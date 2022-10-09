@@ -1,6 +1,6 @@
 package com.mocomoco.tradin.ui.home
 
-import base.BaseViewModel
+import com.mocomoco.tradin.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

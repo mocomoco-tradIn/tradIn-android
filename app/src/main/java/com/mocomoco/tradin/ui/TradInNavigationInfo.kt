@@ -56,3 +56,11 @@ val bottomNavItems = listOf(
     BottomNavigationScreen.Chat,
     BottomNavigationScreen.Profile
 )
+
+val bottomNavItemRouteSet = setOf(
+    TradInDestinations.HOME_ROUTE,
+    TradInDestinations.COMMUNITY_ROUTE,
+    TradInDestinations.ADD_ROUTE,
+    TradInDestinations.CHAT_ROUTE,
+    TradInDestinations.PROFILE_ROUTE
+)

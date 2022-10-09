@@ -1,5 +1,6 @@
 package com.mocomoco.tradin.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +18,8 @@ import com.mocomoco.tradin.ui.theme.Typography
 @Composable
 fun WipScreen(
     modifier: Modifier = Modifier,
-    title: String = ""
+    title: String = "",
+    onClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -25,9 +27,13 @@ fun WipScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier
+                .padding(8.dp)
+                .clickable {
+                    onClick.invoke()
+                },
             text = "\"${title}\" 화면 준비중",
-            style = Typography.h3,
+            style = Typography.body2,
             textAlign = TextAlign.Center,
             color = Color.Black
         )

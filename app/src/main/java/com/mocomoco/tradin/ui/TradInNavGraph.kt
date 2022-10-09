@@ -23,23 +23,31 @@ fun TradInNavGraph(
             HomeScreen()
         }
         composable(TradInDestinations.COMMUNITY_ROUTE) {
-            WipScreen(title = TradInDestinations.COMMUNITY_ROUTE)
-        }
+            WipScreen(title = TradInDestinations.COMMUNITY_ROUTE) {
+                navController.navigate(TradInDestinations.DETAILS_ROUTE)
+            }
+        } // todo make
         composable(TradInDestinations.ADD_ROUTE) {
-            WipScreen(title = TradInDestinations.ADD_ROUTE)
-        }
+            WipScreen(title = TradInDestinations.ADD_ROUTE) {
+                navController.navigate(TradInDestinations.DETAILS_ROUTE)
+            }
+        } // todo make
         composable(TradInDestinations.CHAT_ROUTE) {
-            WipScreen(title = TradInDestinations.CHAT_ROUTE)
-        }
+            WipScreen(title = TradInDestinations.CHAT_ROUTE) {
+                navController.navigate(TradInDestinations.DETAILS_ROUTE)
+            }
+        } // todo make
         composable(TradInDestinations.PROFILE_ROUTE) {
-            WipScreen(title = TradInDestinations.PROFILE_ROUTE) // todo make
-        }
-
+            WipScreen(title = TradInDestinations.PROFILE_ROUTE) {
+                navController.navigate(TradInDestinations.DETAILS_ROUTE)
+            }
+        } // todo make
 
         composable(TradInDestinations.DETAILS_ROUTE) {
-            WipScreen(title = TradInDestinations.DETAILS_ROUTE) // todo make
-        }
+            WipScreen(title = TradInDestinations.DETAILS_ROUTE)
+        }  // todo make
 
-        // todo add screen
+
+        // todo add screens
     }
 }

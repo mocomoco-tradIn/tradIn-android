@@ -1,0 +1,35 @@
+package com.mocomoco.tradin.ui
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.mocomoco.tradin.ui.theme.Typography
+
+
+@Composable
+fun WipScreen(
+    modifier: Modifier = Modifier,
+    title: String = ""
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            modifier = Modifier.padding(8.dp),
+            text = "\"${title}\" 화면 준비중",
+            style = Typography.h3,
+            textAlign = TextAlign.Center,
+            color = Color.Black
+        )
+    }
+}

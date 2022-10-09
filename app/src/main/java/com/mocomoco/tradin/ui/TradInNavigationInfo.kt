@@ -1,4 +1,4 @@
-package com.example.tradin.ui
+package com.mocomoco.tradin.ui
 
 import androidx.navigation.NavHostController
 

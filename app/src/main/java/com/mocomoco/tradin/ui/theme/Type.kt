@@ -1,4 +1,4 @@
-package com.example.tradin.ui.theme
+package com.mocomoco.tradin.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

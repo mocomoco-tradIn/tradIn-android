@@ -1,4 +1,4 @@
-package com.example.tradin.ui
+package com.mocomoco.tradin.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.tradin.ui.home.HomeScreen
+import com.mocomoco.tradin.ui.home.HomeScreen
 
 @Composable
 fun TradInNavGraph(

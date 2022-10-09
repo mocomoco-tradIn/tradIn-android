@@ -1,4 +1,4 @@
-package com.example.tradin
+package com.mocomoco.tradin
 
 import org.junit.Test
 

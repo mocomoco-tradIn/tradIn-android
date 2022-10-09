@@ -1,4 +1,4 @@
-package base
+package com.mocomoco.tradin.base
 
 import androidx.lifecycle.ViewModel
 

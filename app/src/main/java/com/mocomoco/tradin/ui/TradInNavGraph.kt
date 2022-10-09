@@ -22,6 +22,24 @@ fun TradInNavGraph(
         composable(TradInDestinations.HOME_ROUTE) {
             HomeScreen()
         }
-        // todo 추가
+        composable(TradInDestinations.COMMUNITY_ROUTE) {
+            WipScreen(title = TradInDestinations.COMMUNITY_ROUTE)
+        }
+        composable(TradInDestinations.ADD_ROUTE) {
+            WipScreen(title = TradInDestinations.ADD_ROUTE)
+        }
+        composable(TradInDestinations.CHAT_ROUTE) {
+            WipScreen(title = TradInDestinations.CHAT_ROUTE)
+        }
+        composable(TradInDestinations.PROFILE_ROUTE) {
+            WipScreen(title = TradInDestinations.PROFILE_ROUTE) // todo make
+        }
+
+
+        composable(TradInDestinations.DETAILS_ROUTE) {
+            WipScreen(title = TradInDestinations.DETAILS_ROUTE) // todo make
+        }
+
+        // todo add screen
     }
 }

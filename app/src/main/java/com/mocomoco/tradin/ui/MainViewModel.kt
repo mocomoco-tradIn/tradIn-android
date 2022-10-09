@@ -12,14 +12,14 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(): ViewModel() {
 
-    private val _loading = MutableStateFlow(true)
-    val loading = _loading.asStateFlow()
+    private val _splashLoading = MutableStateFlow(true)
+    val splashLoading = _splashLoading.asStateFlow()
 
     init {
         viewModelScope.launch {
-            delay(5000L)
+            delay(1000L)
 
-            _loading.value = false
+            _splashLoading.value = false
         }
     }
 }

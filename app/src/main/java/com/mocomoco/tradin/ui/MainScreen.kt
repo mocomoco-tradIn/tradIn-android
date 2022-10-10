@@ -1,9 +1,7 @@
 package com.mocomoco.tradin.ui
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -55,31 +53,40 @@ fun TradInBottomNavigation(
     navController: NavHostController,
     currentDestination: NavDestination?
 ) {
-    BottomNavigation(
-        backgroundColor = Color.Transparent,
-        elevation = 0.dp
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = White,
+        shape = RoundedCornerShape(
+            topStart = 16.dp,
+            topEnd = 16.dp,
+            bottomStart = 0.dp,
+            bottomEnd = 0.dp
+        ),
+        border = BorderStroke(2.dp, Color.Black)
     ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = White,
-            shape = RoundedCornerShape(
-                topStart = 16.dp,
-                topEnd = 16.dp,
-                bottomStart = 0.dp,
-                bottomEnd = 0.dp
-            ),
-            border = BorderStroke(2.dp, Color.Black)
-        ) {
-            Row {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            BottomNavigation(
+                backgroundColor = Color.Transparent,
+                elevation = 0.dp,
+                modifier = Modifier.height(66.dp)
+            ) {
                 bottomNavItems.forEach { bottomNavItem ->
+                    val selected =
+                        currentDestination?.hierarchy?.any { it.route == bottomNavItem.route } == true
                     BottomNavigationItem(
                         icon = {
+                            val resourceId = if (selected) {
+                                bottomNavItem.selectedIconResourceId
+                            } else {
+                                bottomNavItem.unselectedIconResourceId
+                            }
                             Icon(
-                                painter = painterResource(id = bottomNavItem.iconResourceId),
-                                contentDescription = bottomNavItem.route
+                                painter = painterResource(id = resourceId),
+                                contentDescription = bottomNavItem.route,
                             )
                         },
-                        selected = currentDestination?.hierarchy?.any { it.route == bottomNavItem.route } == true,
+                        selected = selected,
+                        enabled = !selected,
                         onClick = {
                             navController.navigate(bottomNavItem.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
@@ -89,11 +96,18 @@ fun TradInBottomNavigation(
                                 restoreState = true
                             }
                         },
-                        selectedContentColor = Color.Black,
-                        modifier = Modifier.weight(1f, true)
+                        modifier = Modifier.weight(1f, true),
+                        unselectedContentColor = Color.Black,
+                        selectedContentColor = Color.Black
                     )
                 }
             }
+
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(10.dp)
+            )
         }
     }
 }

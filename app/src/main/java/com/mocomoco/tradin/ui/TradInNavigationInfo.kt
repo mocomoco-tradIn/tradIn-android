@@ -22,30 +22,35 @@ class TradInNavigationActions(navController: NavHostController) {
     }
 }
 
-sealed class BottomNavigationScreen(val route: String, @DrawableRes val iconResourceId: Int) {
+sealed class BottomNavigationScreen(val route: String, @DrawableRes val unselectedIconResourceId: Int, @DrawableRes val selectedIconResourceId: Int) {
     object Home : BottomNavigationScreen(
         route = TradInDestinations.HOME_ROUTE,
-        iconResourceId = R.drawable.ic_bottom_nav_home
+        unselectedIconResourceId = R.drawable.ic_bottom_nav_home,
+        selectedIconResourceId = R.drawable.ic_bottom_nav_home_sel
     )
 
     object Community : BottomNavigationScreen(
         route = TradInDestinations.COMMUNITY_ROUTE,
-        iconResourceId = R.drawable.ic_bottom_nav_community
+        unselectedIconResourceId = R.drawable.ic_bottom_nav_community,
+        selectedIconResourceId = R.drawable.ic_bottom_nav_community_sel
     )
 
     object Add : BottomNavigationScreen(
         route = TradInDestinations.ADD_ROUTE,
-        iconResourceId = R.drawable.ic_bottom_nav_add
+        unselectedIconResourceId = R.drawable.ic_bottom_nav_add,
+        selectedIconResourceId = R.drawable.ic_bottom_nav_add_sel
     )
 
     object Chat : BottomNavigationScreen(
         route = TradInDestinations.CHAT_ROUTE,
-        iconResourceId = R.drawable.ic_bottom_nav_chat
+        unselectedIconResourceId = R.drawable.ic_bottom_nav_chat,
+        selectedIconResourceId = R.drawable.ic_bottom_nav_chat_sel
     )
 
     object Profile : BottomNavigationScreen(
         route = TradInDestinations.PROFILE_ROUTE,
-        iconResourceId = R.drawable.ic_bottom_nav_profile
+        unselectedIconResourceId = R.drawable.ic_bottom_nav_profile,
+        selectedIconResourceId = R.drawable.ic_bottom_nav_profile_sel
     )
 }
 

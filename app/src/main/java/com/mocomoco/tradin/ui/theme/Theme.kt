@@ -28,7 +28,7 @@ fun TradInTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
 
     MaterialTheme(
         colors = colors,
-        typography = Typography,
+        typography = TradInTypography,
         shapes = Shapes,
         content = content
     )

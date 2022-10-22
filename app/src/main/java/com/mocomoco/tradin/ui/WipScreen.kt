@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mocomoco.tradin.ui.theme.Typography
+import com.mocomoco.tradin.ui.theme.TradInTypography
 
 
 @Composable
@@ -33,7 +33,7 @@ fun WipScreen(
                     onClick.invoke()
                 },
             text = "\"${title}\" 화면 준비중",
-            style = Typography.body2,
+            style = TradInTypography.body2,
             textAlign = TextAlign.Center,
             color = Color.Black
         )

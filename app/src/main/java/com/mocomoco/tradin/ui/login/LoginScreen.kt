@@ -48,7 +48,7 @@ fun LoginScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(),
-                painter = painterResource(id = R.drawable.background_login_crop_circle),
+                painter = painterResource(id = R.drawable.background_login_bottom),
                 contentScale = ContentScale.Crop,
                 contentDescription = null
             )
@@ -57,20 +57,13 @@ fun LoginScreen() {
                 modifier = Modifier.fillMaxSize()
             ) {
 
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp, 0.dp, 0.dp, 0.dp),
-                    painter = painterResource(id = R.drawable.background_login_line),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null
-                )
-
+                Spacer(modifier = Modifier.weight(1f))
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
+                        .weight(1f)
                         .padding(16.dp, 0.dp),
-                    verticalArrangement = Arrangement.Bottom
+                    verticalArrangement = Arrangement.SpaceEvenly
                 ) {
 
                     DefaultTradInButton(
@@ -82,11 +75,11 @@ fun LoginScreen() {
                         // todo
                     }
 
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(49.dp)
-                    )
+//                    Spacer(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .height(49.dp)
+//                    )
 
                     Row(
                         modifier = Modifier
@@ -130,11 +123,11 @@ fun LoginScreen() {
                         )
                     }
 
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(59.dp)
-                    )
+//                    Spacer(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .height(59.dp)
+//                    )
 
                 }
             }

@@ -1,3 +1,10 @@
-<resources>
-    <string name="app_name">TradIn</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">TradIn</string>입
+    <string name="login_app_subtitle">씀씀이를 줄이는 교환의 경제</string>
+    <string name="login_input_placeholder_id">전화번호/이메일 입력</string>
+    <string name="login_input_placeholder_pw">비밀번호 입력</string>
+    <string name="login_auto">자동 로그인</string>
+    <string name="login_start">시작하기</string>
+    <string name="login_sign_up">회원가입</string>
+    <string name="login_find_pw">비밀번호 찾기</string>
 </resources>

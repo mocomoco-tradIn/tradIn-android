@@ -1,4 +1,4 @@
-package com.mocomoco.tradin.ui.home
+package com.mocomoco.tradin.ui.bottom_navi.home
 
 import com.mocomoco.tradin.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

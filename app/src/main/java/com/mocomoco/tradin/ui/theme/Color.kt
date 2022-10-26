@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 
 val White = Color(0xFFFFFFFF)
 val Black = Color(0xFF000000)
+val Transparent = Color(0x00000000)
+
 
 val Gray0 = Color(0xFF222222) // todo 근데 왜 900~ 이런식으로 표현?
 val Gray1 = Color(0xFF656565)

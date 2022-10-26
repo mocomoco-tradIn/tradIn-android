@@ -12,6 +12,7 @@ object TradInDestinations {
     const val CHAT_ROUTE = "chat"
     const val PROFILE_ROUTE = " profile"
     const val DETAILS_ROUTE = "details"
+    const val LOGIN = "login"
 }
 
 class TradInNavigationActions(navController: NavHostController) {

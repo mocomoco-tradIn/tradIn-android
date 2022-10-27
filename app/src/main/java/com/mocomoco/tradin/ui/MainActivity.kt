@@ -16,7 +16,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         installSplashScreen().apply {
-            this.setKeepOnScreenCondition { viewModel.splashLoading.value }
+            this.setKeepOnScreenCondition {
+                viewModel.splashLoading.value
+            }
         }
 
         setContent {

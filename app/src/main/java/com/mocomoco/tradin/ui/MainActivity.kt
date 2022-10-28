@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TradInTheme {
-               MainScreen()
+                TradInNavGraph()
             }
         }
     }

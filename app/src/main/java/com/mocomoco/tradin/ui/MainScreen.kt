@@ -19,37 +19,34 @@ import androidx.navigation.compose.rememberNavController
 import com.mocomoco.tradin.ui.theme.White
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    onNavEvent: (String) -> Unit
+) {
     val navController = rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val isBottomDestination = currentDestination?.let {
-        bottomNavItemRouteSet.contains(it.route)
-    }
-
     Scaffold(
         bottomBar = {
-            if (isBottomDestination == true) {
-                TradInBottomNavigation(
+                MainBottomNavigation(
                     navController = navController,
                     currentDestination = currentDestination
                 )
-            }
         }
     ) { innerPadding ->
-        TradInNavGraph(
+        MainNavGraph(
             navController = navController,
-            startDestination = TradInDestinations.HOME_ROUTE,
-            modifier = Modifier.padding(innerPadding)
+            startDestination = MainDestination.HOME_ROUTE,
+            modifier = Modifier.padding(innerPadding),
+            onNavEvent = onNavEvent
         )
     }
 
 }
 
 @Composable
-fun TradInBottomNavigation(
+fun MainBottomNavigation(
     navController: NavHostController,
     currentDestination: NavDestination?
 ) {

@@ -7,6 +7,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -23,17 +24,19 @@ import com.mocomoco.tradin.ui.common.VerticalSpacer
 import com.mocomoco.tradin.ui.theme.*
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onClickSignup: () -> Unit
+) {
 
-    var emailText by remember {
+    var emailText by rememberSaveable {
         mutableStateOf("")
     }
 
-    var passwordText by remember {
+    var passwordText by rememberSaveable {
         mutableStateOf("")
     }
 
-    var checkAutoLogin by remember {
+    var checkAutoLogin by rememberSaveable {
         mutableStateOf(false)
     }
 
@@ -89,12 +92,12 @@ fun LoginScreen() {
                         Text(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(0.dp, 8.dp)
+                                .padding(4.dp, 8.dp)
                                 .clickable {
-                                    // todo
+                                    onClickSignup()
                                 },
                             textAlign = TextAlign.Center,
-                            text = stringResource(id = R.string.login_sign_up),
+                            text = stringResource(id = R.string.common_signup),
                             style = TradInTypography.subtitle1,
                             color = Gray1
                         )

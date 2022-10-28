@@ -21,16 +21,25 @@ fun LongRomButton(
     textColor: Color,
     onClick: () -> Unit
 ) {
+    val modifierByEnable = if (enable) {
+        modifier
+            .fillMaxWidth()
+            .background(color = backgroundColor, shape = Shapes.large)
+            .border(defaultBorderStroke, Shapes.large)
+    } else {
+        modifier
+            .fillMaxWidth()
+            .background(color = backgroundColor, shape = Shapes.large)
+    }
+
+
     TextButton(
         onClick = {
             if (enable) {
                 onClick.invoke()
             }
         },
-        modifier = modifier
-            .fillMaxWidth()
-            .background(color = backgroundColor, shape = Shapes.large)
-            .border(defaultBorderStroke, Shapes.large)
+        modifier = modifierByEnable
     ) {
         Text(
             text = text,

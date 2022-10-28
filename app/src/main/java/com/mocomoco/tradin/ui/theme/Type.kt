@@ -78,3 +78,82 @@ val TradInTypography = Typography(
         platformStyle = PlatformTextStyle(includeFontPadding = false)
     )
 )
+
+@OptIn(ExperimentalTextApi::class)
+object TradInTextStyle {
+    val text26 = TextStyle(
+        fontSize = 26.sp,
+        fontFamily = TradInFontFamily,
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    )
+
+    val text20 = TextStyle(
+        fontSize = 20.sp,
+        fontFamily = TradInFontFamily,
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    )
+
+    val text18 = TextStyle(
+        fontSize = 18.sp,
+        fontFamily = TradInFontFamily,
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    )
+
+    val text17 = TextStyle(
+        fontSize = 17.sp,
+        fontFamily = TradInFontFamily,
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    )
+
+    val text16 = TextStyle(
+        fontSize = 16.sp,
+        fontFamily = TradInFontFamily,
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    )
+
+    val text15 = TextStyle(
+        fontSize = 15.sp,
+        fontFamily = TradInFontFamily,
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    )
+
+    val text14 = TextStyle(
+        fontSize = 14.sp,
+        fontFamily = TradInFontFamily,
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    )
+
+    val text13 = TextStyle(
+        fontSize = 13.sp,
+        fontFamily = TradInFontFamily,
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    )
+
+    val text12 = TextStyle(
+        fontSize = 12.sp,
+        fontFamily = TradInFontFamily,
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    )
+    val text11 = TextStyle(
+        fontSize = 11.sp,
+        fontFamily = TradInFontFamily,
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    )
+
+    val text9 = TextStyle(
+        fontSize = 9.sp,
+        fontFamily = TradInFontFamily,
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    )
+}

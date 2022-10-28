@@ -26,18 +26,5 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        DefaultToolbar(
-            showBack = true,
-            onClickBack = {
-                Logger.log("onClickBack")
-            },
-            title = stringResource(id = R.string.common_signup)
-        )
-        SignupProgressBar(
-            5, 1, modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        )
-        Text(text = viewModel.a, modifier = Modifier.background(Blue1))
     }
 }

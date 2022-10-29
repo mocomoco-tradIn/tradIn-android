@@ -1,10 +1,14 @@
 package com.mocomoco.tradin.presentation.signup
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -14,11 +18,12 @@ import com.mocomoco.tradin.presentation.common.DefaultToolbar
 import com.mocomoco.tradin.presentation.common.RomCircularProgressIndicator
 import com.mocomoco.tradin.presentation.common.SignupProgressBar
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
-import com.mocomoco.tradin.presentation.signup.agree.PolicyAgreementSubScreen
-import com.mocomoco.tradin.presentation.signup.complete.CompleteSignupSubScreen
-import com.mocomoco.tradin.presentation.signup.login_info.LoginInfoSubScreen
-import com.mocomoco.tradin.presentation.signup.phon_auth.TelAuthSubScreen
-import com.mocomoco.tradin.presentation.signup.user_info.UserInfoSubScreen
+import com.mocomoco.tradin.presentation.signup.components.PolicyAgreementSubScreen
+import com.mocomoco.tradin.presentation.signup.components.CompleteSignupSubScreen
+import com.mocomoco.tradin.presentation.signup.components.LoginInfoSubScreen
+import com.mocomoco.tradin.presentation.signup.components.TelAuthSubScreen
+import com.mocomoco.tradin.presentation.signup.components.UserInfoSubScreen
+import kotlinx.coroutines.flow.collectLatest
 
 const val SIGNUP_PHASE_NUM = 5
 
@@ -34,6 +39,8 @@ fun SignupScreen(
     val state = viewModel.state.collectAsState().value
 
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -103,7 +110,17 @@ fun SignupScreen(
                     )
                 }
                 !state.completeLoginInfo -> {
-                    LoginInfoSubScreen()
+                    LoginInfoSubScreen(
+                        state = state.loginInfoState,
+                        onClickCheckDuplicate = { email ->
+                            keyboardController?.hide()
+                            viewModel.postEmailDuplicate(email)
+                        },
+                        onClickNext = { email, pw ->
+                            keyboardController?.hide()
+                            viewModel.onCompleteLoginInfo(email, pw)
+                        }
+                    )
                 }
                 !state.completeUserInfo -> {
                     UserInfoSubScreen()

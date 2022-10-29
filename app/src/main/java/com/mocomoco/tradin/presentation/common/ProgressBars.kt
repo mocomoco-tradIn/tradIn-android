@@ -2,6 +2,7 @@ package com.mocomoco.tradin.presentation.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
@@ -20,12 +21,19 @@ import com.mocomoco.tradin.presentation.theme.YellowGreen2
 
 
 @Composable
-fun BoxScope.RomCircularProgressIndicator() {
-    CircularProgressIndicator(
-        modifier = Modifier.align(Alignment.Center),
-        color = Blue1,
-        strokeWidth = 4.dp
-    )
+fun RomCircularProgressIndicator() {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .clickable(enabled = false) {
+            // do nothing
+        }
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.align(Alignment.Center),
+            color = Blue1,
+            strokeWidth = 4.dp
+        )
+    }
 }
 
 @Composable

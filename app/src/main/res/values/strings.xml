@@ -5,6 +5,8 @@
     <string name="common_complete">완료</string>
     <string name="common_ok">확인</string>
     <string name="common_signup">회원가입</string>
+    <string name="common_error_message">인터넷 연결을 확인해주세요</string>
+    <string name="common_server_die">에러발생. 나중에 다시 시도해주세요</string>
 
     <string name="login_app_subtitle">씀씀이를 줄이는 교환의 경제</string>
     <string name="login_input_placeholder_id">전화번호/이메일 입력</string>

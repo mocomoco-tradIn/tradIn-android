@@ -1,4 +1,4 @@
-package com.mocomoco.tradin.presentation.signup.agree
+package com.mocomoco.tradin.presentation.signup.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -33,7 +33,6 @@ fun PolicyAgreementSubScreen(
     }
 
     val allCheck = policyCheck && privacyCheck
-
 
     Column(
         modifier = Modifier

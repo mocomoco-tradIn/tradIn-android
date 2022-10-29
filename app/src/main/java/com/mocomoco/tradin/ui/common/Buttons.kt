@@ -2,49 +2,74 @@ package com.mocomoco.tradin.ui.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import com.mocomoco.tradin.ui.theme.Shapes
-import com.mocomoco.tradin.ui.theme.TradInTypography
-import com.mocomoco.tradin.ui.theme.defaultBorderStroke
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.mocomoco.tradin.ui.theme.*
 
 @Composable
-fun LongRomButton(
-    modifier: Modifier = Modifier,
+fun DefaultRomButton(
+    modifier: Modifier = Modifier.fillMaxWidth(),
     text: String,
-    backgroundColor: Color,
+    textStyle: TextStyle = RomTextStyle.text17,
     enable: Boolean,
-    textColor: Color,
     onClick: () -> Unit
 ) {
-    val modifierByEnable = if (enable) {
-        modifier
-            .fillMaxWidth()
-            .background(color = backgroundColor, shape = Shapes.large)
-            .border(defaultBorderStroke, Shapes.large)
-    } else {
-        modifier
-            .fillMaxWidth()
-            .background(color = backgroundColor, shape = Shapes.large)
-    }
 
+    Text(
+        text = text,
+        style = textStyle,
+        color = if (enable) White else Gray2,
+        modifier = if (enable) {
+            modifier
+                .background(color = Blue1, shape = Shapes.large)
+                .border(borderStrokeBlack2, Shapes.large)
+                .clickable {
+                    onClick.invoke()
+                }
+                .padding(12.dp)
+        } else {
+            modifier
+                .background(color = Gray7, shape = Shapes.large)
+                .padding(12.dp)
+        },
+        textAlign = TextAlign.Center
+    )
+}
 
+@Composable
+fun ShortRomButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    enable: Boolean,
+    onClick: () -> Unit
+) {
     TextButton(
         onClick = {
             if (enable) {
                 onClick.invoke()
             }
         },
-        modifier = modifierByEnable
+        modifier = if (enable) {
+            modifier
+                .background(color = Blue1, shape = Shapes.large)
+                .border(borderStrokeBlack2, Shapes.large)
+        } else {
+            modifier
+                .background(color = Gray7, shape = Shapes.large)
+        }
     ) {
         Text(
             text = text,
             style = TradInTypography.h3,
-            color = textColor,
+            color = if (enable) Blue1 else Gray2,
         )
     }
 }

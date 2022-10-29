@@ -8,6 +8,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mocomoco.tradin.ui.main.home.HomeScreen
 import com.mocomoco.tradin.ui.login.LoginScreen
+import com.mocomoco.tradin.ui.main.chat.ChatListScreen
+import com.mocomoco.tradin.ui.main.community.CommunityScreen
+import com.mocomoco.tradin.ui.main.profile.ProfileScreen
 import com.mocomoco.tradin.ui.signup.SignupScreen
 
 @Composable
@@ -31,8 +34,8 @@ fun TradInNavGraph(
         }
 
         composable(TradInDestinations.DETAILS_ROUTE) {
-            WipScreen(title = TradInDestinations.DETAILS_ROUTE)
-        }  // todo make
+            DetailsScreen()
+        }
 
         composable(TradInDestinations.LOGIN) {
             LoginScreen(
@@ -50,9 +53,6 @@ fun TradInNavGraph(
                 navController.popBackStack(TradInDestinations.SIGNUP, true, true)
             })
         }
-
-
-        // todo add screens
     }
 }
 
@@ -73,29 +73,21 @@ fun MainNavGraph(
         }
 
         composable(MainDestination.COMMUNITY_ROUTE) {
-            WipScreen(title = MainDestination.COMMUNITY_ROUTE) {
+            CommunityScreen() {
                 onNavEvent(TradInDestinations.LOGIN)
             }
         }
 
         composable(MainDestination.ADD_ROUTE) {
-            WipScreen(title = MainDestination.ADD_ROUTE) {
-                onNavEvent(TradInDestinations.LOGIN)
-            }// todo make
+
         }
 
         composable(MainDestination.CHAT_ROUTE) {
-            WipScreen(title = MainDestination.CHAT_ROUTE) {
-                onNavEvent(TradInDestinations.LOGIN)
-
-            }// todo make
+            ChatListScreen()
         }
 
         composable(MainDestination.PROFILE_ROUTE) {
-            WipScreen(title = MainDestination.PROFILE_ROUTE) {
-                onNavEvent(TradInDestinations.LOGIN)
-
-            } // todo make
+            ProfileScreen()
         }
     }
 }

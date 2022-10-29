@@ -13,7 +13,6 @@ val defaultNavOptionBuilder: NavOptionsBuilder.() -> Unit = {
 
 object TradInDestinations {
     const val MAIN_ROUTE = "main"
-
     const val DETAILS_ROUTE = "details"
     const val LOGIN = "login"
     const val SIGNUP = "signup"

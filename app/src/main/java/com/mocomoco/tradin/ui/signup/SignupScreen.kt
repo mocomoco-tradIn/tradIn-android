@@ -3,12 +3,16 @@ package com.mocomoco.tradin.ui.signup
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mocomoco.tradin.R
@@ -40,6 +44,8 @@ fun SignupScreen(
             title = stringResource(id = R.string.common_signup)
         )
 
+        VerticalSpacer(dp = 16.dp)
+
         SignupProgressBar(
             total = SIGNUP_PHASE_NUM,
             current = when {
@@ -61,8 +67,10 @@ fun SignupScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp, 0.dp)
         )
+
+        VerticalSpacer(dp = 18.dp)
 
         when {
             !state.completeAgree -> {
@@ -71,7 +79,13 @@ fun SignupScreen(
                 }
             }
             !state.completePhoneAuth -> {
-                PhoneAuthSubScreen()
+                PhoneAuthSubScreen(
+                    onClickNext = { phone, auth ->
+
+                    },
+                    completeSendPhoneNum = false,
+                    completePhoneAuth = false
+                )
             }
             !state.completeLoginInfo -> {
                 LoginInfoSubScreen()
@@ -112,7 +126,7 @@ fun PolicyAgreementSubScreen(
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
                 text = stringResource(id = R.string.signup_policy_agree_title),
-                style = TradInTextStyle.text20,
+                style = RomTextStyle.text20,
                 modifier = Modifier.padding(start = 2.dp),
                 color = Black
             )
@@ -156,11 +170,10 @@ fun PolicyAgreementSubScreen(
             
             VerticalSpacer(dp = 33.dp)
 
-            LongRomButton(
+            DefaultRomButton(
                 text = "다음",
-                backgroundColor = if (allCheck) Blue1 else Gray7,
                 enable = allCheck,
-                textColor = if (allCheck) White else Gray2
+                textStyle = RomTextStyle.text14
             ) {
                 onCompleteAgreement()
             }
@@ -185,7 +198,7 @@ fun AgreementItem(
     ) {
         Text(
             text = policy,
-            style = TradInTextStyle.text13,
+            style = RomTextStyle.text13,
             color = Gray0,
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
@@ -207,7 +220,110 @@ fun AgreementItem(
 }
 
 @Composable
-fun PhoneAuthSubScreen() {
+fun PhoneAuthSubScreen(
+    onClickNext: (String, String) -> Unit,
+    completeSendPhoneNum: Boolean,
+    completePhoneAuth: Boolean
+) {
+
+    var phoneNum by remember {
+        mutableStateOf("")
+    }
+
+    var authNum by remember {
+        mutableStateOf("")
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp, 0.dp, 16.dp, 24.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(Modifier.fillMaxWidth()) {
+            Text(
+                text = "본인 인증은 필수!",
+                style = RomTextStyle.text20,
+                modifier = Modifier.padding(start = 2.dp),
+                color = Black
+            )
+
+            VerticalSpacer(dp = 18.dp)
+
+            PhoneAuthTextFieldItem(
+                title = "전화번호 인증",
+                input = phoneNum,
+                onInputChange = { phoneNum = it },
+                placeholderText = "본인 명의 휴대폰 번호를 입력해요",
+                descText = "010 포함 '-'제외 입력",
+                descTextColor = Gray2,
+                enableButton = phoneNum.isPhoneNumber()
+            ) { number ->
+                // todo
+            }
+
+            if (completeSendPhoneNum) {
+                VerticalSpacer(dp = 24.dp)
+
+                PhoneAuthTextFieldItem(
+                    title = "인증번호 입력",
+                    input = authNum,
+                    onInputChange = { authNum = it },
+                    placeholderText = "",
+                    descText = "잘못된 입력입니다.",
+                    descTextColor = Pink1,
+                    enableButton = authNum.isNotEmpty()
+                ) { number ->
+                    // todo
+                }
+            }
+        }
+
+        DefaultRomButton(text = "다음", enable = completePhoneAuth) {
+            onClickNext(phoneNum, authNum)
+        }
+    }
+}
+
+@Composable
+fun PhoneAuthTextFieldItem(
+    title: String,
+    input: String,
+    onInputChange: (String) -> Unit,
+    placeholderText: String = "",
+    descText: String,
+    descTextColor: Color,
+    enableButton: Boolean,
+    onClickButton: (String) -> Unit
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(text = title, style = RomTextStyle.text14, color = Gray0)
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            DefaultTextFields(
+                value = input,
+                onValueChange = onInputChange,
+                placeholderText = placeholderText,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.weight(1f)
+            )
+            HorizontalSpacer(dp = 8.dp)
+            DefaultRomButton(text = "인증하기", enable = enableButton, modifier = Modifier.align(Alignment.Bottom).width(84.dp), textStyle = RomTextStyle.text14) {
+                onClickButton(input)
+            }
+        }
+        VerticalSpacer(dp = 8.dp)
+
+        Text(text = descText, style = RomTextStyle.text14, color = descTextColor)
+    }
+}
+
+private fun String.isPhoneNumber() = this.length == 11 && this.startsWith("010")
+
+@Composable
+fun ShortTradInButton() {
 
 }
 

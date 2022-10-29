@@ -80,7 +80,7 @@ val TradInTypography = Typography(
 )
 
 @OptIn(ExperimentalTextApi::class)
-object TradInTextStyle {
+object RomTextStyle {
     val text26 = TextStyle(
         fontSize = 26.sp,
         fontFamily = TradInFontFamily,

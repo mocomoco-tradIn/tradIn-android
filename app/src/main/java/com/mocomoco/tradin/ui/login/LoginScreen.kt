@@ -3,6 +3,7 @@ package com.mocomoco.tradin.ui.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -13,13 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mocomoco.tradin.R
 import com.mocomoco.tradin.ui.common.CommonCheckBox
 import com.mocomoco.tradin.ui.common.DefaultTextFields
-import com.mocomoco.tradin.ui.common.LongRomButton
+import com.mocomoco.tradin.ui.common.DefaultRomButton
 import com.mocomoco.tradin.ui.common.VerticalSpacer
 import com.mocomoco.tradin.ui.theme.*
 
@@ -72,11 +74,9 @@ fun LoginScreen(
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
 
-                    LongRomButton(
+                    DefaultRomButton(
                         text = "시작하기",
-                        backgroundColor = Blue1,
                         enable = true,
-                        textColor = White
                     ) {
                         // todo
                     }
@@ -164,6 +164,7 @@ fun LoginScreen(
                     value = emailText,
                     onValueChange = { new -> emailText = new },
                     placeholderText = stringResource(id = R.string.login_input_placeholder_id),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
 
                 VerticalSpacer(14.dp)
@@ -176,7 +177,8 @@ fun LoginScreen(
                     ),
                     visualTransformation = { anotatedString ->
                         PasswordVisualTransformation().filter(anotatedString)
-                    }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
 
                 VerticalSpacer(dp = 20.dp)

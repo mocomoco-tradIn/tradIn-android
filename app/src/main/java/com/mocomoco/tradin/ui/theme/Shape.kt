@@ -12,4 +12,4 @@ val Shapes = Shapes(
     large = RoundedCornerShape(10.dp)
 )
 
-val defaultBorderStroke = BorderStroke(2.dp, Color.Black)
+val borderStrokeBlack2 = BorderStroke(2.dp, Color.Black)

@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.mocomoco.tradin.ui.theme.Gray0
@@ -39,7 +40,8 @@ fun DefaultTextFields(
         focusedIndicatorColor = Gray0,
         unfocusedIndicatorColor = Gray3
     ),
-    visualTransformation: VisualTransformation = VisualTransformation.None
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     TradInTextField(
         modifier = modifier,
@@ -56,7 +58,8 @@ fun DefaultTextFields(
         },
         colors = colors,
         visualTransformation = visualTransformation,
-        textStyle = MaterialTheme.typography.h5
+        textStyle = MaterialTheme.typography.h5,
+        keyboardOptions = keyboardOptions
     )
 }
 

@@ -40,8 +40,10 @@ fun DefaultTextFields(
         unfocusedIndicatorColor = Gray3
     ),
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
-) {
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    enabled: Boolean = true,
+    trailingIcon: @Composable (() -> Unit)? = null
+    ) {
     TradInTextField(
         modifier = modifier,
         value = value,
@@ -58,7 +60,9 @@ fun DefaultTextFields(
         colors = colors,
         visualTransformation = visualTransformation,
         textStyle = MaterialTheme.typography.h5,
-        keyboardOptions = keyboardOptions
+        keyboardOptions = keyboardOptions,
+        enabled = enabled,
+        trailingIcon = trailingIcon
     )
 }
 

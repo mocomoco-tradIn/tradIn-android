@@ -1,9 +1,36 @@
 package com.mocomoco.tradin.presentation.signup
 
-sealed class Signup(open val phase: Int) {
-    data class PolicyAgree(override val phase: Int = 0) : Signup(phase)
-    data class SelfAuthentication(override val phase: Int = 1) : Signup(phase)
-    data class LoginInfo(override val phase: Int = 2) : Signup(phase)
-    data class UserInfo(override val phase: Int = 3) : Signup(phase)
-    data class Complete(override val phase: Int = 4) : Signup(phase)
-}
+import androidx.compose.ui.graphics.Color
+import com.mocomoco.tradin.presentation.theme.Gray2
+import com.mocomoco.tradin.presentation.theme.Transparent
+
+data class SignupState(
+    val completeAgree: Boolean = false,
+    val completePhoneAuth: Boolean = false,
+    val completeLoginInfo: Boolean = false,
+    val completeUserInfo: Boolean = false,
+    val telAuthState: TelAuthState = TelAuthState(),
+    val userInputInfo: UserInputInfo = UserInputInfo()
+)
+
+data class TelAuthState(
+    val completeRequestAuth: Boolean = false,
+    val completeRequestAuthTime: Long = 0,
+    val completeRequestCoincide: Boolean = false,
+    val tel: String = "",
+    val telInputDesc: String = "010 포함 '-' 제외 입력",
+    val telInputDescColor: Color = Gray2,
+    val authNumInputDesc: String = "",
+    val authNumInputDescColor: Color = Transparent,
+    val editableTelNum: Boolean = true,
+    val editableAuthNum: Boolean = true,
+)
+
+data class UserInputInfo(
+    val tel: String = "",
+    val email: String = "",
+    val pw: String = "",
+    val nickname: String = "",
+    val location: String = "",
+    val categories: List<Int> = listOf(),
+)

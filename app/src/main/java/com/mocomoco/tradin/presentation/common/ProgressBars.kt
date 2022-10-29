@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -12,8 +14,19 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.mocomoco.tradin.presentation.theme.Black
+import com.mocomoco.tradin.presentation.theme.Blue1
 import com.mocomoco.tradin.presentation.theme.White
 import com.mocomoco.tradin.presentation.theme.YellowGreen2
+
+
+@Composable
+fun BoxScope.RomCircularProgressIndicator() {
+    CircularProgressIndicator(
+        modifier = Modifier.align(Alignment.Center),
+        color = Blue1,
+        strokeWidth = 4.dp
+    )
+}
 
 @Composable
 fun SignupProgressBar(

@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mocomoco.tradin.ui.bottom_navi.home.HomeScreen
+import com.mocomoco.tradin.ui.main.home.HomeScreen
 import com.mocomoco.tradin.ui.login.LoginScreen
 import com.mocomoco.tradin.ui.signup.SignupScreen
 

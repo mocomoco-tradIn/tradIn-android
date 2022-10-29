@@ -208,15 +208,7 @@ fun AgreementItem(
 
 @Composable
 fun PhoneAuthSubScreen() {
-    CommonCheckBox(
-        checked = false,
-        offIconId = R.drawable.ic_checkbox_off,
-        onIconId = R.drawable.ic_checkbox_on,
-        textId = R.string.signup_policy_agree_checkbox_title,
-        modifier = Modifier.padding(top = 14.dp),
-        onClick = { new ->
-        }
-    )
+
 }
 
 @Composable

@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mocomoco.tradin.R
 import com.mocomoco.tradin.ui.common.CommonCheckBox
-import com.mocomoco.tradin.ui.common.LoginTextField
+import com.mocomoco.tradin.ui.common.DefaultTextFields
 import com.mocomoco.tradin.ui.common.LongRomButton
 import com.mocomoco.tradin.ui.common.VerticalSpacer
 import com.mocomoco.tradin.ui.theme.*
@@ -160,7 +160,7 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .wrapContentHeight()
             ) {
-                LoginTextField(
+                DefaultTextFields(
                     value = emailText,
                     onValueChange = { new -> emailText = new },
                     placeholderText = stringResource(id = R.string.login_input_placeholder_id),
@@ -168,7 +168,7 @@ fun LoginScreen(
 
                 VerticalSpacer(14.dp)
 
-                LoginTextField(
+                DefaultTextFields(
                     value = passwordText,
                     onValueChange = { new -> passwordText = new },
                     placeholderText = stringResource(

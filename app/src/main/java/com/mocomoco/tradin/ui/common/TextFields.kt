@@ -25,13 +25,13 @@ import com.mocomoco.tradin.ui.theme.Gray3
 import com.mocomoco.tradin.ui.theme.Transparent
 
 @Composable
-fun LoginTextField(
+fun DefaultTextFields(
     value: String,
     onValueChange: (String) -> Unit,
+    placeholderText: String,
     modifier: Modifier = Modifier.fillMaxWidth(),
     contentPaddingValues: PaddingValues = PaddingValues(4.dp, 12.dp),
     singleLine: Boolean = true,
-    placeholderText: String,
     colors: TextFieldColors = TextFieldDefaults.textFieldColors(
         textColor = Gray0,
         backgroundColor = Transparent,
@@ -58,8 +58,8 @@ fun LoginTextField(
         visualTransformation = visualTransformation,
         textStyle = MaterialTheme.typography.h5
     )
-
 }
+
 
 @Composable
 fun TradInTextField(

@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.mocomoco.tradin.ui.main.MainViewModel
 import com.mocomoco.tradin.ui.theme.TradInTheme
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -1,4 +1,4 @@
-package com.mocomoco.tradin.ui
+package com.mocomoco.tradin.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

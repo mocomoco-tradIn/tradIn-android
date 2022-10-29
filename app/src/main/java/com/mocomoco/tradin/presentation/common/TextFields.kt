@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.mocomoco.tradin.presentation.theme.*
@@ -142,6 +141,68 @@ fun TradInTextField(
 }
 
 @Composable
+fun RightButtonTextField(
+    input: String,
+    onInputChange: (String) -> Unit,
+    enableButton: Boolean = false,
+    placeholderText: String = "",
+    buttonText: String = "",
+    editable: Boolean = true,
+    isError: Boolean = false,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+    onClickButton: (String) -> Unit = {}
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        DefaultTextFields(
+            value = input,
+            onValueChange = onInputChange,
+            placeholderText = placeholderText,
+            keyboardOptions = keyboardOptions,
+            modifier = Modifier.weight(1f),
+            enabled = editable,
+            trailingIcon = trailingIcon,
+            isError = isError,
+            visualTransformation = visualTransformation
+        )
+        HorizontalSpacer(dp = 8.dp)
+
+        if (buttonText.isNotEmpty()) {
+            DefaultRomButton(
+                text = buttonText,
+                enable = enableButton,
+                modifier = Modifier
+                    .align(Alignment.Bottom)
+                    .width(84.dp),
+                textStyle = RomTextStyle.text14
+            ) {
+                onClickButton(input)
+            }
+        }
+    }
+}
+
+@Composable
+fun SignupInfoInputItem(
+    title: String,
+    descText: String = "",
+    descTextColor: Color = Transparent,
+    content: @Composable () -> Unit
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(text = title, style = RomTextStyle.text14, color = Gray0)
+
+        content()
+
+        VerticalSpacer(dp = 6.dp)
+        Text(text = descText, style = RomTextStyle.text14, color = descTextColor)
+    }
+}
+
+@Composable
 fun SignupInputItem(
     title: String,
     input: String,
@@ -158,40 +219,24 @@ fun SignupInputItem(
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
     onClickButton: (String) -> Unit = {}
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = title, style = RomTextStyle.text14, color = Gray0)
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            DefaultTextFields(
-                value = input,
-                onValueChange = onInputChange,
-                placeholderText = placeholderText,
-                keyboardOptions = keyboardOptions,
-                modifier = Modifier.weight(1f),
-                enabled = editable,
-                trailingIcon = trailingIcon,
-                isError = isError,
-                visualTransformation = visualTransformation
-            )
-            HorizontalSpacer(dp = 8.dp)
-
-            if (buttonText.isNotEmpty()) {
-                DefaultRomButton(
-                    text = buttonText,
-                    enable = enableButton,
-                    modifier = Modifier
-                        .align(Alignment.Bottom)
-                        .width(84.dp),
-                    textStyle = RomTextStyle.text14
-                ) {
-                    onClickButton(input)
-                }
-            }
+    SignupInfoInputItem(
+        title = title,
+        descText = descText,
+        descTextColor = descTextColor
+    ) {
+        RightButtonTextField(
+            input = input,
+            onInputChange = onInputChange,
+            placeholderText = placeholderText,
+            keyboardOptions = keyboardOptions,
+            editable = editable,
+            trailingIcon = trailingIcon,
+            isError = isError,
+            visualTransformation = visualTransformation,
+            buttonText = buttonText,
+            enableButton = enableButton,
+        ) { text ->
+            onClickButton(text)
         }
-        VerticalSpacer(dp = 8.dp)
-
-        Text(text = descText, style = RomTextStyle.text14, color = descTextColor)
     }
 }

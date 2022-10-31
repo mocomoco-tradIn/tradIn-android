@@ -6,10 +6,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mocomoco.tradin.presentation.main.home.HomeScreen
 import com.mocomoco.tradin.presentation.login.LoginScreen
 import com.mocomoco.tradin.presentation.main.chat.ChatListScreen
 import com.mocomoco.tradin.presentation.main.community.CommunityScreen
+import com.mocomoco.tradin.presentation.main.home.HomeScreen
 import com.mocomoco.tradin.presentation.main.profile.ProfileScreen
 import com.mocomoco.tradin.presentation.signup.SignupScreen
 
@@ -49,9 +49,14 @@ fun TradInNavGraph(
         }
 
         composable(TradInDestinations.SIGNUP) {
-            SignupScreen(onClickBack = {
-                navController.popBackStack(TradInDestinations.SIGNUP, true, true)
-            })
+            SignupScreen(
+                onClickBack = {
+                    navController.popBackStack(TradInDestinations.SIGNUP, true, true)
+                },
+                onNavEvent = { route ->
+                    navController.navigate(route)
+                }
+            )
         }
     }
 }

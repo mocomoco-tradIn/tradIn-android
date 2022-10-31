@@ -1,14 +1,10 @@
 package com.mocomoco.tradin.presentation.signup
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -18,12 +14,7 @@ import com.mocomoco.tradin.presentation.common.DefaultToolbar
 import com.mocomoco.tradin.presentation.common.RomCircularProgressIndicator
 import com.mocomoco.tradin.presentation.common.SignupProgressBar
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
-import com.mocomoco.tradin.presentation.signup.components.PolicyAgreementSubScreen
-import com.mocomoco.tradin.presentation.signup.components.CompleteSignupSubScreen
-import com.mocomoco.tradin.presentation.signup.components.LoginInfoSubScreen
-import com.mocomoco.tradin.presentation.signup.components.TelAuthSubScreen
-import com.mocomoco.tradin.presentation.signup.components.UserInfoSubScreen
-import kotlinx.coroutines.flow.collectLatest
+import com.mocomoco.tradin.presentation.signup.subscreens.*
 
 const val SIGNUP_PHASE_NUM = 5
 
@@ -31,6 +22,7 @@ const val SIGNUP_PHASE_NUM = 5
 @Composable
 fun SignupScreen(
     onClickBack: () -> Unit,
+    onNavEvent: (String) -> Unit,
     viewModel: SignupViewModel = hiltViewModel()
 ) {
 
@@ -39,8 +31,6 @@ fun SignupScreen(
     val state = viewModel.state.collectAsState().value
 
     val keyboardController = LocalSoftwareKeyboardController.current
-
-    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -91,23 +81,18 @@ fun SignupScreen(
                 }
                 !state.completePhoneAuth -> {
                     TelAuthSubScreen(
-                        state = state.telAuthState,
-                        onClickNext = { phone, _ ->
-                            keyboardController?.hide()
-                            viewModel.onCompletePhoneAuth(phone)
-                        },
-                        onClickAuthWithTel = { phone ->
+                        state = state.telAuthState, onClickAuthWithTel = { phone ->
                             keyboardController?.hide()
                             viewModel.postTelAuth(phone)
-                        },
-                        onClickAuthCoincide = { authNum ->
+                        }, onClickAuthCoincide = { authNum ->
                             keyboardController?.hide()
                             viewModel.putAuthCoincide(authNum)
-                        },
-                        onTimeout = {
+                        }, onTimeout = {
                             viewModel.onTimeout()
-                        }
-                    )
+                        }, onClickNext = { phone, _ ->
+                            keyboardController?.hide()
+                            viewModel.onCompletePhoneAuth(phone)
+                        })
                 }
                 !state.completeLoginInfo -> {
                     LoginInfoSubScreen(
@@ -123,7 +108,25 @@ fun SignupScreen(
                     )
                 }
                 !state.completeUserInfo -> {
-                    UserInfoSubScreen()
+                    UserInfoSubScreen(
+                        state = state.userInfoState,
+                        onClickCheckNicknameDuplicate = { nickname ->
+                            viewModel.postNicknameDuplicate(nickname)
+                        },
+                        onClickChip = { code, selected ->
+                            viewModel.onSelectCategory(code, selected)
+                        },
+                        onClickLocation = {
+                            // onNavEvent("") todo 지역설정 화면으로 이동
+                        },
+                        onClickNext = { nickname, locationCode, categoriesCode ->
+                            viewModel.onCompleteUserInfo(
+                                nickname,
+                                locationCode,
+                                categoriesCode.map { it.code }
+                            )
+                        }
+                    )
                 }
                 else -> {
                     CompleteSignupSubScreen()

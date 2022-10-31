@@ -11,7 +11,6 @@ import androidx.compose.ui.unit.Dp
 fun VerticalSpacer(dp: Dp) {
     Spacer(
         modifier = Modifier
-            .fillMaxWidth()
             .height(dp)
     )
 }
@@ -20,6 +19,5 @@ fun VerticalSpacer(dp: Dp) {
 fun HorizontalSpacer(dp: Dp) {
     Spacer(modifier = Modifier
         .width(dp)
-        .background(Color.Gray)
     )
 }

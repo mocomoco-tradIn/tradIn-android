@@ -1,15 +1,13 @@
 package com.mocomoco.tradin.presentation.signup
 
 import androidx.lifecycle.viewModelScope
-import com.mocomoco.tradin.R
 import com.mocomoco.tradin.base.BaseViewModel
-import com.mocomoco.tradin.common.DuplicateEmailException
-import com.mocomoco.tradin.common.InvalidTelException
-import com.mocomoco.tradin.common.Logger
-import com.mocomoco.tradin.common.NotMatchedAuthNumberException
+import com.mocomoco.tradin.common.*
 import com.mocomoco.tradin.data.data.dto.request_body.AuthCoincideBody
 import com.mocomoco.tradin.data.data.dto.request_body.EmailDuplicateBody
+import com.mocomoco.tradin.data.data.dto.request_body.SignupBody
 import com.mocomoco.tradin.data.data.dto.request_body.TelBody
+import com.mocomoco.tradin.data.data.dto.response.NicknameDuplicateBody
 import com.mocomoco.tradin.data.data.repository.SignupRepository
 import com.mocomoco.tradin.presentation.theme.Blue1
 import com.mocomoco.tradin.presentation.theme.Pink1
@@ -18,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.io.IOError
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,7 +39,7 @@ class SignupViewModel @Inject constructor(
                     telInputDescColor = Blue1,
                     editableTelNum = false
                 ),
-                userInputInfo = state.userInputInfo.copy(
+                userInputSignupInfo = state.userInputSignupInfo.copy(
                     tel = tel,
                 )
             )
@@ -66,7 +63,7 @@ class SignupViewModel @Inject constructor(
         with(state.value) {
             try {
                 signupRepository.putAuthCoincide(
-                    AuthCoincideBody(code = authNum, tel = userInputInfo.tel)
+                    AuthCoincideBody(code = authNum, tel = userInputSignupInfo.tel)
                 )
                 _state.value = copy(
                     telAuthState = telAuthState.copy(
@@ -105,25 +102,23 @@ class SignupViewModel @Inject constructor(
 
         with(state.value) {
             try {
-                val dto = signupRepository.postEmailDuplicate(EmailDuplicateBody(email))
+                signupRepository.postEmailDuplicate(EmailDuplicateBody(email))
                 _state.value = copy(
                     loginInfoState = loginInfoState.copy(
                         email = email, // todo 응답으로
                         isDuplicate = false
                     ),
-                    userInputInfo = userInputInfo.copy(
+                    userInputSignupInfo = userInputSignupInfo.copy(
                         email = email // todo 응답으로
                     )
                 )
-                Logger.log("dto email $dto")
-
             } catch (e: DuplicateEmailException) {
                 _state.value = copy(
                     loginInfoState = loginInfoState.copy(
                         email = "",
                         isDuplicate = true
                     ),
-                    userInputInfo = userInputInfo.copy(
+                    userInputSignupInfo = userInputSignupInfo.copy(
                         email = ""
                     )
                 )
@@ -135,11 +130,83 @@ class SignupViewModel @Inject constructor(
         }
     }
 
+    fun postNicknameDuplicate(nickname: String) = viewModelScope.launch(Dispatchers.IO) {
+        _loading.value = true
+
+        with(state.value) {
+            try {
+                signupRepository.postNicknameDuplicate(NicknameDuplicateBody(nickname))
+                _state.value = copy(
+                    userInfoState = userInfoState.copy(
+                        nickname = nickname,
+                        isDuplicate = false
+                    )
+                )
+            } catch (e: DuplicateNicknameException) {
+                _state.value = copy(
+                    userInfoState = userInfoState.copy(
+                        nickname = "",
+                        isDuplicate = true
+                    )
+                )
+            } catch (e: Exception) {
+
+            } finally {
+                _loading.value = false
+            }
+        }
+    }
+
+    private fun postSignup() = viewModelScope.launch(Dispatchers.IO) {
+        _loading.value = true
+
+        Logger.log("${state.value.userInputSignupInfo}")
+
+        with(state.value) {
+            try {
+                signupRepository.postSignup(
+                    SignupBody(
+                        tel = userInputSignupInfo.tel,
+                        email = userInputSignupInfo.email,
+                        password = userInputSignupInfo.pw,
+                        nickname = userInputSignupInfo.nickname,
+                        regionCode = userInputSignupInfo.locationCode,
+                        category = userInputSignupInfo.categories
+                    )
+                )
+            } catch (e: Exception) {
+
+            } finally {
+                _loading.value = false
+            }
+        }
+    }
+
+
+
     fun onTimeout() {
-        with (state.value) {
+        with(state.value) {
             _state.value = copy(
                 telAuthState = TelAuthState(
                     telInputDesc = "재전송하려면 인증하기를 눌러주세요"
+                )
+            )
+        }
+    }
+
+    fun onSelectCategory(code: Int, selected: Boolean) {
+        with(state.value) {
+            _state.value = copy(
+                userInfoState = userInfoState.copy(
+                    categories = userInfoState.categories.map {
+                        if (code == it.code) {
+                            it.copy(
+                                selected = selected
+                            )
+                        } else {
+                            it
+                        }
+                    }
                 )
             )
         }
@@ -153,7 +220,7 @@ class SignupViewModel @Inject constructor(
         val state = state.value
         _state.value = state.copy(
             completePhoneAuth = true,
-            userInputInfo = state.userInputInfo.copy(
+            userInputSignupInfo = state.userInputSignupInfo.copy(
                 tel = phoneNum
             )
         )
@@ -163,7 +230,7 @@ class SignupViewModel @Inject constructor(
         val state = state.value
         _state.value = state.copy(
             completeLoginInfo = true,
-            userInputInfo = state.userInputInfo.copy(
+            userInputSignupInfo = state.userInputSignupInfo.copy(
                 email = email,
                 pw = pw
             )
@@ -173,13 +240,13 @@ class SignupViewModel @Inject constructor(
     fun onCompleteUserInfo(nickname: String, location: String, categories: List<Int>) {
         val state = state.value
         _state.value = state.copy(
-            completeUserInfo = true,
-            userInputInfo = state.userInputInfo.copy(
+            userInputSignupInfo = state.userInputSignupInfo.copy(
                 nickname = nickname,
-                location = location,
+                locationCode = location,
                 categories = categories
             )
         )
+        postSignup()
     }
 
     companion object {

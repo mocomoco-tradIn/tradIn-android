@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1005307424366",
+    "project_id": "mocomoco-rom",
+    "storage_bucket": "mocomoco-rom.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1005307424366:android:5f379e977840eca9fd407f",
+        "android_client_info": {
+          "package_name": "com.mocomoco.tradin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1005307424366-tc7eo4npk2fjpk281l6f1s51d77vjvr3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mocomoco.tradin",
+            "certificate_hash": "47640b40b60aefd5ed690bc8f09e4f5514894afb"
+          }
+        },
+        {
+          "client_id": "1005307424366-u1mq75ms4plvil8enupc10njnidce8vc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCv4dPJmTv7j_gJ4e9ju0vfaUUbzUHqDag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1005307424366-u1mq75ms4plvil8enupc10njnidce8vc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

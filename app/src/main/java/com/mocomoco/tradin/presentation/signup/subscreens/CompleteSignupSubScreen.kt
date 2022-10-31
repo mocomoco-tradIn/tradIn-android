@@ -1,4 +1,4 @@
-package com.mocomoco.tradin.presentation.signup.components
+package com.mocomoco.tradin.presentation.signup.subscreens
 
 import androidx.compose.runtime.Composable
 

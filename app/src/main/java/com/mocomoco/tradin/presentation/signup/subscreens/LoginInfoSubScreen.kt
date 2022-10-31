@@ -1,7 +1,9 @@
-package com.mocomoco.tradin.presentation.signup.components
+package com.mocomoco.tradin.presentation.signup.subscreens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -9,9 +11,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.mocomoco.tradin.presentation.common.DefaultRomButton
-import com.mocomoco.tradin.presentation.common.SignupInputItem
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
 import com.mocomoco.tradin.presentation.signup.LoginInfoState
+import com.mocomoco.tradin.presentation.signup.components.SignupTextFieldInputItem
 import com.mocomoco.tradin.presentation.theme.*
 import com.mocomoco.tradin.util.LoginRegex.checkEmailForm
 import com.mocomoco.tradin.util.LoginRegex.checkPwForm
@@ -25,7 +27,8 @@ fun LoginInfoSubScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp, 0.dp, 16.dp, 24.dp),
+            .padding(16.dp, 0.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
@@ -58,7 +61,7 @@ fun LoginInfoSubScreen(
 
             VerticalSpacer(dp = 18.dp)
 
-            SignupInputItem(
+            SignupTextFieldInputItem(
                 title = "이메일",
                 input = emailText,
                 onInputChange = { emailText = it },
@@ -87,7 +90,7 @@ fun LoginInfoSubScreen(
 
             VerticalSpacer(dp = 24.dp)
 
-            SignupInputItem(
+            SignupTextFieldInputItem(
                 title = "비밀번호 입력",
                 input = pwText,
                 onInputChange = { pwText = it },
@@ -113,7 +116,7 @@ fun LoginInfoSubScreen(
 
             VerticalSpacer(dp = 24.dp)
 
-            SignupInputItem(
+            SignupTextFieldInputItem(
                 title = "비밀번호 확인",
                 input = pwCheckText,
                 onInputChange = { pwCheckText = it },
@@ -125,19 +128,17 @@ fun LoginInfoSubScreen(
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
-
             VerticalSpacer(dp = 16.dp)
         }
 
         Column(modifier = Modifier.fillMaxWidth()) {
-            VerticalSpacer(dp = 16.dp)
-
             DefaultRomButton(
                 text = "다음",
                 enable = completeCheckEmailDuplicate && checkEmailForm && !invalidPwForm && pwText == pwCheckText
             ) {
                 onClickNext(emailText, pwText)
             }
+            VerticalSpacer(dp = 24.dp)
         }
     }
 }

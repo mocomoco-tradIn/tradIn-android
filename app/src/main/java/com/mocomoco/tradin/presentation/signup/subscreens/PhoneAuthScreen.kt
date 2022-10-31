@@ -1,15 +1,17 @@
-package com.mocomoco.tradin.presentation.signup.components
+package com.mocomoco.tradin.presentation.signup.subscreens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mocomoco.tradin.presentation.common.DefaultRomButton
-import com.mocomoco.tradin.presentation.common.SignupInputItem
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
 import com.mocomoco.tradin.presentation.signup.SignupViewModel
 import com.mocomoco.tradin.presentation.signup.TelAuthState
+import com.mocomoco.tradin.presentation.signup.components.SignupTextFieldInputItem
 import com.mocomoco.tradin.presentation.theme.Black
 import com.mocomoco.tradin.presentation.theme.Gray2
 import com.mocomoco.tradin.presentation.theme.Pink1
@@ -51,7 +53,8 @@ fun TelAuthSubScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp, 0.dp, 16.dp, 24.dp),
+            .padding(16.dp, 0.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(Modifier.fillMaxWidth()) {
@@ -64,7 +67,7 @@ fun TelAuthSubScreen(
 
             VerticalSpacer(dp = 18.dp)
 
-            SignupInputItem(
+            SignupTextFieldInputItem(
                 title = "전화번호 인증",
                 input = phoneNum,
                 onInputChange = { phoneNum = it },
@@ -104,7 +107,7 @@ fun TelAuthSubScreen(
                     remainingTime = ""
                 }
 
-                SignupInputItem(
+                SignupTextFieldInputItem(
                     title = "인증번호 입력",
                     input = authNum,
                     onInputChange = { authNum = it },
@@ -123,12 +126,14 @@ fun TelAuthSubScreen(
                     onClickAuthCoincide(number)
                 }
             }
-
             VerticalSpacer(dp = 16.dp)
         }
 
-        DefaultRomButton(text = "다음", enable = state.completeRequestCoincide) {
-            onClickNext(phoneNum, authNum)
+        Column(modifier = Modifier.fillMaxWidth()) {
+            DefaultRomButton(text = "다음", enable = state.completeRequestCoincide) {
+                onClickNext(phoneNum, authNum)
+            }
+            VerticalSpacer(dp = 24.dp)
         }
     }
 }

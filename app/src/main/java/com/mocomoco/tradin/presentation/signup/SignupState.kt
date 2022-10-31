@@ -12,7 +12,8 @@ data class SignupState(
     val completeUserInfo: Boolean = false,
     val telAuthState: TelAuthState = TelAuthState(),
     val loginInfoState: LoginInfoState = LoginInfoState(),
-    val userInputInfo: UserInputInfo = UserInputInfo()
+    val userInfoState: UserInfoState = UserInfoState(),
+    val userInputSignupInfo: UserInputSignupInfo = UserInputSignupInfo()
 )
 
 data class TelAuthState(
@@ -35,11 +36,45 @@ data class LoginInfoState(
     val isDuplicate: Boolean = false
 )
 
-data class UserInputInfo(
+data class UserInfoState(
+    val nickname: String = "",
+    val locationDisplay: String = "",
+    val locationCode: String = "",
+    val categories: List<Category> =
+        listOf(
+            "의류",
+            "서적/문구",
+            "취미",
+            "전자제품",
+            "잡화",
+            "아이돌 굿즈",
+            "티켓/교환권"
+        ).mapIndexed { index, display ->
+            Category(
+                display = display,
+                code = index,
+                selected = false
+            )
+        },
+    val isDuplicate: Boolean = false
+) {
+    val selected3Items: Boolean
+        get() = categories.count {
+            it.selected
+        } == 3
+
+    data class Category(
+        val display: String,
+        val code: Int,
+        val selected: Boolean
+    )
+}
+
+data class UserInputSignupInfo(
     val tel: String = "",
     val email: String = "",
     val pw: String = "",
     val nickname: String = "",
-    val location: String = "",
+    val locationCode: String = "",
     val categories: List<Int> = listOf(),
 )

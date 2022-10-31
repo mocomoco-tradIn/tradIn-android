@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,7 @@ fun DefaultRomButton(
             modifier
                 .background(color = Blue1, shape = Shapes.large)
                 .border(borderStrokeBlack2, Shapes.large)
+                .clip(shape = Shapes.large)
                 .clickable {
                     onClick.invoke()
                 }
@@ -42,34 +44,4 @@ fun DefaultRomButton(
         },
         textAlign = TextAlign.Center
     )
-}
-
-@Composable
-fun ShortRomButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    enable: Boolean,
-    onClick: () -> Unit
-) {
-    TextButton(
-        onClick = {
-            if (enable) {
-                onClick.invoke()
-            }
-        },
-        modifier = if (enable) {
-            modifier
-                .background(color = Blue1, shape = Shapes.large)
-                .border(borderStrokeBlack2, Shapes.large)
-        } else {
-            modifier
-                .background(color = Gray7, shape = Shapes.large)
-        }
-    ) {
-        Text(
-            text = text,
-            style = TradInTypography.h3,
-            color = if (enable) Blue1 else Gray2,
-        )
-    }
 }

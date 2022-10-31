@@ -1,4 +1,4 @@
-package com.mocomoco.tradin.presentation.signup.components
+package com.mocomoco.tradin.presentation.signup.subscreens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -36,7 +36,7 @@ fun PolicyAgreementSubScreen(
 
     Column(
         modifier = Modifier
-            .padding(16.dp, 0.dp, 16.dp, 0.dp)
+            .padding(16.dp, 0.dp)
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.SpaceBetween

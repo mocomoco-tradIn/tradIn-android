@@ -4,8 +4,10 @@ package com.mocomoco.tradin.data.data.impl
 import com.mocomoco.tradin.data.common.handleResponse
 import com.mocomoco.tradin.data.data.dto.request_body.EmailDuplicateBody
 import com.mocomoco.tradin.data.data.dto.request_body.AuthCoincideBody
+import com.mocomoco.tradin.data.data.dto.request_body.SignupBody
 import com.mocomoco.tradin.data.data.dto.request_body.TelBody
 import com.mocomoco.tradin.data.data.dto.response.EmailDuplicateDto
+import com.mocomoco.tradin.data.data.dto.response.NicknameDuplicateBody
 import com.mocomoco.tradin.data.data.dto.response.PhoneAuthDto
 import com.mocomoco.tradin.data.data.repository.SignupRepository
 import com.mocomoco.tradin.data.data.resource.remote.SignupApi
@@ -23,7 +25,15 @@ class SignupRepositoryImpl @Inject constructor(
         return handleResponse(signupApi.putAuthCoincide(body))
     }
 
-    override suspend fun postEmailDuplicate(body: EmailDuplicateBody): EmailDuplicateDto {
+    override suspend fun postEmailDuplicate(body: EmailDuplicateBody) {
         return handleResponse(signupApi.postEmailDuplicate(body))
+    }
+
+    override suspend fun postNicknameDuplicate(body: NicknameDuplicateBody) {
+        return handleResponse(signupApi.postNickDuplicate(body))
+    }
+
+    override suspend fun postSignup(body: SignupBody) {
+        return handleResponse(signupApi.postSignup(body))
     }
 }

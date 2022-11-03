@@ -7,4 +7,8 @@ object Logger {
     fun log(content: String) {
         Log.d("SR-N", content)
     }
+
+    fun logE(content: String) {
+        Log.e("SR-N", content)
+    }
 }

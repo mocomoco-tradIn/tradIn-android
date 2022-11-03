@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,7 +39,7 @@ fun UserInfoSubScreen(
     onClickChip: (Int, Boolean) -> Unit,
     onClickNext: (String, String, List<UserInfoState.Category>) -> Unit
 ) {
-    var nicknameText by remember {
+    var nicknameText by rememberSaveable {
         mutableStateOf("")
     }
 
@@ -46,7 +47,7 @@ fun UserInfoSubScreen(
 
     val completeCheckNicknameDuplicate = nicknameText.isNotEmpty() && state.nickname == nicknameText
     val checkNicknameForm = nicknameText.checkNickname()
-    var selectedLocation = state.locationCode.isNotEmpty()
+    val selectedLocation = state.locationCode.isNotEmpty()
     val check3Category = state.selected3Items
 
     Column(
@@ -104,7 +105,7 @@ fun UserInfoSubScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            selectedLocation = true // todo onClickLocation()
+                            onClickLocation()
                         },
                     value = state.locationDisplay,
                     onValueChange = {
@@ -131,13 +132,13 @@ fun UserInfoSubScreen(
                 FlowRow(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(top = 4.dp)
                         .align(Alignment.Start),
                     mainAxisAlignment = FlowMainAxisAlignment.Start,
                     mainAxisSpacing = 8.dp,
                     crossAxisAlignment = FlowCrossAxisAlignment.Start,
                     crossAxisSpacing = 4.dp
                 ) {
-                    Logger.log("categories ${state.categories}")
                     state.categories.forEach {
                         CategoryChip(value = it.display, selected = it.selected) { selected ->
                             if (selected && check3Category) {
@@ -154,16 +155,16 @@ fun UserInfoSubScreen(
         }
 
         Column(modifier = Modifier.fillMaxWidth()) {
-
             DefaultRomButton(
                 text = "다음",
                 enable = completeCheckNicknameDuplicate && selectedLocation && check3Category
             ) {
                 onClickNext(
                     nicknameText,
-                    "10110", // todo state.locationCode,
+                    state.locationCode,
                     state.categories
                 )
+
             }
             VerticalSpacer(dp = 24.dp)
         }

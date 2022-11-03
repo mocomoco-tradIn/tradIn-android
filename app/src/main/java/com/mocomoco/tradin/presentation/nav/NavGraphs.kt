@@ -6,6 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.mocomoco.tradin.presentation.TradInDestinations.LOCATION
+import com.mocomoco.tradin.presentation.TradInDestinations.SIGNUP
+import com.mocomoco.tradin.presentation.location.LocationSelectScreen
 import com.mocomoco.tradin.presentation.login.LoginScreen
 import com.mocomoco.tradin.presentation.main.chat.ChatListScreen
 import com.mocomoco.tradin.presentation.main.community.CommunityScreen
@@ -40,7 +43,7 @@ fun TradInNavGraph(
         composable(TradInDestinations.LOGIN) {
             LoginScreen(
                 onClickSignup = {
-                    navController.navigate(TradInDestinations.SIGNUP) {
+                    navController.navigate(SIGNUP) {
                         launchSingleTop = true
                         restoreState = true
                     }
@@ -48,15 +51,24 @@ fun TradInNavGraph(
             )
         }
 
-        composable(TradInDestinations.SIGNUP) {
+        composable(SIGNUP) {
             SignupScreen(
                 onClickBack = {
-                    navController.popBackStack(TradInDestinations.SIGNUP, true, true)
+                    navController.popBackStack(SIGNUP, true, true)
                 },
                 onNavEvent = { route ->
-                    navController.navigate(route)
+                    navController.navigate(route) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
             )
+        }
+
+        composable(LOCATION) {
+            LocationSelectScreen {
+                navController.popBackStack(LOCATION, true, true)
+            }
         }
     }
 }
@@ -96,3 +108,10 @@ fun MainNavGraph(
         }
     }
 }
+
+object Arguments {
+    const val LOCATION_CODE = "locationCode"
+    const val LOCATION_DISPLAY = "locationDisplay"
+
+}
+

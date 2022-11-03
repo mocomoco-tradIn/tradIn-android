@@ -1,5 +1,6 @@
 package com.mocomoco.tradin.presentation.signup
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mocomoco.tradin.base.BaseViewModel
 import com.mocomoco.tradin.common.*
@@ -9,6 +10,8 @@ import com.mocomoco.tradin.data.data.dto.request_body.SignupBody
 import com.mocomoco.tradin.data.data.dto.request_body.TelBody
 import com.mocomoco.tradin.data.data.dto.response.NicknameDuplicateBody
 import com.mocomoco.tradin.data.data.repository.SignupRepository
+import com.mocomoco.tradin.presentation.Arguments.LOCATION_CODE
+import com.mocomoco.tradin.presentation.Arguments.LOCATION_DISPLAY
 import com.mocomoco.tradin.presentation.theme.Blue1
 import com.mocomoco.tradin.presentation.theme.Pink1
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,10 +23,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignupViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val signupRepository: SignupRepository
 ) : BaseViewModel() {
     private val _state = MutableStateFlow(SignupState())
     val state: StateFlow<SignupState> = _state
+
+    private val locationCode: String = savedStateHandle[LOCATION_CODE] ?: ""
+    private val locationDisplay: String = savedStateHandle[LOCATION_DISPLAY] ?: ""
+
+
+    init {
+        Logger.log("location $locationCode locationDisplay $locationDisplay")
+    }
 
     fun postTelAuth(input: String) = viewModelScope.launch(Dispatchers.IO) {
         val state = state.value
@@ -174,6 +186,10 @@ class SignupViewModel @Inject constructor(
                         category = userInputSignupInfo.categories
                     )
                 )
+
+                _state.value = state.value.copy(
+                    completeUserInfo = true
+                )
             } catch (e: Exception) {
 
             } finally {
@@ -181,8 +197,6 @@ class SignupViewModel @Inject constructor(
             }
         }
     }
-
-
 
     fun onTimeout() {
         with(state.value) {
@@ -233,6 +247,16 @@ class SignupViewModel @Inject constructor(
             userInputSignupInfo = state.userInputSignupInfo.copy(
                 email = email,
                 pw = pw
+            )
+        )
+    }
+
+    fun onCompleteLocationInfo(locationCode: String, locationDisplay: String) {
+        val state = state.value
+        _state.value = state.copy(
+            userInfoState = state.userInfoState.copy(
+                locationCode = locationCode,
+                locationDisplay = locationDisplay
             )
         )
     }

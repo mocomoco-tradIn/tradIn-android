@@ -1,9 +1,11 @@
 package com.mocomoco.tradin.presentation
 
+import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import com.mocomoco.tradin.R
+import kotlinx.parcelize.Parcelize
 
 
 val defaultNavOptionBuilder: NavOptionsBuilder.() -> Unit = {
@@ -16,6 +18,7 @@ object TradInDestinations {
     const val DETAILS_ROUTE = "details"
     const val LOGIN = "login"
     const val SIGNUP = "signup"
+    const val LOCATION = "location"
 }
 
 object MainDestination {

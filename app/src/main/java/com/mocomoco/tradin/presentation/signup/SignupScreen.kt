@@ -8,13 +8,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.mocomoco.tradin.R
+import com.mocomoco.tradin.presentation.TradInDestinations
 import com.mocomoco.tradin.presentation.common.DefaultToolbar
 import com.mocomoco.tradin.presentation.common.RomCircularProgressIndicator
 import com.mocomoco.tradin.presentation.common.SignupProgressBar
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
 import com.mocomoco.tradin.presentation.signup.subscreens.*
+import com.mocomoco.tradin.util.sharedActivityViewModel
+import java.util.logging.Logger
 
 const val SIGNUP_PHASE_NUM = 5
 
@@ -23,7 +25,7 @@ const val SIGNUP_PHASE_NUM = 5
 fun SignupScreen(
     onClickBack: () -> Unit,
     onNavEvent: (String) -> Unit,
-    viewModel: SignupViewModel = hiltViewModel()
+    viewModel: SignupViewModel = sharedActivityViewModel()
 ) {
 
     val loading = viewModel.loading.collectAsState().value
@@ -117,19 +119,21 @@ fun SignupScreen(
                             viewModel.onSelectCategory(code, selected)
                         },
                         onClickLocation = {
-                            // onNavEvent("") todo 지역설정 화면으로 이동
+                            onNavEvent(TradInDestinations.LOCATION) // todo 지역설정 화면으로 이동
                         },
                         onClickNext = { nickname, locationCode, categoriesCode ->
                             viewModel.onCompleteUserInfo(
                                 nickname,
                                 locationCode,
-                                categoriesCode.map { it.code }
+                                categoriesCode.filter { it.selected }.map { it.code }
                             )
                         }
                     )
                 }
                 else -> {
-                    CompleteSignupSubScreen()
+                    CompleteSignupSubScreen {
+                        onNavEvent(TradInDestinations.LOGIN)
+                    }
                 }
             }
         }

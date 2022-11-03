@@ -16,14 +16,13 @@ import com.mocomoco.tradin.presentation.common.SignupProgressBar
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
 import com.mocomoco.tradin.presentation.signup.subscreens.*
 import com.mocomoco.tradin.util.sharedActivityViewModel
-import java.util.logging.Logger
 
 const val SIGNUP_PHASE_NUM = 5
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SignupScreen(
-    onClickBack: () -> Unit,
+    onBack: () -> Unit,
     onNavEvent: (String) -> Unit,
     viewModel: SignupViewModel = sharedActivityViewModel()
 ) {
@@ -42,7 +41,7 @@ fun SignupScreen(
             DefaultToolbar(
                 showBack = true,
                 onClickBack = {
-                    onClickBack()
+                    onBack()
                 },
                 title = stringResource(id = R.string.common_signup)
             )
@@ -125,14 +124,14 @@ fun SignupScreen(
                             viewModel.onCompleteUserInfo(
                                 nickname,
                                 locationCode,
-                                categoriesCode.filter { it.selected }.map { it.code }
+                                categoriesCode.filter { it.selected }.map { it.code + 1 }
                             )
                         }
                     )
                 }
                 else -> {
                     CompleteSignupSubScreen {
-                        onNavEvent(TradInDestinations.LOGIN)
+                        onBack()
                     }
                 }
             }

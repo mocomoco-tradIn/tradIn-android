@@ -57,7 +57,7 @@ fun TradInNavGraph(
 
         composable(SIGNUP) {
             SignupScreen(
-                onClickBack = {
+                onBack = {
                     navController.popBackStack(SIGNUP, true, true)
                 },
                 onNavEvent = { route ->

@@ -9,7 +9,7 @@ import com.mocomoco.tradin.data.data.dto.request_body.EmailDuplicateBody
 import com.mocomoco.tradin.data.data.dto.request_body.SignupBody
 import com.mocomoco.tradin.data.data.dto.request_body.TelBody
 import com.mocomoco.tradin.data.data.dto.response.NicknameDuplicateBody
-import com.mocomoco.tradin.data.data.repository.SignupRepository
+import com.mocomoco.tradin.data.data.repository.AuthRepository
 import com.mocomoco.tradin.presentation.Arguments.LOCATION_CODE
 import com.mocomoco.tradin.presentation.Arguments.LOCATION_DISPLAY
 import com.mocomoco.tradin.presentation.theme.Blue1
@@ -24,24 +24,16 @@ import javax.inject.Inject
 @HiltViewModel
 class SignupViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val signupRepository: SignupRepository
+    private val authRepository: AuthRepository
 ) : BaseViewModel() {
     private val _state = MutableStateFlow(SignupState())
     val state: StateFlow<SignupState> = _state
-
-    private val locationCode: String = savedStateHandle[LOCATION_CODE] ?: ""
-    private val locationDisplay: String = savedStateHandle[LOCATION_DISPLAY] ?: ""
-
-
-    init {
-        Logger.log("location $locationCode locationDisplay $locationDisplay")
-    }
 
     fun postTelAuth(input: String) = viewModelScope.launch(Dispatchers.IO) {
         val state = state.value
         try {
             _loading.value = true
-            val tel = signupRepository.postTelAuth(TelBody(tel = input)).tel
+            val tel = authRepository.postTelAuth(TelBody(tel = input)).tel
             _state.value = state.copy(
                 telAuthState = state.telAuthState.copy(
                     completeRequestAuth = true,
@@ -74,7 +66,7 @@ class SignupViewModel @Inject constructor(
 
         with(state.value) {
             try {
-                signupRepository.putAuthCoincide(
+                authRepository.putAuthCoincide(
                     AuthCoincideBody(code = authNum, tel = userInputSignupInfo.tel)
                 )
                 _state.value = copy(
@@ -114,7 +106,7 @@ class SignupViewModel @Inject constructor(
 
         with(state.value) {
             try {
-                signupRepository.postEmailDuplicate(EmailDuplicateBody(email))
+                authRepository.postEmailDuplicate(EmailDuplicateBody(email))
                 _state.value = copy(
                     loginInfoState = loginInfoState.copy(
                         email = email, // todo 응답으로
@@ -147,7 +139,7 @@ class SignupViewModel @Inject constructor(
 
         with(state.value) {
             try {
-                signupRepository.postNicknameDuplicate(NicknameDuplicateBody(nickname))
+                authRepository.postNicknameDuplicate(NicknameDuplicateBody(nickname))
                 _state.value = copy(
                     userInfoState = userInfoState.copy(
                         nickname = nickname,
@@ -176,7 +168,7 @@ class SignupViewModel @Inject constructor(
 
         with(state.value) {
             try {
-                signupRepository.postSignup(
+                authRepository.postSignup(
                     SignupBody(
                         tel = userInputSignupInfo.tel,
                         email = userInputSignupInfo.email,

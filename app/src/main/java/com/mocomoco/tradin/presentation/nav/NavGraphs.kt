@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mocomoco.tradin.presentation.TradInDestinations.LOCATION
 import com.mocomoco.tradin.presentation.TradInDestinations.SIGNUP
+import com.mocomoco.tradin.presentation.TradInDestinations.WIP
 import com.mocomoco.tradin.presentation.location.LocationSelectScreen
 import com.mocomoco.tradin.presentation.login.LoginScreen
 import com.mocomoco.tradin.presentation.main.chat.ChatListScreen
@@ -42,6 +43,9 @@ fun TradInNavGraph(
 
         composable(TradInDestinations.LOGIN) {
             LoginScreen(
+                onClickFindPassword = {
+                    navController.navigate(WIP) // todo replace
+                },
                 onClickSignup = {
                     navController.navigate(SIGNUP) {
                         launchSingleTop = true
@@ -69,6 +73,10 @@ fun TradInNavGraph(
             LocationSelectScreen {
                 navController.popBackStack(LOCATION, true, true)
             }
+        }
+
+        composable(WIP) {
+            WipScreen()
         }
     }
 }

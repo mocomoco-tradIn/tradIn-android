@@ -9,10 +9,12 @@ import javax.inject.Singleton
 class PreferenceService @Inject constructor(@ApplicationContext context: Context) {
     private val sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
 
-
-
+    fun setAutoLogin(enable: Boolean) {
+        sharedPreferences.edit().putBoolean(AUTO_LOGIN, enable).apply()
+    }
 
     companion object {
         const val PREFERENCE_NAME = "tradIn"
+        const val AUTO_LOGIN = "autoLogin"
     }
 }

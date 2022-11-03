@@ -1,7 +1,7 @@
 package com.mocomoco.tradin.di
 
 import com.mocomoco.tradin.data.common.Constants
-import com.mocomoco.tradin.data.data.resource.remote.SignupApi
+import com.mocomoco.tradin.data.data.resource.remote.AuthApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,8 +25,8 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideSignupApi(retrofit: Retrofit): SignupApi {
-        return retrofit.create(SignupApi::class.java)
+    fun provideSignupApi(retrofit: Retrofit): AuthApi {
+        return retrofit.create(AuthApi::class.java)
     }
 }
 

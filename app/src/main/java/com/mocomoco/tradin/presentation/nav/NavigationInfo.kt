@@ -19,6 +19,8 @@ object TradInDestinations {
     const val LOGIN = "login"
     const val SIGNUP = "signup"
     const val LOCATION = "location"
+
+    const val WIP = "wip"
 }
 
 object MainDestination {

@@ -100,6 +100,7 @@ fun AddScreenSectionImage(state: AddState, modifier: Modifier = Modifier, onClic
         }
         VerticalSpacer(dp = 11.dp)
         Text(text = "사진은 최대 5장까지 첨부 가능합니다", style = RomTextStyle.text12, color = Gray2)
+        VerticalSpacer(dp = 22.dp)
         AddScreenSectionCategory(state)
     }
 }
@@ -108,7 +109,12 @@ fun AddScreenSectionImage(state: AddState, modifier: Modifier = Modifier, onClic
 fun AddScreenSectionCategory(state: AddState, modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(text = "카테고리", style = RomTextStyle.text14, color = Gray0)
+        Row(modifier = Modifier.fillMaxWidth()) {
 
+        }
+        Row(modifier = Modifier.fillMaxWidth()) {
+
+        }
     }
 }
 
@@ -119,6 +125,7 @@ fun CategoryItem(
     selected: Boolean = false,
     onClick: () -> Unit = {},
 ) {
+
     Column(modifier = modifier) {
         Box {
             Image(painter = painterResource(id = data.iconResId), contentDescription = null)
@@ -131,6 +138,11 @@ fun CategoryItem(
                     .clickable { onClick }
             )
         }
+
+        VerticalSpacer(dp = 8.dp)
+
+        Text(text = data.display, style = RomTextStyle.text14, color = Gray0)
+
     }
 }
 

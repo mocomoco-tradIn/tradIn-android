@@ -118,7 +118,7 @@ fun SignupScreen(
                             viewModel.onSelectCategory(code, selected)
                         },
                         onClickLocation = {
-                            onNavEvent(TradInDestinations.LOCATION) // todo 지역설정 화면으로 이동
+                            onNavEvent(TradInDestinations.LOCATION_ROUTE) // todo 지역설정 화면으로 이동
                         },
                         onClickNext = { nickname, locationCode, categoriesCode ->
                             viewModel.onCompleteUserInfo(

@@ -10,8 +10,6 @@ import com.mocomoco.tradin.data.data.dto.request_body.SignupBody
 import com.mocomoco.tradin.data.data.dto.request_body.TelBody
 import com.mocomoco.tradin.data.data.dto.response.NicknameDuplicateBody
 import com.mocomoco.tradin.data.data.repository.AuthRepository
-import com.mocomoco.tradin.presentation.Arguments.LOCATION_CODE
-import com.mocomoco.tradin.presentation.Arguments.LOCATION_DISPLAY
 import com.mocomoco.tradin.presentation.theme.Blue1
 import com.mocomoco.tradin.presentation.theme.Pink1
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +21,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignupViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val authRepository: AuthRepository
 ) : BaseViewModel() {
     private val _state = MutableStateFlow(SignupState())

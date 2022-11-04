@@ -6,11 +6,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mocomoco.tradin.presentation.TradInDestinations.LOCATION
-import com.mocomoco.tradin.presentation.TradInDestinations.SIGNUP
+import com.mocomoco.tradin.presentation.TradInDestinations.DETAILS_ROUTE
+import com.mocomoco.tradin.presentation.TradInDestinations.LOCATION_ROUTE
+import com.mocomoco.tradin.presentation.TradInDestinations.LOGIN_ROUTE
+import com.mocomoco.tradin.presentation.TradInDestinations.MAIN_ROUTE
+import com.mocomoco.tradin.presentation.TradInDestinations.SIGNUP_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.WIP
 import com.mocomoco.tradin.presentation.location.LocationSelectScreen
 import com.mocomoco.tradin.presentation.login.LoginScreen
+import com.mocomoco.tradin.presentation.main.add.InventoryScreen
 import com.mocomoco.tradin.presentation.main.chat.ChatListScreen
 import com.mocomoco.tradin.presentation.main.community.CommunityScreen
 import com.mocomoco.tradin.presentation.main.home.HomeScreen
@@ -29,7 +33,7 @@ fun TradInNavGraph(
         modifier = modifier
     ) {
 
-        composable(TradInDestinations.MAIN_ROUTE) {
+        composable(MAIN_ROUTE) {
             MainScreen(
                 onNavEvent = { route ->
                     navController.navigate(route)
@@ -37,17 +41,17 @@ fun TradInNavGraph(
             )
         }
 
-        composable(TradInDestinations.DETAILS_ROUTE) {
+        composable(DETAILS_ROUTE) {
             DetailsScreen()
         }
 
-        composable(TradInDestinations.LOGIN) {
+        composable(LOGIN_ROUTE) {
             LoginScreen(
                 onClickFindPassword = {
                     navController.navigate(WIP) // todo replace
                 },
                 onClickSignup = {
-                    navController.navigate(SIGNUP) {
+                    navController.navigate(SIGNUP_ROUTE) {
                         launchSingleTop = true
                         restoreState = true
                     }
@@ -55,10 +59,10 @@ fun TradInNavGraph(
             )
         }
 
-        composable(SIGNUP) {
+        composable(SIGNUP_ROUTE) {
             SignupScreen(
                 onBack = {
-                    navController.popBackStack(SIGNUP, true, true)
+                    navController.popBackStack(SIGNUP_ROUTE, true, true)
                 },
                 onNavEvent = { route ->
                     navController.navigate(route) {
@@ -69,9 +73,9 @@ fun TradInNavGraph(
             )
         }
 
-        composable(LOCATION) {
+        composable(LOCATION_ROUTE) {
             LocationSelectScreen {
-                navController.popBackStack(LOCATION, true, true)
+                navController.popBackStack(LOCATION_ROUTE, true, true)
             }
         }
 
@@ -99,12 +103,14 @@ fun MainNavGraph(
 
         composable(MainDestination.COMMUNITY_ROUTE) {
             CommunityScreen() {
-                onNavEvent(TradInDestinations.LOGIN)
+                onNavEvent(TradInDestinations.LOGIN_ROUTE)
             }
         }
 
         composable(MainDestination.ADD_ROUTE) {
-
+            InventoryScreen() {
+                onNavEvent(it)
+            }
         }
 
         composable(MainDestination.CHAT_ROUTE) {
@@ -115,11 +121,5 @@ fun MainNavGraph(
             ProfileScreen()
         }
     }
-}
-
-object Arguments {
-    const val LOCATION_CODE = "locationCode"
-    const val LOCATION_DISPLAY = "locationDisplay"
-
 }
 

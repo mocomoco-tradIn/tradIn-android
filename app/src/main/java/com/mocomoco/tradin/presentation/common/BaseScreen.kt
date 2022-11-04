@@ -25,3 +25,19 @@ inline fun <reified T : BaseViewModel> BaseScreen(
         }
     }
 }
+
+
+@Composable
+inline fun <reified T : BaseViewModel> MainBaseScreen(
+    baseViewModel: T = hiltViewModel(LocalContext.current as ComponentActivity),
+    content: @Composable () -> Unit
+) {
+    val loadingState = baseViewModel.loading.collectAsState()
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        content()
+        if (loadingState.value) {
+            RomCircularProgressIndicator()
+        }
+    }
+}

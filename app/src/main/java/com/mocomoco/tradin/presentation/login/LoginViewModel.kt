@@ -3,15 +3,13 @@ package com.mocomoco.tradin.presentation.login
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.messaging.FirebaseMessaging
 import com.mocomoco.tradin.base.BaseViewModel
-import com.mocomoco.tradin.common.Logger
 import com.mocomoco.tradin.data.data.dto.request_body.SignInBody
 import com.mocomoco.tradin.data.data.repository.AuthRepository
 import com.mocomoco.tradin.data.data.resource.local.PreferenceService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,14 +20,7 @@ class LoginViewModel @Inject constructor(
 
     fun login(email: String, pw: String) = viewModelScope.launch(Dispatchers.IO) {
         _loading.value = true
-        val deviceToken = FirebaseMessaging.getInstance().token.result
-        Logger.log("deviceToken $deviceToken")
-
-        FirebaseMessaging.getInstance().token.addOnCompleteListener {
-            val result = it.result
-            Logger.log("deviceToken result ${result}")
-        }
-
+        val deviceToken = FirebaseMessaging.getInstance().token.await()
         try {
             authRepository.postSignIn(
                 SignInBody(

@@ -83,6 +83,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-messaging'
 
+    implementation "io.coil-kt:coil-compose:2.2.2"
 
 
     // not tracked

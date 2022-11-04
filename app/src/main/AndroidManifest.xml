@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mocomoco.tradin">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name="com.mocomoco.tradin.TradInApplication"
         android:allowBackup="true"
@@ -15,7 +17,7 @@
         android:theme="@style/Theme.App.Starting"
         tools:targetApi="31">
         <activity
-            android:name="com.mocomoco.tradin.ui.MainActivity"
+            android:name="com.mocomoco.tradin.presentation.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.App.Starting">

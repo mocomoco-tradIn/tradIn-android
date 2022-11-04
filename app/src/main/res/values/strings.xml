@@ -1,10 +1,55 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">TradIn</string>입
+    <string name="app_name">TradIn</string>
+    <string name="common_agree">동의</string>
+    <string name="common_agree_all">전체 동의</string>
+    <string name="common_complete">완료</string>
+    <string name="common_ok">확인</string>
+    <string name="common_signup">회원가입</string>
+    <string name="common_error_message">인터넷 연결을 확인해주세요</string>
+    <string name="common_server_die">에러발생. 나중에 다시 시도해주세요</string>
+    <string name="common_cloth">의류</string>
+    <string name="common_book">서적/문구</string>
+    <string name="common_hobby">취미</string>
+    <string name="common_electronic">전자제품</string>
+    <string name="common_etc">잡화</string>
+    <string name="common_idol">아이돌 굿즈</string>
+    <string name="common_ticket">티켓/교환권</string>
+
     <string name="login_app_subtitle">씀씀이를 줄이는 교환의 경제</string>
     <string name="login_input_placeholder_id">전화번호/이메일 입력</string>
     <string name="login_input_placeholder_pw">비밀번호 입력</string>
     <string name="login_auto">자동 로그인</string>
     <string name="login_start">시작하기</string>
-    <string name="login_sign_up">회원가입</string>
     <string name="login_find_pw">비밀번호 찾기</string>
+
+    <string name="signup_policy_agree_title">먼저 이용약관에 동의해주세요</string>
+    <string name="signup_policy_agree_checkbox_title">위 내용에 동의합니다</string>
+    <string name="signup_auth_title">본인 인증은 필수!</string>
+
+    <string name="signup_auth_phone_num_title">전화번호 인증</string>
+    <string name="signup_auth_phone_num_placeholder">본인 명의 휴대폰 번호를 입력해요</string>
+    <string name="signup_auth_phone_num_button">인증하기</string>
+    <string name="signup_auth_phone_num_desc_guide">010 포함 \'-\' 제외 입력</string>
+    <string name="signup_auth_phone_num_desc_sent">인증번호가 전송됐어요</string>
+
+    <string name="signup_auth_num_input_title">인증번호 입력</string>
+    <string name="signup_auth_num_input_desc_error">잘못된 입력입니다</string>
+    <string name="signup_auth_num_input_desc_complete">인증 완료!</string>
+    <string name="signup_auth_num_input_button">확인</string>
+
+    <string name="signup_info_title">정보를 입력해주세요</string>
+    <string name="signup_info_email_title">이메일</string>
+    <string name="signup_info_email_placeholder">닉네임을 입력하세요</string>
+    <string name="signup_info_email_desc">\@ 포함 입력</string>
+    <string name="signup_info_email_desc_error_form">잘못된 형식입니다</string>
+    <string name="signup_info_email_desc_error_duplicate">이미 가입된 이메일입니다</string>
+    <string name="signup_info_email_desc_ok">사용 가능한 이메일입니다</string>
+    <string name="signup_info_pw_title">비밀번호 입력</string>
+    <string name="signup_info_pw_placeholder">안전한 비밀번호로 부탁해요</string>
+    <string name="signup_info_pw_desc">영문, 숫자, 특수문자 포함 8자 이상</string>
+    <string name="signup_info_pw_desc_error">잘못된 입력입니다 (영문, 숫자, 특수문자 포함 8자 이상)</string>
+    <string name="signup_info_pw_check_title">비밀번호 확인</string>
+    <string name="signup_info_pw_check_placeholder">비밀번호를 다시 한번 입력해요</string>
+    <string name="signup_info_pw_check_error">비밀번호가 다릅니다</string>
+
 </resources>

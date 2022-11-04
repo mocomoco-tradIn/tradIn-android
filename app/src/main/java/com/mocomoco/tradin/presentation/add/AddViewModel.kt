@@ -27,8 +27,10 @@ class AddViewModel @Inject constructor(
     val state: StateFlow<AddState> = _state
 
 
-    fun onAddImage(bitmap: Bitmap) {
-
+    fun onAddImageFromGallery(bitmap: Bitmap) = with(state.value){
+        _state.value = copy(
+            bitmaps = bitmaps.toMutableList().apply { add(bitmap) }
+        )
     }
 
     fun onSelectLocation(location: Location) {
@@ -51,6 +53,7 @@ class AddViewModel @Inject constructor(
 data class AddState(
     val title: String = "",
     val imageUrls: List<String> = listOf(),
+    val bitmaps: List<Bitmap> = listOf(),
     val itemName: String = "",
     val itemDesc: String = "",
     val selectedCategory: Category = Category.None,
@@ -82,5 +85,5 @@ data class AddState(
         val selected: Boolean = false
     )
 
-    val showImageNone: Boolean get() = imageUrls.isEmpty()
+    val showImageNone: Boolean get() = imageUrls.isEmpty() && bitmaps.isEmpty()
 }

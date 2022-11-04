@@ -1,10 +1,12 @@
 package com.mocomoco.tradin.presentation.signup
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -26,6 +28,11 @@ fun SignupScreen(
     onNavEvent: (String) -> Unit,
     viewModel: SignupViewModel = sharedActivityViewModel()
 ) {
+
+    val focusManager = LocalFocusManager.current
+    BackHandler {
+        focusManager.clearFocus()
+    }
 
     val loading = viewModel.loading.collectAsState().value
 

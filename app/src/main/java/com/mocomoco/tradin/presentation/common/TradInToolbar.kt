@@ -54,7 +54,7 @@ fun DefaultToolbar(
                     Image(
                         painter = pair.first,
                         contentDescription = null,
-                        modifier = Modifier.padding(end = 16.dp, top = 10.dp, bottom = 10.dp).clickable { pair.second.invoke() }
+                        modifier = Modifier.padding(end = 16.dp, top = 4.dp, bottom = 4.dp).clickable { pair.second.invoke() }
                     )
                 }
             }

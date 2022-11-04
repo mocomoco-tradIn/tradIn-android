@@ -43,7 +43,8 @@ fun DefaultTextFields(
     enabled: Boolean = true,
     trailingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
+    keyboardActions: KeyboardActions = KeyboardActions(),
     ) {
     TradInTextField(
         modifier = modifier,
@@ -64,7 +65,9 @@ fun DefaultTextFields(
         keyboardOptions = keyboardOptions,
         enabled = enabled,
         trailingIcon = trailingIcon,
-        isError = isError
+        isError = isError,
+        maxLines = maxLines,
+        keyboardActions = keyboardActions
     )
 }
 
@@ -152,7 +155,9 @@ fun RightButtonTextField(
     trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-    onClickButton: (String) -> Unit = {}
+    maxLines: Int = Int.MAX_VALUE,
+    keyboardActions: KeyboardActions = KeyboardActions(),
+    onClickButton: (String) -> Unit = {},
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -166,7 +171,9 @@ fun RightButtonTextField(
             enabled = editable,
             trailingIcon = trailingIcon,
             isError = isError,
-            visualTransformation = visualTransformation
+            visualTransformation = visualTransformation,
+            maxLines = maxLines,
+            keyboardActions = keyboardActions
         )
         HorizontalSpacer(dp = 8.dp)
 

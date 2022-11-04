@@ -1,4 +1,4 @@
-package com.mocomoco.tradin.presentation.main.add
+package com.mocomoco.tradin.presentation.main.inventory
 
 import com.mocomoco.tradin.base.BaseViewModel
 import com.mocomoco.tradin.common.Logger

@@ -17,6 +17,7 @@ object TradInDestinations {
     const val LOGIN_ROUTE = "login"
     const val SIGNUP_ROUTE = "signup"
     const val LOCATION_ROUTE = "location"
+    const val ADD_ROUTE = "addRoute"
 
     const val WIP = "wip"
 }
@@ -24,7 +25,7 @@ object TradInDestinations {
 object MainDestination {
     const val HOME_ROUTE = "home"
     const val COMMUNITY_ROUTE = "community"
-    const val ADD_ROUTE = "add"
+    const val INVENTORY_ROUTE = "add"
     const val CHAT_ROUTE = "chat"
     const val PROFILE_ROUTE = " profile"
 }
@@ -51,7 +52,7 @@ sealed class BottomNavigationScreen(val route: String, @DrawableRes val unselect
     )
 
     object Add : BottomNavigationScreen(
-        route = MainDestination.ADD_ROUTE,
+        route = MainDestination.INVENTORY_ROUTE,
         unselectedIconResourceId = R.drawable.ic_bottom_nav_add,
         selectedIconResourceId = R.drawable.ic_bottom_nav_add_sel
     )

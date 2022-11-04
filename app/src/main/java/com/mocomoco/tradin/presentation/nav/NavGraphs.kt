@@ -1,24 +1,30 @@
-package com.mocomoco.tradin.presentation
+package com.mocomoco.tradin.presentation.nav
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.mocomoco.tradin.presentation.*
+import com.mocomoco.tradin.presentation.TradInDestinations.ADD_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.DETAILS_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.LOCATION_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.LOGIN_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.MAIN_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.SIGNUP_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.WIP
+import com.mocomoco.tradin.presentation.add.AddScreen
 import com.mocomoco.tradin.presentation.location.LocationSelectScreen
 import com.mocomoco.tradin.presentation.login.LoginScreen
-import com.mocomoco.tradin.presentation.main.add.InventoryScreen
 import com.mocomoco.tradin.presentation.main.chat.ChatListScreen
 import com.mocomoco.tradin.presentation.main.community.CommunityScreen
 import com.mocomoco.tradin.presentation.main.home.HomeScreen
+import com.mocomoco.tradin.presentation.main.inventory.InventoryScreen
 import com.mocomoco.tradin.presentation.main.profile.ProfileScreen
+import com.mocomoco.tradin.presentation.nav.Arguments.FROM_INVENTORY
 import com.mocomoco.tradin.presentation.signup.SignupScreen
 
 @Composable
@@ -79,6 +85,13 @@ fun TradInNavGraph(
             }
         }
 
+        composable(
+            "$ADD_ROUTE/{${FROM_INVENTORY}}",
+            arguments = listOf(navArgument(FROM_INVENTORY) { type = NavType.BoolType })
+        ) {
+            AddScreen()
+        }
+
         composable(WIP) {
             WipScreen()
         }
@@ -103,11 +116,11 @@ fun MainNavGraph(
 
         composable(MainDestination.COMMUNITY_ROUTE) {
             CommunityScreen() {
-                onNavEvent(TradInDestinations.LOGIN_ROUTE)
+                onNavEvent(LOGIN_ROUTE)
             }
         }
 
-        composable(MainDestination.ADD_ROUTE) {
+        composable(MainDestination.INVENTORY_ROUTE) {
             InventoryScreen() {
                 onNavEvent(it)
             }
@@ -121,5 +134,9 @@ fun MainNavGraph(
             ProfileScreen()
         }
     }
+}
+
+object Arguments {
+    const val FROM_INVENTORY = "fromInventory"
 }
 

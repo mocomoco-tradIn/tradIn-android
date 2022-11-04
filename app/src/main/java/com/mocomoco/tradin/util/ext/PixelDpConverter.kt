@@ -10,3 +10,7 @@ fun Float.pixelToDp(): Dp {
         return this@pixelToDp.toDp()
     }
 }
+
+fun String.addArgument(arg: String): String = "$this/$arg"
+fun String.addArgument(arg: Int): String = "$this/$arg"
+fun String.addArgument(arg: Boolean): String = "$this/$arg"

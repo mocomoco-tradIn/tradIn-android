@@ -1,5 +1,6 @@
 package com.mocomoco.tradin.presentation.common
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
@@ -8,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.mocomoco.tradin.R
@@ -20,7 +22,8 @@ fun DefaultToolbar(
     modifier: Modifier = Modifier,
     showBack: Boolean = false,
     onClickBack: () -> Unit = {},
-    title: String = ""
+    title: String = "",
+    rightButtons: List<Pair<Painter, () -> Unit>> = listOf()
 ) {
 
     Column(
@@ -45,6 +48,16 @@ fun DefaultToolbar(
                 style = TradInTypography.h4,
                 color = Gray0
             )
+
+            Row(modifier = Modifier.align(Alignment.CenterEnd)) {
+                rightButtons.forEach { pair ->
+                    Image(
+                        painter = pair.first,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 16.dp, top = 10.dp, bottom = 10.dp).clickable { pair.second.invoke() }
+                    )
+                }
+            }
         }
         Divider(
             modifier = Modifier

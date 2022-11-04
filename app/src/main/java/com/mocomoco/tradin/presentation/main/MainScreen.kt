@@ -16,6 +16,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.mocomoco.tradin.presentation.nav.MainNavGraph
 import com.mocomoco.tradin.presentation.theme.White
 
 @Composable

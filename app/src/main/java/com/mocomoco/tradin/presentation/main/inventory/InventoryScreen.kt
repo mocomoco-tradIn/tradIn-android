@@ -1,4 +1,4 @@
-package com.mocomoco.tradin.presentation.main.add
+package com.mocomoco.tradin.presentation.main.inventory
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.mocomoco.tradin.presentation.TradInDestinations.ADD_ROUTE
 import com.mocomoco.tradin.presentation.common.DefaultRomButton
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
 import com.mocomoco.tradin.presentation.theme.*
@@ -35,7 +36,7 @@ fun InventoryScreen(
     val state = viewModel.state.collectAsState().value
     Column(modifier = Modifier.fillMaxSize()) {
         InventoryScreenHeader()
-        InventoryScreenBody(state)
+        InventoryScreenBody(state, onNavEvent)
     }
 }
 
@@ -53,7 +54,7 @@ fun InventoryScreenHeader() {
 }
 
 @Composable
-fun InventoryScreenBody(state: InventoryState) {
+fun InventoryScreenBody(state: InventoryState, onNavEvent: (String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -77,13 +78,12 @@ fun InventoryScreenBody(state: InventoryState) {
                 .background(color = Orange3)
         ) {
             if (state.showNone) {
-                InventoryScreenItemsNone(state.onClickAddInventoryItem)
+                InventoryScreenItemsNone(onNavEvent)
             } else {
                 InventoryScreenItems(
-                    onClickAddInventoryItem = state.onClickAddInventoryItem,
-                    onClickAddFeedItem = state.onClickAddFeedItem,
                     onClickInventoryItem = state.onClickInventoryItem,
                     onClickCheckBox = state.onClickCheckBox,
+                    onNavEvent = onNavEvent,
                     items = state.items,
                     showAddFeedButton = state.showAddFeedButton
                 )
@@ -95,17 +95,16 @@ fun InventoryScreenBody(state: InventoryState) {
 
 @Composable
 fun InventoryScreenItems(
-    onClickAddInventoryItem: () -> Unit,
-    onClickAddFeedItem: () -> Unit,
     onClickInventoryItem: () -> Unit,
     onClickCheckBox: (index: Int) -> Unit,
+    onNavEvent: (String) -> Unit,
     items: List<InventoryItem>,
     showAddFeedButton: Boolean
 ) {
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
-            InventoryScreenItemsHeader(onClickAddInventoryItem)
+            InventoryScreenItemsHeader(onNavEvent)
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
@@ -132,7 +131,7 @@ fun InventoryScreenItems(
                     .align(Alignment.BottomCenter)
                     .padding(17.dp, 0.dp)
             ) {
-                onClickAddFeedItem()
+                onNavEvent(ADD_ROUTE + "/false")
             }
         }
     }
@@ -140,10 +139,10 @@ fun InventoryScreenItems(
 
 @Composable
 fun InventoryScreenItemsNone(
-    onClickAddInventoryItem: () -> Unit,
+    onNavEvent: (String) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        InventoryScreenItemsHeader(onClickAddInventoryItem)
+        InventoryScreenItemsHeader(onNavEvent)
 
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -154,7 +153,9 @@ fun InventoryScreenItemsNone(
                     painter = painterResource(id = com.mocomoco.tradin.R.drawable.ic_inventory_empty),
                     contentDescription = null
                 )
+                VerticalSpacer(dp = 16.dp)
                 Text(text = "아직 서랍에 상품이 없어요", style = RomTextStyle.text13, color = Gray0)
+                VerticalSpacer(dp = 2.dp)
                 Row {
                     Image(
                         painter = painterResource(id = com.mocomoco.tradin.R.drawable.ic_add_24_dp),
@@ -171,7 +172,7 @@ fun InventoryScreenItemsNone(
 
 @Composable
 fun InventoryScreenItemsHeader(
-    onClickAddInventoryItem: () -> Unit
+    onNavEvent: (String) -> Unit
 ) {
     Column(Modifier.fillMaxWidth()) {
         Spacer(
@@ -192,7 +193,7 @@ fun InventoryScreenItemsHeader(
                 painter = painterResource(id = com.mocomoco.tradin.R.drawable.ic_add_24_dp),
                 contentDescription = null,
                 modifier = Modifier.clickable {
-                    onClickAddInventoryItem()
+                    onNavEvent(ADD_ROUTE + "/true")
                 }
             )
         }
@@ -210,8 +211,7 @@ fun InventoryItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = 3.dp,
-                vertical = 7.dp
+                horizontal = 3.dp, vertical = 7.dp
             )
             .border(borderStrokeBlack2, shape = RoundedCornerShape(10.dp))
             .clip(RoundedCornerShape(10.dp))
@@ -219,10 +219,7 @@ fun InventoryItem(
                 onClickItem()
             }
             .padding(
-                start = 8.dp,
-                top = 8.dp,
-                end = 8.dp,
-                bottom = 14.dp
+                start = 8.dp, top = 8.dp, end = 8.dp, bottom = 14.dp
             )
     ) {
 

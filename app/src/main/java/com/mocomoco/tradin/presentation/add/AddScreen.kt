@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -57,9 +58,18 @@ fun AddScreen(
                 .scrollable(rememberScrollState(), Orientation.Vertical)
         ) {
 
-            AddScreenSectionImage(state, onClick =  {
-                // todo 갤러리 런치
-            })
+            AddScreenSectionImage(
+                state,
+                onClickGallery = {
+                    // todo 갤러리 런치
+                }
+            )
+
+            AddScreenSectionCategories(
+                state, onClick = { category ->
+                    viewModel.onClickCategory(category)
+                }
+            )
 
         }
     }
@@ -67,7 +77,11 @@ fun AddScreen(
 
 
 @Composable
-fun AddScreenSectionImage(state: AddState, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun AddScreenSectionImage(
+    state: AddState,
+    modifier: Modifier = Modifier,
+    onClickGallery: () -> Unit,
+) {
     Column(modifier = modifier) {
         LazyRow {
             if (state.showImageNone) {
@@ -91,8 +105,7 @@ fun AddScreenSectionImage(state: AddState, modifier: Modifier = Modifier, onClic
                         painterResource(id = R.drawable.ic_add_24_dp),
                         isCrop = true,
                         onClick = {
-                            onClick()
-                            // todo 갤러리 런치
+                            onClickGallery()
                         }
                     )
                 }
@@ -100,20 +113,45 @@ fun AddScreenSectionImage(state: AddState, modifier: Modifier = Modifier, onClic
         }
         VerticalSpacer(dp = 11.dp)
         Text(text = "사진은 최대 5장까지 첨부 가능합니다", style = RomTextStyle.text12, color = Gray2)
-        VerticalSpacer(dp = 22.dp)
-        AddScreenSectionCategory(state)
     }
 }
 
 @Composable
-fun AddScreenSectionCategory(state: AddState, modifier: Modifier = Modifier) {
+fun AddScreenSectionCategories(
+    state: AddState,
+    modifier: Modifier = Modifier,
+    onClick: (Category) -> Unit
+) {
+    val itemWidth = LocalConfiguration.current.screenWidthDp.dp - ((36 * 3) + 32).dp
     Column(modifier = modifier.fillMaxWidth()) {
         Text(text = "카테고리", style = RomTextStyle.text14, color = Gray0)
         Row(modifier = Modifier.fillMaxWidth()) {
-
+            state.categoryState.take(4).forEach {
+                CategoryItem(
+                    data = it.category,
+                    modifier = Modifier
+                        .width(itemWidth)
+                        .aspectRatio(1f),
+                    selected = it.selected,
+                    onClick = {
+                        onClick(it.category)
+                    }
+                )
+            }
         }
         Row(modifier = Modifier.fillMaxWidth()) {
-
+            state.categoryState.takeLast(4).forEach {
+                CategoryItem(
+                    data = it.category,
+                    modifier = Modifier
+                        .width(itemWidth)
+                        .aspectRatio(1f),
+                    selected = it.selected,
+                    onClick = {
+                        onClick(it.category)
+                    }
+                )
+            }
         }
     }
 }

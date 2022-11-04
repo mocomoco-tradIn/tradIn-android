@@ -2,22 +2,27 @@ package com.mocomoco.tradin.presentation.add
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mocomoco.tradin.R
 import com.mocomoco.tradin.model.Category
+import com.mocomoco.tradin.presentation.TradInDestinations.LOCATION_ROUTE
 import com.mocomoco.tradin.presentation.common.*
+import com.mocomoco.tradin.presentation.signup.components.InfoInputWithDescItem
+import com.mocomoco.tradin.presentation.signup.components.InfoInputWithDescTextFieldItem
 import com.mocomoco.tradin.presentation.theme.Gray0
 import com.mocomoco.tradin.presentation.theme.Gray2
 import com.mocomoco.tradin.presentation.theme.RomTextStyle
@@ -25,10 +30,20 @@ import com.mocomoco.tradin.presentation.theme.RomTextStyle
 
 @Composable
 fun AddScreen(
-    viewModel: AddViewModel = hiltViewModel()
+    viewModel: AddViewModel = hiltViewModel(),
+    navEvent: (String) -> Unit,
 ) {
 
     val state = viewModel.state.collectAsState().value
+
+    var itemName by rememberSaveable {
+        mutableStateOf("")
+    }
+
+    var itemDesc by rememberSaveable {
+        mutableStateOf("")
+    }
+
 
     Column {
         DefaultToolbar(
@@ -43,7 +58,7 @@ fun AddScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-                .scrollable(rememberScrollState(), Orientation.Vertical)
+                .verticalScroll(rememberScrollState())
         ) {
 
             AddScreenSectionImage(
@@ -60,14 +75,87 @@ fun AddScreen(
                     viewModel.onClickCategory(category)
                 }
             )
-            
+
             VerticalSpacer(dp = 30.dp)
 
+            InfoInputWithDescTextFieldItem(
+                title = "상품명",
+                input = itemName,
+                onInputChange = { itemName = it },
+                placeholderText = "최대 32자까지 입력가능",
+                editable = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            )
 
+            VerticalSpacer(dp = 16.dp)
+
+
+            InfoInputWithDescTextFieldItem(
+                title = "상세내용",
+                input = itemDesc,
+                onInputChange = { itemDesc = it },
+                placeholderText = "상품 사용기간, 원가를 포함해 적으면 좋아요",
+                editable = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            )
+
+            VerticalSpacer(dp = 16.dp)
+
+            InfoInputWithDescItem(
+                title = "희망 거래 방식",
+                descText = "기타의 경우 내용에 구체적인 내용을 기입해주세요",
+                descTextColor = Gray2
+            ) {
+                VerticalSpacer(dp = 8.dp)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    state.tradeMethodState.forEachIndexed { index, value ->
+                        ToggleButton(
+                            modifier = Modifier.weight(1f),
+                            text = value.tradeMethod.display,
+                            enable = value.selected
+                        ) {
+                            viewModel.onClickTradeMethod(value.tradeMethod)
+                        }
+
+                        if (index != state.tradeMethodState.size) {
+                            HorizontalSpacer(dp = 8.dp)
+                        }
+                    }
+                }
+            }
+
+            VerticalSpacer(dp = 16.dp)
+
+            InfoInputWithDescItem(
+                title = "희망 거래지역",
+                descTextColor = Gray2
+            ) {
+                DefaultTextFields(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            navEvent(LOCATION_ROUTE)
+                        },
+                    value = state.location.display,
+                    onValueChange = {
+                        // do nothing
+                    },
+                    placeholderText = "희망 거래 지역을 설정해요",
+                    enabled = false,
+                    trailingIcon = {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_next),
+                            contentDescription = null
+                        )
+                    }
+                )
+            }
         }
     }
 }
-
 
 @Composable
 fun AddScreenSectionImage(
@@ -81,7 +169,10 @@ fun AddScreenSectionImage(
                 item {
                     Image(
                         painter = painterResource(id = R.drawable.ic_none_image),
-                        contentDescription = null
+                        contentDescription = null,
+                        modifier = Modifier.clickable {
+                            onClickGallery()
+                        }
                     )
                 }
             } else {
@@ -153,7 +244,6 @@ fun CategoryItem(
     selected: Boolean = false,
     onClick: () -> Unit = {},
 ) {
-
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Box {
             Image(painter = painterResource(id = data.iconResId), contentDescription = null)
@@ -172,11 +262,4 @@ fun CategoryItem(
         Text(text = data.display, style = RomTextStyle.text14, color = Gray0)
     }
 }
-
-@Composable
-fun AddSectionTitleAndDesc() {
-    
-}
-
-
 

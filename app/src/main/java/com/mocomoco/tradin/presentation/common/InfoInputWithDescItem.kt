@@ -1,6 +1,5 @@
 package com.mocomoco.tradin.presentation.signup.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,11 +8,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.mocomoco.tradin.R
 import com.mocomoco.tradin.presentation.common.RightButtonTextField
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
 import com.mocomoco.tradin.presentation.theme.Gray0
@@ -21,7 +18,7 @@ import com.mocomoco.tradin.presentation.theme.RomTextStyle
 import com.mocomoco.tradin.presentation.theme.Transparent
 
 @Composable
-fun SignupInfoInputItem(
+fun InfoInputWithDescItem(
     title: String,
     descText: String = "",
     descTextColor: Color = Transparent,
@@ -38,7 +35,7 @@ fun SignupInfoInputItem(
 }
 
 @Composable
-fun SignupTextFieldInputItem(
+fun InfoInputWithDescTextFieldItem(
     title: String,
     input: String,
     onInputChange: (String) -> Unit,
@@ -52,9 +49,10 @@ fun SignupTextFieldInputItem(
     trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+    maxLines: Int = Int.MAX_VALUE,
     onClickButton: (String) -> Unit = {}
 ) {
-    SignupInfoInputItem(
+    InfoInputWithDescItem(
         title = title,
         descText = descText,
         descTextColor = descTextColor

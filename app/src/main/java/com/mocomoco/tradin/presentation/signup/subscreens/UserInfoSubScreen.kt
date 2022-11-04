@@ -20,14 +20,13 @@ import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.mocomoco.tradin.R
-import com.mocomoco.tradin.common.Logger
 import com.mocomoco.tradin.presentation.common.CategoryChip
 import com.mocomoco.tradin.presentation.common.DefaultRomButton
 import com.mocomoco.tradin.presentation.common.DefaultTextFields
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
 import com.mocomoco.tradin.presentation.signup.UserInfoState
-import com.mocomoco.tradin.presentation.signup.components.SignupInfoInputItem
-import com.mocomoco.tradin.presentation.signup.components.SignupTextFieldInputItem
+import com.mocomoco.tradin.presentation.signup.components.InfoInputWithDescItem
+import com.mocomoco.tradin.presentation.signup.components.InfoInputWithDescTextFieldItem
 import com.mocomoco.tradin.presentation.theme.*
 import com.mocomoco.tradin.util.LoginRegex.checkNickname
 
@@ -68,7 +67,7 @@ fun UserInfoSubScreen(
 
             VerticalSpacer(dp = 18.dp)
 
-            SignupTextFieldInputItem(
+            InfoInputWithDescTextFieldItem(
                 title = "닉네임",
                 input = nicknameText,
                 onInputChange = { nicknameText = it },
@@ -96,7 +95,7 @@ fun UserInfoSubScreen(
             VerticalSpacer(dp = 24.dp)
 
 
-            SignupInfoInputItem(
+            InfoInputWithDescItem(
                 title = "지역 설정",
                 descText = "이후 마이페이지에서 변경할 수 있어요",
                 descTextColor = Gray2
@@ -124,7 +123,7 @@ fun UserInfoSubScreen(
 
             VerticalSpacer(dp = 24.dp)
 
-            SignupInfoInputItem(
+            InfoInputWithDescItem(
                 title = "관심 카테고리 설정",
                 descText = "최대 3개 선택 가능",
                 descTextColor = Gray2

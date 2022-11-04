@@ -39,6 +39,10 @@ class AddViewModel @Inject constructor(
 
     }
 
+    fun onClickTradeMethod(tradeMethod: TradeMethod) {
+
+    }
+
     fun onClickComplete() {
 
     }
@@ -47,9 +51,9 @@ class AddViewModel @Inject constructor(
 data class AddState(
     val title: String = "",
     val imageUrls: List<String> = listOf(),
-    val selectedCategory: Category = Category.None,
     val itemName: String = "",
     val itemDesc: String = "",
+    val selectedCategory: Category = Category.None,
     val selectedTradeMethod: TradeMethod = TradeMethod.None,
     val location: Location = Location(),
     val categoryState: List<CategoryState> = listOf(

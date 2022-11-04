@@ -1,12 +1,12 @@
 package com.mocomoco.tradin.presentation.common
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,3 +45,29 @@ fun DefaultRomButton(
         textAlign = TextAlign.Center
     )
 }
+
+@Composable
+fun ToggleButton(
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    text: String,
+    textStyle: TextStyle = RomTextStyle.text17,
+    enable: Boolean,
+    onClick: () -> Unit
+) {
+
+    Text(
+        text = text,
+        style = textStyle,
+        color = if (enable) Gray9 else Gray0,
+        modifier = modifier
+            .background(color = if (enable) Blue1 else White, shape = Shapes.large)
+            .border(BorderStroke(2.dp, Gray0), Shapes.large)
+            .clip(shape = Shapes.large)
+            .clickable {
+                onClick.invoke()
+            }
+            .padding(8.dp),
+        textAlign = TextAlign.Center
+    )
+}
+

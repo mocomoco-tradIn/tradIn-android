@@ -11,7 +11,7 @@ import com.mocomoco.tradin.presentation.common.DefaultRomButton
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
 import com.mocomoco.tradin.presentation.signup.SignupViewModel
 import com.mocomoco.tradin.presentation.signup.TelAuthState
-import com.mocomoco.tradin.presentation.signup.components.SignupTextFieldInputItem
+import com.mocomoco.tradin.presentation.signup.components.InfoInputWithDescTextFieldItem
 import com.mocomoco.tradin.presentation.theme.Black
 import com.mocomoco.tradin.presentation.theme.Gray2
 import com.mocomoco.tradin.presentation.theme.Pink1
@@ -67,7 +67,7 @@ fun TelAuthSubScreen(
 
             VerticalSpacer(dp = 18.dp)
 
-            SignupTextFieldInputItem(
+            InfoInputWithDescTextFieldItem(
                 title = "전화번호 인증",
                 input = phoneNum,
                 onInputChange = { phoneNum = it },
@@ -107,7 +107,7 @@ fun TelAuthSubScreen(
                     remainingTime = ""
                 }
 
-                SignupTextFieldInputItem(
+                InfoInputWithDescTextFieldItem(
                     title = "인증번호 입력",
                     input = authNum,
                     onInputChange = { authNum = it },

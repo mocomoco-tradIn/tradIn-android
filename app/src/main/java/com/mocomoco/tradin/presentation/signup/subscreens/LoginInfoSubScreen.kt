@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.mocomoco.tradin.presentation.common.DefaultRomButton
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
 import com.mocomoco.tradin.presentation.signup.LoginInfoState
-import com.mocomoco.tradin.presentation.signup.components.SignupTextFieldInputItem
+import com.mocomoco.tradin.presentation.signup.components.InfoInputWithDescTextFieldItem
 import com.mocomoco.tradin.presentation.theme.*
 import com.mocomoco.tradin.util.LoginRegex.checkEmailForm
 import com.mocomoco.tradin.util.LoginRegex.checkPwForm
@@ -61,7 +61,7 @@ fun LoginInfoSubScreen(
 
             VerticalSpacer(dp = 18.dp)
 
-            SignupTextFieldInputItem(
+            InfoInputWithDescTextFieldItem(
                 title = "이메일",
                 input = emailText,
                 onInputChange = { emailText = it },
@@ -90,7 +90,7 @@ fun LoginInfoSubScreen(
 
             VerticalSpacer(dp = 24.dp)
 
-            SignupTextFieldInputItem(
+            InfoInputWithDescTextFieldItem(
                 title = "비밀번호 입력",
                 input = pwText,
                 onInputChange = { pwText = it },
@@ -116,7 +116,7 @@ fun LoginInfoSubScreen(
 
             VerticalSpacer(dp = 24.dp)
 
-            SignupTextFieldInputItem(
+            InfoInputWithDescTextFieldItem(
                 title = "비밀번호 확인",
                 input = pwCheckText,
                 onInputChange = { pwCheckText = it },

@@ -89,7 +89,13 @@ fun TradInNavGraph(
             "$ADD_ROUTE/{${FROM_INVENTORY}}",
             arguments = listOf(navArgument(FROM_INVENTORY) { type = NavType.BoolType })
         ) {
-            AddScreen()
+            AddScreen() { route ->
+                if (route.isNotEmpty()) {
+                    navController.navigate(route)
+                } else {
+                    navController.popBackStack(ADD_ROUTE, true, true)
+                }
+            }
         }
 
         composable(WIP) {

@@ -1,38 +1,26 @@
 package com.mocomoco.tradin.presentation.add
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.mocomoco.tradin.R
 import com.mocomoco.tradin.model.Category
-import com.mocomoco.tradin.presentation.common.DefaultToolbar
-import com.mocomoco.tradin.presentation.common.HorizontalSpacer
-import com.mocomoco.tradin.presentation.common.VerticalSpacer
+import com.mocomoco.tradin.presentation.common.*
 import com.mocomoco.tradin.presentation.theme.Gray0
 import com.mocomoco.tradin.presentation.theme.Gray2
 import com.mocomoco.tradin.presentation.theme.RomTextStyle
-import com.mocomoco.tradin.presentation.theme.borderStrokeBlack2
 
 
 @Composable
@@ -65,11 +53,16 @@ fun AddScreen(
                 }
             )
 
+            VerticalSpacer(dp = 22.dp)
+
             AddScreenSectionCategories(
                 state, onClick = { category ->
                     viewModel.onClickCategory(category)
                 }
             )
+            
+            VerticalSpacer(dp = 30.dp)
+
 
         }
     }
@@ -122,16 +115,15 @@ fun AddScreenSectionCategories(
     modifier: Modifier = Modifier,
     onClick: (Category) -> Unit
 ) {
-    val itemWidth = LocalConfiguration.current.screenWidthDp.dp - ((36 * 3) + 32).dp
     Column(modifier = modifier.fillMaxWidth()) {
         Text(text = "카테고리", style = RomTextStyle.text14, color = Gray0)
-        Row(modifier = Modifier.fillMaxWidth()) {
+
+        VerticalSpacer(dp = 8.dp)
+
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             state.categoryState.take(4).forEach {
                 CategoryItem(
                     data = it.category,
-                    modifier = Modifier
-                        .width(itemWidth)
-                        .aspectRatio(1f),
                     selected = it.selected,
                     onClick = {
                         onClick(it.category)
@@ -139,13 +131,11 @@ fun AddScreenSectionCategories(
                 )
             }
         }
-        Row(modifier = Modifier.fillMaxWidth()) {
+        VerticalSpacer(dp = 16.dp)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             state.categoryState.takeLast(4).forEach {
                 CategoryItem(
                     data = it.category,
-                    modifier = Modifier
-                        .width(itemWidth)
-                        .aspectRatio(1f),
                     selected = it.selected,
                     onClick = {
                         onClick(it.category)
@@ -159,12 +149,12 @@ fun AddScreenSectionCategories(
 @Composable
 fun CategoryItem(
     data: Category,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     selected: Boolean = false,
     onClick: () -> Unit = {},
 ) {
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Box {
             Image(painter = painterResource(id = data.iconResId), contentDescription = null)
             Image(
@@ -172,7 +162,7 @@ fun CategoryItem(
                 contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .offset(x = 2.dp, y = 0.dp)
+                    .offset(x = 5.dp, y = 0.dp)
                     .clickable { onClick }
             )
         }
@@ -180,39 +170,13 @@ fun CategoryItem(
         VerticalSpacer(dp = 8.dp)
 
         Text(text = data.display, style = RomTextStyle.text14, color = Gray0)
-
     }
 }
 
 @Composable
-fun DefaultAsyncImage(url: String, modifier: Modifier = Modifier) {
-    AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(url)
-            .crossfade(true)
-            .build(),
-        contentDescription = null,
-        modifier = modifier
-            .border(borderStrokeBlack2, shape = RoundedCornerShape(10.dp))
-            .clip(RoundedCornerShape(10.dp)),
-        contentScale = ContentScale.Crop,
-    )
+fun AddSectionTitleAndDesc() {
+    
 }
 
-@Composable
-fun DefaultImage(
-    painter: Painter,
-    modifier: Modifier = Modifier,
-    isCrop: Boolean = true,
-    onClick: () -> Unit = {}
-) {
-    Image(
-        painter = painter,
-        contentDescription = null,
-        modifier = modifier
-            .border(borderStrokeBlack2, shape = RoundedCornerShape(10.dp))
-            .clip(RoundedCornerShape(10.dp))
-            .clickable { onClick() },
-        contentScale = if (isCrop) ContentScale.Crop else ContentScale.None,
-    )
-}
+
+

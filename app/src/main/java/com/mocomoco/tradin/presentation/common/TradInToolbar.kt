@@ -29,9 +29,8 @@ fun DefaultToolbar(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(0.dp, 8.dp)
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
+        Box(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
             if (showBack) {
                 Icon(
                     modifier = modifier.clickable {

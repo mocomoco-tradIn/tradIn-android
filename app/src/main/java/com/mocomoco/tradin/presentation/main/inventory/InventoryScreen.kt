@@ -84,7 +84,7 @@ fun InventoryScreenBody(state: InventoryState, onNavEvent: (String) -> Unit) {
                     onClickInventoryItem = state.onClickInventoryItem,
                     onClickCheckBox = state.onClickCheckBox,
                     onNavEvent = onNavEvent,
-                    items = state.items,
+                    items = state.products,
                     showAddFeedButton = state.showAddFeedButton
                 )
             }
@@ -213,6 +213,7 @@ fun InventoryItem(
             .padding(
                 horizontal = 3.dp, vertical = 7.dp
             )
+            .background(White, shape = RoundedCornerShape(10.dp))
             .border(borderStrokeBlack2, shape = RoundedCornerShape(10.dp))
             .clip(RoundedCornerShape(10.dp))
             .clickable {

@@ -10,6 +10,12 @@ class PreferenceService @Inject constructor(@ApplicationContext context: Context
     private val sharedPreferences =
         context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
 
+    fun isLogin(): Boolean {
+        return getAccessToken() != null
+    }
+
+
+
     fun setAccessToken(token: String) {
         sharedPreferences.edit().putString(ACCESS_TOKEN, token).apply()
     }
@@ -40,10 +46,6 @@ class PreferenceService @Inject constructor(@ApplicationContext context: Context
 
     fun getRefreshTokenKey(): String? {
         return sharedPreferences.getString(REFRESH_TOKEN_KEY, null)
-    }
-
-    fun setAutoLogin(enable: Boolean) {
-        sharedPreferences.edit().putBoolean(AUTO_LOGIN, enable).apply()
     }
 
     companion object {

@@ -1,32 +1,53 @@
 package com.mocomoco.tradin.di
 
-import com.mocomoco.tradin.data.common.Constants
-import com.mocomoco.tradin.data.data.resource.remote.AuthApi
+import com.mocomoco.tradin.data.data.repository.RefreshTokenRepository
+import com.mocomoco.tradin.data.data.resource.local.PreferenceService
+import com.mocomoco.tradin.data.data.resource.remote.ApiHeaderInterceptor
+import com.mocomoco.tradin.data.data.resource.remote.RefreshTokenService
+import com.mocomoco.tradin.data.data.resource.remote.RetrofitService
+import com.mocomoco.tradin.data.data.resource.remote.apis.AuthApi
+import com.mocomoco.tradin.data.data.resource.remote.apis.RefreshTokenApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataModule {
+class DataModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL_DEV)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    fun provideRetrofit(apiHeaderInterceptor: ApiHeaderInterceptor): RetrofitService {
+        return RetrofitService(apiHeaderInterceptor)
     }
 
     @Provides
     @Singleton
-    fun provideSignupApi(retrofit: Retrofit): AuthApi {
-        return retrofit.create(AuthApi::class.java)
+    fun provideApiHeaderInterceptor(
+        preferenceService: PreferenceService,
+        refreshTokenApi: RefreshTokenApi
+    ): ApiHeaderInterceptor {
+        return ApiHeaderInterceptor(preferenceService, refreshTokenApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRefreshTokenService(): RefreshTokenService {
+        return RefreshTokenService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRefreshTokenApi(refreshTokenService: RefreshTokenService): RefreshTokenApi {
+        return refreshTokenService.retrofit.create(RefreshTokenApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignupApi(retrofitService: RetrofitService): AuthApi {
+        return retrofitService.retrofit.create(AuthApi::class.java)
     }
 }
 

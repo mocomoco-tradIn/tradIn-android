@@ -1,6 +1,5 @@
 package com.mocomoco.tradin.di
 
-import com.mocomoco.tradin.data.data.repository.RefreshTokenRepository
 import com.mocomoco.tradin.data.data.resource.local.PreferenceService
 import com.mocomoco.tradin.data.data.resource.remote.ApiHeaderInterceptor
 import com.mocomoco.tradin.data.data.resource.remote.RefreshTokenService
@@ -10,7 +9,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -72,6 +70,12 @@ class DataModule {
     @Singleton
     fun provideTradeApi(retrofitService: RetrofitService): TradeApi {
         return retrofitService.retrofit.create(TradeApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationApi(retrofitService: RetrofitService): LocationApi {
+        return retrofitService.retrofit.create(LocationApi::class.java)
     }
 }
 

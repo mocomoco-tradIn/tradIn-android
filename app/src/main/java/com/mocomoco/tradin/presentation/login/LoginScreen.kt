@@ -52,10 +52,6 @@ fun LoginScreen(
             mutableStateOf("")
         }
 
-        var checkAutoLogin by rememberSaveable {
-            mutableStateOf(false)
-        }
-
         Box(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier

@@ -1,11 +1,7 @@
 package com.mocomoco.tradin.di
 
-import com.mocomoco.tradin.data.data.repository.AuthRepository
-import com.mocomoco.tradin.data.data.repository.ProductRepository
-import com.mocomoco.tradin.data.data.repository.RefreshTokenRepository
-import com.mocomoco.tradin.data.data.repository.impl.AuthRepositoryImpl
-import com.mocomoco.tradin.data.data.repository.impl.ProductRepositoryImpl
-import com.mocomoco.tradin.data.data.repository.impl.RefreshTokenRepositoryImpl
+import com.mocomoco.tradin.data.data.repository.*
+import com.mocomoco.tradin.data.data.repository.impl.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -23,5 +19,15 @@ interface RepositoryModule {
     @Binds
     fun provideProductRepository(productRepository: ProductRepositoryImpl): ProductRepository
 
+    @Binds
+    fun provideFeedRepository(feedRepository: FeedRepositoryImpl): FeedRepository
 
+    @Binds
+    fun provideLocationRepository(locationRepository: LocationRepositoryImpl): LocationRepository
+
+    @Binds
+    fun provideSearchRepository(searchRepository: SearchRepositoryImpl): SearchRepository
+
+    @Binds
+    fun provideTradeRepository(tradeRepository: TradeRepositoryImpl): TradeRepository
 }

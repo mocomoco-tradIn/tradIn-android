@@ -21,6 +21,7 @@ fun handleResponseCode(errorDto: ErrorDto) {
         "A001" -> throw InvalidTelException(errorDto.message)
         "A005" -> throw NotMatchedAuthNumberException(errorDto.message)
         "A007" -> throw DuplicateEmailException(errorDto.message)
+        "A010" -> throw InvalidAccountException(errorDto.message)
         else -> throw ServerException(errorDto.message)
     }
 }

@@ -7,14 +7,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -23,10 +21,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mocomoco.tradin.R
-import com.mocomoco.tradin.presentation.common.*
-import com.mocomoco.tradin.presentation.theme.Gray1
-import com.mocomoco.tradin.presentation.theme.Gray2
-import com.mocomoco.tradin.presentation.theme.TradInTypography
+import com.mocomoco.tradin.base.BaseScreen
+import com.mocomoco.tradin.presentation.common.DefaultRomButton
+import com.mocomoco.tradin.presentation.common.DefaultTextFields
+import com.mocomoco.tradin.presentation.common.VerticalSpacer
+import com.mocomoco.tradin.presentation.theme.*
+import com.mocomoco.tradin.util.ext.showToast
 
 @Composable
 fun LoginScreen(
@@ -34,8 +34,14 @@ fun LoginScreen(
     onClickSignup: () -> Unit,
     onClickFindPassword: () -> Unit,
 ) {
+    val state = viewModel.state.collectAsState().value
 
-//    val loading = viewModel.loading.collectAsState().value
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect {
+            it.showToast(context)
+        }
+    }
 
     BaseScreen<LoginViewModel>() {
         var emailText by rememberSaveable {
@@ -147,17 +153,11 @@ fun LoginScreen(
                         .fillMaxWidth()
                         .wrapContentHeight()
                 ) {
+                    Text(text = "오고가는 교환의 재미", style = RomTextStyle.text14, color = Gray2)
+                    VerticalSpacer(14.dp)
                     Icon(
                         painter = painterResource(id = R.drawable.ic_logo_login),
                         contentDescription = null
-                    )
-
-                    VerticalSpacer(14.dp)
-
-                    Text(
-                        text = stringResource(id = R.string.login_app_subtitle),
-                        style = TradInTypography.subtitle1,
-                        color = Gray2
                     )
                 }
 
@@ -181,34 +181,20 @@ fun LoginScreen(
                         onValueChange = { new -> passwordText = new },
                         placeholderText = stringResource(
                             id = R.string.login_input_placeholder_pw
-                        ),
-                        visualTransformation = { anotatedString ->
+                        ), visualTransformation = { anotatedString ->
                             PasswordVisualTransformation().filter(anotatedString)
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                        }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                     )
 
                     VerticalSpacer(dp = 20.dp)
 
-                    CommonCheckBox(
-                        checked = checkAutoLogin,
-                        offIconId = R.drawable.ic_checkbox_off,
-                        onIconId = R.drawable.ic_checkbox_on,
-                        textId = R.string.login_auto,
-                        onClick = { new ->
-                            viewModel.setAutoLogin(new)
-                            checkAutoLogin = new
-                        }
+                    Text(
+                        text = "아이디 또는 비밀번호가 올바르지 않습니다.",
+                        style = RomTextStyle.text13,
+                        color = if (state.invalidAccount) Pink1 else Transparent
                     )
                 }
-
-
             }
         }
-
-
-//        if (loading) {
-//            RomCircularProgressIndicator()
-//        }
     }
 }

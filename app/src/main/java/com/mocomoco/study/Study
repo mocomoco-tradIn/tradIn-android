@@ -1,0 +1,5 @@
+
+
+StateFlow vs SharedFlow
+StateFlow only emits last known value , whereas sharedflow can configure how many previous values to be emitted.
+If you want emitting and collecting repeated values , use sharedflow.

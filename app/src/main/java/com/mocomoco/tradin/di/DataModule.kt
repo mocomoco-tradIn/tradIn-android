@@ -6,6 +6,7 @@ import com.mocomoco.tradin.data.data.resource.remote.ApiHeaderInterceptor
 import com.mocomoco.tradin.data.data.resource.remote.RefreshTokenService
 import com.mocomoco.tradin.data.data.resource.remote.RetrofitService
 import com.mocomoco.tradin.data.data.resource.remote.apis.AuthApi
+import com.mocomoco.tradin.data.data.resource.remote.apis.FeedApi
 import com.mocomoco.tradin.data.data.resource.remote.apis.ProductApi
 import com.mocomoco.tradin.data.data.resource.remote.apis.RefreshTokenApi
 import dagger.Module
@@ -55,6 +56,12 @@ class DataModule {
     @Singleton
     fun provideProductApi(retrofitService: RetrofitService): ProductApi {
         return retrofitService.retrofit.create(ProductApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFeedApi(retrofitService: RetrofitService): FeedApi {
+        return retrofitService.retrofit.create(FeedApi::class.java)
     }
 }
 

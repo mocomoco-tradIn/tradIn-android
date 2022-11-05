@@ -1,10 +1,9 @@
 package com.mocomoco.tradin.data.data.resource.remote.apis
 
 import com.mocomoco.tradin.data.data.dto.request_body.*
-import com.mocomoco.tradin.data.data.dto.response.NicknameDuplicateBody
+import com.mocomoco.tradin.data.data.dto.request_body.NicknameDuplicateBody
 import com.mocomoco.tradin.data.data.dto.response.PhoneAuthDto
 import com.mocomoco.tradin.data.data.dto.response.login.SignInDto
-import com.mocomoco.tradin.data.data.dto.response.refresh_token.RefreshTokenDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

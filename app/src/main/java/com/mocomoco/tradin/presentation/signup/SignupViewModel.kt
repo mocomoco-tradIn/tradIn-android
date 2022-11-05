@@ -1,6 +1,5 @@
 package com.mocomoco.tradin.presentation.signup
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mocomoco.tradin.base.BaseViewModel
 import com.mocomoco.tradin.common.*
@@ -8,7 +7,7 @@ import com.mocomoco.tradin.data.data.dto.request_body.AuthCoincideBody
 import com.mocomoco.tradin.data.data.dto.request_body.EmailDuplicateBody
 import com.mocomoco.tradin.data.data.dto.request_body.SignupBody
 import com.mocomoco.tradin.data.data.dto.request_body.TelBody
-import com.mocomoco.tradin.data.data.dto.response.NicknameDuplicateBody
+import com.mocomoco.tradin.data.data.dto.request_body.NicknameDuplicateBody
 import com.mocomoco.tradin.data.data.repository.AuthRepository
 import com.mocomoco.tradin.presentation.theme.Blue1
 import com.mocomoco.tradin.presentation.theme.Pink1

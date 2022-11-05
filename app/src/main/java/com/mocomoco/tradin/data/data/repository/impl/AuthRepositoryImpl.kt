@@ -3,7 +3,7 @@ package com.mocomoco.tradin.data.data.repository.impl
 
 import com.mocomoco.tradin.data.common.handleResponse
 import com.mocomoco.tradin.data.data.dto.request_body.*
-import com.mocomoco.tradin.data.data.dto.response.NicknameDuplicateBody
+import com.mocomoco.tradin.data.data.dto.request_body.NicknameDuplicateBody
 import com.mocomoco.tradin.data.data.dto.response.PhoneAuthDto
 import com.mocomoco.tradin.data.data.dto.response.login.SignInDto
 import com.mocomoco.tradin.data.data.repository.AuthRepository

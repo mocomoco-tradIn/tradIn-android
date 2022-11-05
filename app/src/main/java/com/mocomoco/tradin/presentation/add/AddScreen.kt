@@ -194,7 +194,7 @@ fun AddScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            state.tradeMethodState.forEachIndexed { index, value ->
+                            state.tradeMethodStates.forEachIndexed { index, value ->
                                 ToggleButton(
                                     modifier = Modifier.weight(1f),
                                     text = value.tradeMethod.display,
@@ -203,7 +203,7 @@ fun AddScreen(
                                     viewModel.onClickTradeMethod(value.tradeMethod)
                                 }
 
-                                if (index != state.tradeMethodState.size) {
+                                if (index != state.tradeMethodStates.size) {
                                     HorizontalSpacer(dp = 8.dp)
                                 }
                             }
@@ -222,7 +222,7 @@ fun AddScreen(
                                 .clickable {
                                     navEvent(LOCATION_ROUTE)
                                 },
-                            value = state.location.display,
+                            value = state.postInfo.location.display,
                             onValueChange = {
                                 // do nothing
                             },
@@ -261,7 +261,7 @@ fun AddScreenSectionImage(
                     )
                 }
             } else {
-                state.imageUrls.forEach { url ->
+                state.postInfo.imageUrls.forEach { url ->
                     item {
                         DefaultAsyncImage(
                             url, modifier = Modifier
@@ -273,7 +273,7 @@ fun AddScreenSectionImage(
                         HorizontalSpacer(dp = 12.dp)
                     }
                 }
-                state.bitmaps.forEach { bitmap ->
+                state.postInfo.bitmaps.forEach { bitmap ->
                     item {
                         DefaultBitmapImage(
                             bitmap, modifier = Modifier
@@ -326,7 +326,7 @@ fun AddScreenSectionCategories(
         VerticalSpacer(dp = 8.dp)
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            state.categoryState.take(4).forEach {
+            state.categoryStates.take(4).forEach {
                 CategoryItem(
                     data = it.category,
                     selected = it.selected,
@@ -338,7 +338,7 @@ fun AddScreenSectionCategories(
         }
         VerticalSpacer(dp = 16.dp)
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            state.categoryState.takeLast(4).forEach {
+            state.categoryStates.takeLast(4).forEach {
                 CategoryItem(
                     data = it.category,
                     selected = it.selected,
@@ -359,7 +359,7 @@ fun CategoryItem(
     onClick: () -> Unit = {},
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Box {
+        Box(modifier = Modifier.clickable { onClick() }) {
             Image(painter = painterResource(id = data.iconResId), contentDescription = null)
             Image(
                 painter = painterResource(id = if (selected) R.drawable.ic_checkbox_fill_on else R.drawable.ic_checkbox_fill_off),
@@ -367,7 +367,6 @@ fun CategoryItem(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .offset(x = 5.dp, y = 0.dp)
-                    .clickable { onClick }
             )
         }
 

@@ -3,6 +3,8 @@ buildscript {
         compose_version = '1.2.0' // PlatformTextStyle 이 1.2.0 부터
         accompanist_version = "0.25.1"
         nav_version = '2.5.2'
+        lifecycle_version = "2.5.1"
+
     }
 
     repositories {

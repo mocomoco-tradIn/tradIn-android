@@ -1,12 +1,10 @@
 package com.mocomoco.tradin.presentation.add
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
-import android.provider.MediaStore
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,7 +13,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -28,13 +25,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mocomoco.tradin.R
-import com.mocomoco.tradin.common.Logger
 import com.mocomoco.tradin.model.Category
 import com.mocomoco.tradin.presentation.TradInDestinations.LOCATION_ROUTE
 import com.mocomoco.tradin.presentation.common.*
@@ -45,6 +40,8 @@ import com.mocomoco.tradin.util.asBitmap
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import java.io.OutputStream
+import java.util.*
 
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
@@ -81,7 +78,6 @@ fun AddScreen(
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetMultipleContents()) { uris ->
             uris.forEach {
                 viewModel.onAddImageFromGallery(it.asBitmap(context))
-                //val file = UriUtil.toFile(context, it)
             }
         }
 
@@ -160,8 +156,6 @@ fun AddScreen(
 
                     VerticalSpacer(dp = 16.dp)
 
-                    Logger.log("$itemDesc")
-                    
                     InfoInputWithDescItem(title = "상세내용") {
                         TradInTextField(
                             value = itemDesc,
@@ -427,14 +421,6 @@ fun BottomSheet(
 
 }
 
-fun Uri.asMultipartBody(context: Context): Bitmap {
-    return if (Build.VERSION.SDK_INT < 28) {
-        MediaStore.Images.Media.getBitmap(context.contentResolver, this)
-    } else {
-        val source = ImageDecoder.createSource(context.contentResolver, this)
-        ImageDecoder.decodeBitmap(source)
-    }
-}
 
 object FileUtil {
     // 임시 파일 생성
@@ -479,3 +465,14 @@ object UriUtil {
     }
 }
 
+
+fun Bitmap.asFile(context: Context): File {
+    val wrapper = ContextWrapper(context)
+    var file = wrapper.getDir("Images", Context.MODE_PRIVATE)
+    file = File(file, "${UUID.randomUUID()}.jpg")
+    val stream: OutputStream = FileOutputStream(file)
+    this.compress(Bitmap.CompressFormat.JPEG, 25, stream)
+    stream.flush()
+    stream.close()
+    return file
+}

@@ -10,6 +10,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -65,6 +66,12 @@ class DataModule {
     @Singleton
     fun provideSearchApi(retrofitService: RetrofitService): SearchApi {
         return retrofitService.retrofit.create(SearchApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTradeApi(retrofitService: RetrofitService): TradeApi {
+        return retrofitService.retrofit.create(TradeApi::class.java)
     }
 }
 

@@ -22,4 +22,6 @@ interface RepositoryModule {
 
     @Binds
     fun provideProductRepository(productRepository: ProductRepositoryImpl): ProductRepository
+
+
 }

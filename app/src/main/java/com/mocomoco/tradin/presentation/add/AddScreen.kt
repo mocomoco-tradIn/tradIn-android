@@ -120,6 +120,9 @@ fun AddScreen(
 
                 DefaultToolbar(
                     showBack = true,
+                    onClickBack = {
+                                  navEvent("")
+                    },
                     title = state.title,
                     rightButtons = listOf(
                         painterResource(id = R.drawable.ic_btn_complete) to {

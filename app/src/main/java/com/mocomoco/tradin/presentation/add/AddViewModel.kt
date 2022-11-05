@@ -121,7 +121,6 @@ class AddViewModel @Inject constructor(
                 _state.value = state.value.copy(
                     completeAdd = true
                 )
-
                 Logger.log("onClickComplete success $dto")
             }
         } catch (e: Exception) {

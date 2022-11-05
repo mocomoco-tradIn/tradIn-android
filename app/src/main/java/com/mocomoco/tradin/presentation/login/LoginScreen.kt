@@ -31,10 +31,15 @@ import com.mocomoco.tradin.util.ext.showToast
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
+    onBack: () -> Unit,
     onClickSignup: () -> Unit,
     onClickFindPassword: () -> Unit,
 ) {
     val state = viewModel.state.collectAsState().value
+
+    if(state.completeLogin) {
+        onBack()
+    }
 
     val context = LocalContext.current
     LaunchedEffect(Unit) {

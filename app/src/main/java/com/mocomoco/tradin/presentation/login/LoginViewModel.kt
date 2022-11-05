@@ -37,12 +37,18 @@ class LoginViewModel @Inject constructor(
                     deviceToken = deviceToken
                 )
             )
+
             preferenceService.setAccessTokenKey(dto.accessToken.key)
             preferenceService.setAccessToken(dto.accessToken.value)
+            preferenceService.setRefreshTokenKey(dto.refreshToken.key)
+            preferenceService.setRefreshToken(dto.refreshToken.value)
+
             _state.value = state.value.copy(
                 invalidAccount = false,
                 completeLogin = true
             )
+
+            _toastMessage.emit("성공적으로 로그인되었어요")
             _loading.value = false
         } catch (e: InvalidAccountException) {
             _state.value = state.value.copy(

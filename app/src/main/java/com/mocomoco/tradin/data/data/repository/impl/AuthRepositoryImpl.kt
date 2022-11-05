@@ -1,4 +1,4 @@
-package com.mocomoco.tradin.data.data.impl
+package com.mocomoco.tradin.data.data.repository.impl
 
 
 import com.mocomoco.tradin.data.common.handleResponse

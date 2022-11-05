@@ -5,7 +5,6 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
@@ -22,13 +21,11 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.mocomoco.tradin.R
 import com.mocomoco.tradin.model.Category
 import com.mocomoco.tradin.presentation.TradInDestinations.LOCATION_ROUTE
@@ -37,6 +34,8 @@ import com.mocomoco.tradin.presentation.signup.components.InfoInputWithDescItem
 import com.mocomoco.tradin.presentation.signup.components.InfoInputWithDescTextFieldItem
 import com.mocomoco.tradin.presentation.theme.*
 import com.mocomoco.tradin.util.asBitmap
+import com.mocomoco.tradin.util.ext.showToast
+import com.mocomoco.tradin.util.sharedActivityViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -47,11 +46,15 @@ import java.util.*
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun AddScreen(
-    viewModel: AddViewModel = hiltViewModel(),
+    viewModel: AddViewModel = sharedActivityViewModel(),
     navEvent: (String) -> Unit,
 ) {
 
     val state = viewModel.state.collectAsState().value
+
+    if (state.completeAdd) {
+        navEvent("")
+    }
 
     var itemName by rememberSaveable {
         mutableStateOf("")
@@ -62,29 +65,29 @@ fun AddScreen(
     }
 
     val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect {
+            it.showToast(context)
+        }
+    }
 
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
 
     val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-    BackHandler {
-        focusManager.clearFocus()
-    }
-
 
     val galleryLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetMultipleContents()) { uris ->
             uris.forEach {
-                viewModel.onAddImageFromGallery(it.asBitmap(context))
+                viewModel.onAddImageFromDevice(it.asBitmap(context))
             }
         }
 
     val cameraLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) { bitmap ->
             bitmap?.let {
-                viewModel.onAddImageFromGallery(it)
+                viewModel.onAddImageFromDevice(it)
             }
         }
 
@@ -115,7 +118,12 @@ fun AddScreen(
                 showBack = true,
                 title = state.title,
                 rightButtons = listOf(
-                    painterResource(id = R.drawable.ic_btn_complete) to { viewModel.onClickComplete() }
+                    painterResource(id = R.drawable.ic_btn_complete) to {
+                        viewModel.onClickComplete(
+                            itemName,
+                            itemDesc
+                        )
+                    }
                 )
             )
 
@@ -194,7 +202,7 @@ fun AddScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            state.tradeMethodState.forEachIndexed { index, value ->
+                            state.tradeMethodStates.forEachIndexed { index, value ->
                                 ToggleButton(
                                     modifier = Modifier.weight(1f),
                                     text = value.tradeMethod.display,
@@ -203,7 +211,7 @@ fun AddScreen(
                                     viewModel.onClickTradeMethod(value.tradeMethod)
                                 }
 
-                                if (index != state.tradeMethodState.size) {
+                                if (index != state.tradeMethodStates.size) {
                                     HorizontalSpacer(dp = 8.dp)
                                 }
                             }
@@ -222,7 +230,7 @@ fun AddScreen(
                                 .clickable {
                                     navEvent(LOCATION_ROUTE)
                                 },
-                            value = state.location.display,
+                            value = state.postInfo.location.display,
                             onValueChange = {
                                 // do nothing
                             },
@@ -326,7 +334,7 @@ fun AddScreenSectionCategories(
         VerticalSpacer(dp = 8.dp)
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            state.categoryState.take(4).forEach {
+            state.categoryStates.take(4).forEach {
                 CategoryItem(
                     data = it.category,
                     selected = it.selected,
@@ -338,7 +346,7 @@ fun AddScreenSectionCategories(
         }
         VerticalSpacer(dp = 16.dp)
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            state.categoryState.takeLast(4).forEach {
+            state.categoryStates.takeLast(4).forEach {
                 CategoryItem(
                     data = it.category,
                     selected = it.selected,
@@ -359,7 +367,7 @@ fun CategoryItem(
     onClick: () -> Unit = {},
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Box {
+        Box(modifier = Modifier.clickable { onClick() }) {
             Image(painter = painterResource(id = data.iconResId), contentDescription = null)
             Image(
                 painter = painterResource(id = if (selected) R.drawable.ic_checkbox_fill_on else R.drawable.ic_checkbox_fill_off),
@@ -367,7 +375,6 @@ fun CategoryItem(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .offset(x = 5.dp, y = 0.dp)
-                    .clickable { onClick }
             )
         }
 
@@ -469,7 +476,7 @@ object UriUtil {
 
 fun Bitmap.asFile(context: Context): File {
     val wrapper = ContextWrapper(context)
-    var file = wrapper.getDir("Images", Context.MODE_PRIVATE)
+    var file = wrapper.getDir("images", Context.MODE_PRIVATE)
     file = File(file, "${UUID.randomUUID()}.jpg")
     val stream: OutputStream = FileOutputStream(file)
     this.compress(Bitmap.CompressFormat.JPEG, 25, stream)

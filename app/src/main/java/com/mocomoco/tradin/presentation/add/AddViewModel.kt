@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mocomoco.tradin.base.BaseViewModel
 import com.mocomoco.tradin.common.Logger
+import com.mocomoco.tradin.data.data.dto.request_body.AddProductBody
 import com.mocomoco.tradin.data.data.dto.response.ImageUrlDto
 import com.mocomoco.tradin.data.data.repository.ProductRepository
 import com.mocomoco.tradin.model.Category
@@ -13,9 +14,12 @@ import com.mocomoco.tradin.model.Location
 import com.mocomoco.tradin.model.TradeMethod
 import com.mocomoco.tradin.presentation.nav.Arguments.FROM_INVENTORY
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -95,7 +99,42 @@ class AddViewModel @Inject constructor(
         )
     }
 
-    fun onClickComplete() = viewModelScope.launch(Dispatchers.IO) {
+    fun onClickComplete(name: String, desc: String) = viewModelScope.launch(Dispatchers.IO) {
+        _loading.value = true
+        try {
+            with(state.value) {
+                Logger.log("onClickComplete postInfo $this")
+                val dto = productRepository.postUploadProduct(
+                    AddProductBody(
+                        categoryId = postInfo.selectedCategory.code,
+                        title = name,
+                        content = desc,
+                        images = listOf(
+                            "https://d1p1ltj3ad3g5i.cloudfront.net/local/images/1/2022-10-31-00:26:34-1",
+                            "https://d1p1ltj3ad3g5i.cloudfront.net/local/images/1/2022-10-31-00:26:34-1"
+                        ),
+                        regionCode = postInfo.location.code,
+                        tradeMethodId = postInfo.selectedTradeMethod.code
+                    )
+                )
+                _toastMessage.emit("성공적으로 상품을 추가 했어요!")
+
+                _state.value = state.value.copy(
+                    completeAdd = true
+                )
+
+                Logger.log("onClickComplete success $dto")
+            }
+        } catch (e: Exception) {
+            Logger.log("onClickComplete e $e")
+
+            _toastMessage.emit("아직 채워지지 않은 정보가 있어요!")
+        } finally {
+            _loading.value = false
+        }
+    }
+
+    private fun uploadImage() = viewModelScope.launch(Dispatchers.IO) {
         Logger.log("onClickComplete")
 
         _loading.value = true
@@ -152,17 +191,13 @@ class AddViewModel @Inject constructor(
 
         _toastMessage.emit("이미지 업로드 완료")
     }
-
-    private fun uploadImage() {
-        _loading.value = true
-
-    }
 }
 
 data class AddState(
     val title: String = "",
     val bitmaps: List<Bitmap> = listOf(),
     val imageUrls: List<String> = listOf(),
+    val completeAdd: Boolean = false,
     val categoryStates: List<CategoryState> = listOf(
         CategoryState(Category.Cloth),
         CategoryState(Category.Book),
@@ -182,8 +217,8 @@ data class AddState(
 ) {
     data class PostInfo(
         val imageUrls: List<String> = listOf(),
-        val itemName: String = "",
-        val itemDesc: String = "",
+        val itemName: String = "", // todo delete
+        val itemDesc: String = "", // todo delete
         val selectedCategory: Category = Category.None,
         val selectedTradeMethod: TradeMethod = TradeMethod.None,
         val location: Location = Location()

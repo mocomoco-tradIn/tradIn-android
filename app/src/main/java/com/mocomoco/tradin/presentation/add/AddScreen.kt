@@ -26,7 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.mocomoco.tradin.R
 import com.mocomoco.tradin.model.Category
 import com.mocomoco.tradin.presentation.TradInDestinations.LOCATION_ROUTE
@@ -35,6 +34,7 @@ import com.mocomoco.tradin.presentation.signup.components.InfoInputWithDescItem
 import com.mocomoco.tradin.presentation.signup.components.InfoInputWithDescTextFieldItem
 import com.mocomoco.tradin.presentation.theme.*
 import com.mocomoco.tradin.util.asBitmap
+import com.mocomoco.tradin.util.ext.showToast
 import com.mocomoco.tradin.util.sharedActivityViewModel
 import kotlinx.coroutines.launch
 import java.io.File
@@ -52,6 +52,10 @@ fun AddScreen(
 
     val state = viewModel.state.collectAsState().value
 
+    if (state.completeAdd) {
+        navEvent("")
+    }
+
     var itemName by rememberSaveable {
         mutableStateOf("")
     }
@@ -61,6 +65,11 @@ fun AddScreen(
     }
 
     val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect {
+            it.showToast(context)
+        }
+    }
 
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -109,7 +118,12 @@ fun AddScreen(
                 showBack = true,
                 title = state.title,
                 rightButtons = listOf(
-                    painterResource(id = R.drawable.ic_btn_complete) to { viewModel.onClickComplete() }
+                    painterResource(id = R.drawable.ic_btn_complete) to {
+                        viewModel.onClickComplete(
+                            itemName,
+                            itemDesc
+                        )
+                    }
                 )
             )
 

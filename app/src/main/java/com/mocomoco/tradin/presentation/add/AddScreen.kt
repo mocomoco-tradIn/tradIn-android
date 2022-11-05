@@ -5,7 +5,6 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
@@ -22,7 +21,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,6 +35,7 @@ import com.mocomoco.tradin.presentation.signup.components.InfoInputWithDescItem
 import com.mocomoco.tradin.presentation.signup.components.InfoInputWithDescTextFieldItem
 import com.mocomoco.tradin.presentation.theme.*
 import com.mocomoco.tradin.util.asBitmap
+import com.mocomoco.tradin.util.sharedActivityViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -47,7 +46,7 @@ import java.util.*
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun AddScreen(
-    viewModel: AddViewModel = hiltViewModel(),
+    viewModel: AddViewModel = sharedActivityViewModel(),
     navEvent: (String) -> Unit,
 ) {
 
@@ -68,23 +67,18 @@ fun AddScreen(
     val scope = rememberCoroutineScope()
 
     val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-    BackHandler {
-        focusManager.clearFocus()
-    }
-
 
     val galleryLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetMultipleContents()) { uris ->
             uris.forEach {
-                viewModel.onAddImageFromGallery(it.asBitmap(context))
+                viewModel.onAddImageFromDevice(it.asBitmap(context))
             }
         }
 
     val cameraLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) { bitmap ->
             bitmap?.let {
-                viewModel.onAddImageFromGallery(it)
+                viewModel.onAddImageFromDevice(it)
             }
         }
 
@@ -261,7 +255,7 @@ fun AddScreenSectionImage(
                     )
                 }
             } else {
-                state.postInfo.imageUrls.forEach { url ->
+                state.imageUrls.forEach { url ->
                     item {
                         DefaultAsyncImage(
                             url, modifier = Modifier
@@ -273,7 +267,7 @@ fun AddScreenSectionImage(
                         HorizontalSpacer(dp = 12.dp)
                     }
                 }
-                state.postInfo.bitmaps.forEach { bitmap ->
+                state.bitmaps.forEach { bitmap ->
                     item {
                         DefaultBitmapImage(
                             bitmap, modifier = Modifier
@@ -468,7 +462,7 @@ object UriUtil {
 
 fun Bitmap.asFile(context: Context): File {
     val wrapper = ContextWrapper(context)
-    var file = wrapper.getDir("Images", Context.MODE_PRIVATE)
+    var file = wrapper.getDir("images", Context.MODE_PRIVATE)
     file = File(file, "${UUID.randomUUID()}.jpg")
     val stream: OutputStream = FileOutputStream(file)
     this.compress(Bitmap.CompressFormat.JPEG, 25, stream)

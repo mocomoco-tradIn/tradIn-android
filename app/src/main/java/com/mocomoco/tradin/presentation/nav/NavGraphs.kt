@@ -53,6 +53,9 @@ fun TradInNavGraph(
 
         composable(LOGIN_ROUTE) {
             LoginScreen(
+                onBack = {
+                    navController.popBackStack(LOGIN_ROUTE, inclusive = true)
+                },
                 onClickFindPassword = {
                     navController.navigate(WIP) // todo replace
                 },

@@ -52,6 +52,8 @@ fun AddScreen(
 
     val state = viewModel.state.collectAsState().value
 
+    val loading = viewModel.loading.collectAsState()
+
     if (state.completeAdd) {
         navEvent("")
     }
@@ -112,139 +114,146 @@ fun AddScreen(
         sheetState = bottomSheetState
     ) {
 
-        Column {
+        Box(modifier = Modifier.fillMaxSize()) {
 
-            DefaultToolbar(
-                showBack = true,
-                title = state.title,
-                rightButtons = listOf(
-                    painterResource(id = R.drawable.ic_btn_complete) to {
-                        viewModel.onClickComplete(
-                            itemName,
-                            itemDesc
-                        )
-                    }
-                )
-            )
+            Column {
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(top = 8.dp)
-            ) {
-
-                AddScreenSectionImage(
-                    state,
-                    onClickAddImage = {
-                        scope.launch {
-                            bottomSheetState.show()
+                DefaultToolbar(
+                    showBack = true,
+                    title = state.title,
+                    rightButtons = listOf(
+                        painterResource(id = R.drawable.ic_btn_complete) to {
+                            viewModel.onClickComplete(
+                                itemName,
+                                itemDesc
+                            )
                         }
-                    }
+                    )
                 )
 
-                VerticalSpacer(dp = 22.dp)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(top = 8.dp)
+                ) {
 
-                AddScreenSectionCategories(
-                    state, onClick = { category ->
-                        viewModel.onClickCategory(category)
-                    }
-                )
-
-                VerticalSpacer(dp = 30.dp)
-
-                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    InfoInputWithDescTextFieldItem(
-                        title = "상품명",
-                        input = itemName,
-                        onInputChange = { itemName = it },
-                        placeholderText = "최대 32자까지 입력가능",
-                        editable = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    AddScreenSectionImage(
+                        state,
+                        onClickAddImage = {
+                            scope.launch {
+                                bottomSheetState.show()
+                            }
+                        }
                     )
 
-                    VerticalSpacer(dp = 16.dp)
+                    VerticalSpacer(dp = 22.dp)
 
-                    InfoInputWithDescItem(title = "상세내용") {
-                        TradInTextField(
-                            value = itemDesc,
-                            onValueChange = { itemDesc = it },
-                            contentPaddingValues = PaddingValues(4.dp, 12.dp),
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = TextFieldDefaults.textFieldColors(
-                                textColor = Gray0,
-                                backgroundColor = Transparent,
-                                cursorColor = Gray0,
-                                focusedIndicatorColor = Gray0,
-                                unfocusedIndicatorColor = Gray3,
-                                errorIndicatorColor = Pink1
-                            ),
-                            placeholder = {
-                                Text(
-                                    text = "상품 사용기간, 원가를 포함해 적으면 좋아요",
-                                    style = MaterialTheme.typography.h5,
-                                    color = Gray3,
-                                    textAlign = TextAlign.Center
-                                )
-                            },
+                    AddScreenSectionCategories(
+                        state, onClick = { category ->
+                            viewModel.onClickCategory(category)
+                        }
+                    )
+
+                    VerticalSpacer(dp = 30.dp)
+
+                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                        InfoInputWithDescTextFieldItem(
+                            title = "상품명",
+                            input = itemName,
+                            onInputChange = { itemName = it },
+                            placeholderText = "최대 32자까지 입력가능",
+                            editable = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                         )
-                    }
 
-                    VerticalSpacer(dp = 16.dp)
+                        VerticalSpacer(dp = 16.dp)
 
-                    InfoInputWithDescItem(
-                        title = "희망 거래 방식",
-                        descText = "기타의 경우 내용에 구체적인 내용을 기입해주세요",
-                        descTextColor = Gray2
-                    ) {
-                        VerticalSpacer(dp = 8.dp)
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                        InfoInputWithDescItem(title = "상세내용") {
+                            TradInTextField(
+                                value = itemDesc,
+                                onValueChange = { itemDesc = it },
+                                contentPaddingValues = PaddingValues(4.dp, 12.dp),
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    textColor = Gray0,
+                                    backgroundColor = Transparent,
+                                    cursorColor = Gray0,
+                                    focusedIndicatorColor = Gray0,
+                                    unfocusedIndicatorColor = Gray3,
+                                    errorIndicatorColor = Pink1
+                                ),
+                                placeholder = {
+                                    Text(
+                                        text = "상품 사용기간, 원가를 포함해 적으면 좋아요",
+                                        style = MaterialTheme.typography.h5,
+                                        color = Gray3,
+                                        textAlign = TextAlign.Center
+                                    )
+                                },
+                            )
+                        }
+
+                        VerticalSpacer(dp = 16.dp)
+
+                        InfoInputWithDescItem(
+                            title = "희망 거래 방식",
+                            descText = "기타의 경우 내용에 구체적인 내용을 기입해주세요",
+                            descTextColor = Gray2
                         ) {
-                            state.tradeMethodStates.forEachIndexed { index, value ->
-                                ToggleButton(
-                                    modifier = Modifier.weight(1f),
-                                    text = value.tradeMethod.display,
-                                    enable = value.selected
-                                ) {
-                                    viewModel.onClickTradeMethod(value.tradeMethod)
-                                }
+                            VerticalSpacer(dp = 8.dp)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                state.tradeMethodStates.forEachIndexed { index, value ->
+                                    ToggleButton(
+                                        modifier = Modifier.weight(1f),
+                                        text = value.tradeMethod.display,
+                                        enable = value.selected
+                                    ) {
+                                        viewModel.onClickTradeMethod(value.tradeMethod)
+                                    }
 
-                                if (index != state.tradeMethodStates.size) {
-                                    HorizontalSpacer(dp = 8.dp)
+                                    if (index != state.tradeMethodStates.size) {
+                                        HorizontalSpacer(dp = 8.dp)
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    VerticalSpacer(dp = 16.dp)
+                        VerticalSpacer(dp = 16.dp)
 
-                    InfoInputWithDescItem(
-                        title = "희망 거래지역",
-                        descTextColor = Gray2
-                    ) {
-                        DefaultTextFields(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    navEvent(LOCATION_ROUTE)
+                        InfoInputWithDescItem(
+                            title = "희망 거래지역",
+                            descTextColor = Gray2
+                        ) {
+                            DefaultTextFields(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        navEvent(LOCATION_ROUTE)
+                                    },
+                                value = state.postInfo.location.display,
+                                onValueChange = {
+                                    // do nothing
                                 },
-                            value = state.postInfo.location.display,
-                            onValueChange = {
-                                // do nothing
-                            },
-                            placeholderText = "희망 거래 지역을 설정해요",
-                            enabled = false,
-                            trailingIcon = {
-                                Image(
-                                    painter = painterResource(id = R.drawable.ic_next),
-                                    contentDescription = null
-                                )
-                            }
-                        )
+                                placeholderText = "희망 거래 지역을 설정해요",
+                                enabled = false,
+                                trailingIcon = {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.ic_next),
+                                        contentDescription = null
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
+            }
+
+            if (loading.value) {
+                RomCircularProgressIndicator()
             }
         }
     }

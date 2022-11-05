@@ -48,7 +48,6 @@ class AddViewModel @Inject constructor(
         )
     }
 
-    // todo
     fun onSelectLocation(location: Location) = with(state.value) {
         _state.value = copy(
             postInfo = postInfo.copy(
@@ -108,11 +107,11 @@ class AddViewModel @Inject constructor(
                     AddProductBody(
                         categoryId = postInfo.selectedCategory.code,
                         title = name,
-                        content = desc,
+                        content = desc, // todo 스테이트 데이터로 교체
                         images = listOf(
                             "https://d1p1ltj3ad3g5i.cloudfront.net/local/images/1/2022-10-31-00:26:34-1",
                             "https://d1p1ltj3ad3g5i.cloudfront.net/local/images/1/2022-10-31-00:26:34-1"
-                        ),
+                        ), // todo 이미지 업로드
                         regionCode = postInfo.location.code,
                         tradeMethodId = postInfo.selectedTradeMethod.code
                     )

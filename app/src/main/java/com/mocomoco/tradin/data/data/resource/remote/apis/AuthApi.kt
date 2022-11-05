@@ -1,4 +1,4 @@
-package com.mocomoco.tradin.data.data.resource.remote
+package com.mocomoco.tradin.data.data.resource.remote.apis
 
 import com.mocomoco.tradin.data.data.dto.request_body.*
 import com.mocomoco.tradin.data.data.dto.response.NicknameDuplicateBody
@@ -28,7 +28,4 @@ interface AuthApi {
 
     @POST("/api/v1/auth/signin")
     suspend fun postSignIn(@Body body: SignInBody): Response<SignInDto>
-
-    @POST("/api/v1/auth/token/refresh")
-    suspend fun postRefreshAccessToken(@Body body: RefreshTokenBody): Response<RefreshTokenDto>
 }

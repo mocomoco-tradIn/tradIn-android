@@ -6,9 +6,8 @@ import com.mocomoco.tradin.data.data.dto.request_body.*
 import com.mocomoco.tradin.data.data.dto.response.NicknameDuplicateBody
 import com.mocomoco.tradin.data.data.dto.response.PhoneAuthDto
 import com.mocomoco.tradin.data.data.dto.response.login.SignInDto
-import com.mocomoco.tradin.data.data.dto.response.refresh_token.RefreshTokenDto
 import com.mocomoco.tradin.data.data.repository.AuthRepository
-import com.mocomoco.tradin.data.data.resource.remote.AuthApi
+import com.mocomoco.tradin.data.data.resource.remote.apis.AuthApi
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -37,9 +36,5 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun postSignIn(body: SignInBody): SignInDto {
         return handleResponse(authApi.postSignIn(body))
-    }
-
-    override suspend fun postRefreshToken(body: RefreshTokenBody): RefreshTokenDto {
-        return handleResponse(authApi.postRefreshAccessToken(body))
     }
 }

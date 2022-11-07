@@ -45,6 +45,12 @@ class HomeViewModel @Inject constructor(
             _state.value = state.value.copy(
                 feeds = state.value.feeds.toMutableList().apply {
                     addAll(dto.feeds.map { mapToFeed(it) })
+                },
+                location = dto.region,
+                sortType = when (dto.sorted) {
+                    SortType.POPULAR.display -> SortType.POPULAR
+                    SortType.LATEST.display -> SortType.LATEST
+                    else -> SortType.VIEW
                 }
             )
         } catch (e: Exception) {
@@ -71,17 +77,11 @@ class HomeViewModel @Inject constructor(
 data class HomeState(
     val feeds: List<Feed> = listOf(),
     val isFeedLoading: Boolean = false,
-    val location: Location = Location(),
-    val sortType: SortType = SortType.POPULAR
+    val location: String = "",
+    val sortType: SortType = SortType.POPULAR,
 ) {
     data class ListState(
         val isLoading: Boolean
-    )
-
-    data class Event(
-        val onChangeSortType: (SortType) -> Unit,
-        val onChangeLocation: (Location) -> Unit,
-        val onClickLike: (id: Int, isLike: Boolean) -> Unit
     )
 }
 

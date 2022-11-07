@@ -12,13 +12,14 @@ data class Feed(
     val id: Int,
     val imgUrl: String,
     val isLiked: Boolean,
-    var title: String,
+    val title: String,
     val location: String,
     val nickname: String,
     val likeCount: Int,
     val status: FeedStatus,
     val createdAt: String
 )
+
 fun mapToFeed(dto: FeedDto): Feed = Feed(
     id = dto.feedId,
     imgUrl = dto.image,

@@ -8,8 +8,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.mocomoco.tradin.common.Logger
-import com.mocomoco.tradin.presentation.*
+import com.mocomoco.tradin.presentation.DetailsScreen
+import com.mocomoco.tradin.presentation.MainDestination
+import com.mocomoco.tradin.presentation.MainScreen
 import com.mocomoco.tradin.presentation.TradInDestinations.ADD_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.DETAILS_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.LOCATION_ROUTE
@@ -17,6 +18,7 @@ import com.mocomoco.tradin.presentation.TradInDestinations.LOGIN_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.MAIN_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.SIGNUP_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.WIP
+import com.mocomoco.tradin.presentation.WipScreen
 import com.mocomoco.tradin.presentation.add.AddScreen
 import com.mocomoco.tradin.presentation.location.LocationSelectScreen
 import com.mocomoco.tradin.presentation.login.LoginScreen
@@ -25,6 +27,7 @@ import com.mocomoco.tradin.presentation.main.community.CommunityScreen
 import com.mocomoco.tradin.presentation.main.home.HomeScreen
 import com.mocomoco.tradin.presentation.main.inventory.InventoryScreen
 import com.mocomoco.tradin.presentation.main.profile.ProfileScreen
+import com.mocomoco.tradin.presentation.nav.Arguments.FEED_ID
 import com.mocomoco.tradin.presentation.nav.Arguments.FROM_INVENTORY
 import com.mocomoco.tradin.presentation.signup.SignupScreen
 
@@ -48,9 +51,26 @@ fun TradInNavGraph(
             )
         }
 
-        composable(DETAILS_ROUTE) {
+        composable(
+            "$DETAILS_ROUTE/{${FEED_ID}}",
+            arguments = listOf(navArgument(FEED_ID) { type = NavType.IntType })
+        ) {
             DetailsScreen()
         }
+
+        composable(
+            "$ADD_ROUTE/{${FROM_INVENTORY}}",
+            arguments = listOf(navArgument(FROM_INVENTORY) { type = NavType.BoolType })
+        ) {
+            AddScreen { route ->
+                if (route.isNotEmpty()) {
+                    navController.navigate(route)
+                } else {
+                    navController.popBackStack()
+                }
+            }
+        }
+
 
         composable(LOGIN_ROUTE) {
             LoginScreen(
@@ -89,18 +109,6 @@ fun TradInNavGraph(
             }
         }
 
-        composable(
-            "$ADD_ROUTE/{${FROM_INVENTORY}}",
-            arguments = listOf(navArgument(FROM_INVENTORY) { type = NavType.BoolType })
-        ) {
-            AddScreen { route ->
-                if (route.isNotEmpty()) {
-                    navController.navigate(route)
-                } else {
-                    navController.popBackStack()
-                }
-            }
-        }
 
         composable(WIP) {
             WipScreen()
@@ -121,7 +129,11 @@ fun MainNavGraph(
         modifier = modifier
     ) {
         composable(MainDestination.HOME_ROUTE) {
-            HomeScreen()
+            HomeScreen(
+                onNavEvent = {
+                    onNavEvent(it)
+                }
+            )
         }
 
         composable(MainDestination.COMMUNITY_ROUTE) {
@@ -148,5 +160,6 @@ fun MainNavGraph(
 
 object Arguments {
     const val FROM_INVENTORY = "fromInventory"
+    const val FEED_ID = "feedId"
 }
 

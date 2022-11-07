@@ -7,7 +7,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,45 +23,139 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.mocomoco.tradin.R
 import com.mocomoco.tradin.common.Logger
+import com.mocomoco.tradin.model.Category
 import com.mocomoco.tradin.model.Feed
 import com.mocomoco.tradin.model.FeedStatus
-import com.mocomoco.tradin.presentation.common.HorizontalLineSpacer
+import com.mocomoco.tradin.presentation.TradInDestinations
 import com.mocomoco.tradin.presentation.common.HorizontalSpacer
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
+import com.mocomoco.tradin.presentation.nav.Arguments.FEED_ID
 import com.mocomoco.tradin.presentation.theme.*
 
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    onNavEvent: (String) -> Unit
 ) {
 
-    val state = viewModel.state.collectAsState()
+    val state = viewModel.state.collectAsState().value
 
     LaunchedEffect(true) {
         viewModel.load(lastId = 0)
     }
 
+    val categories = remember {
+        listOf(
+            (Category.Cloth),
+            (Category.Book),
+            (Category.Hobby),
+            (Category.Electronic),
+            (Category.Stuff),
+            (Category.Idol),
+            (Category.Ticket),
+            (Category.Etc),
+        )
+    }
+
     val lazyColumnState = rememberLazyGridState()
 
+
+    // --- 카테고리 ---
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        categories.take(4).forEach {
+            CategoryItem(
+                data = it,
+                onClick = {
+                    // todo 카테고리 화면으로 이동
+                }
+            )
+        }
+    }
+    VerticalSpacer(dp = 16.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        categories.takeLast(4).forEach {
+            CategoryItem(
+                data = it,
+                modifier = Modifier.fillMaxWidth(0.25f),
+                onClick = {
+                    // todo 카테고리 화면으로 이동
+                }
+            )
+        }
+    }
+
+
+    // --- 지역, 정렬 ---
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(4.dp, 2.dp)
+                .clip(RoundedCornerShape(50f))
+                .clickable {
+                    // todo 지역화면으로 이동
+                },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_location_red_22_dp),
+                contentDescription = null
+            )
+            HorizontalSpacer(dp = 2.dp)
+            Text(text = state.location, style = RomTextStyle.text16, color = Gray1)
+        }
+
+        Row(
+            modifier = Modifier
+                .padding(4.dp, 2.dp)
+                .clip(RoundedCornerShape(50f))
+                .clickable {
+                    // todo 바텀시트 띄우기
+                }, verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = state.sortType.display, style = RomTextStyle.text13, color = Gray2)
+            Image(
+                painter = painterResource(id = R.drawable.ic_drop_down_arrow_22_dp),
+                contentDescription = null
+            )
+        }
+
+    }
+
+    // --- 리스트 ---
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
             .fillMaxSize()
-            .padding(PaddingValues(16.dp)),
+            .padding(PaddingValues(horizontal = 16.dp)),
         state = lazyColumnState
     ) {
-        items(state.value.feeds.size) { index ->
-            HomeFeedItem(feed = state.value.feeds[index],
+     
+        items(state.feeds.size, key = { state.feeds[it].id }, contentType = { state.feeds[it]}) { index ->
+            HomeFeedItem(feed = state.feeds[index],
                 onClickLike = { id ->
                     viewModel.like(id)
                 },
                 onClickFeed = { feed ->
-                    // todo goToDetails
+                    onNavEvent("${TradInDestinations.DETAILS_ROUTE}/{${FEED_ID}}")
                 }
             )
         }
@@ -146,7 +243,10 @@ fun HomeFeedItem(feed: Feed, onClickLike: (id: Int) -> Unit, onClickFeed: (Feed)
                     color = feed.status.textColor,
                     fontWeight = FontWeight(700),
                     modifier = Modifier
-                        .background(color = feed.status.backgroundColor, shape = RoundedCornerShape(5.dp))
+                        .background(
+                            color = feed.status.backgroundColor,
+                            shape = RoundedCornerShape(5.dp)
+                        )
                         .padding(horizontal = 8.dp, vertical = 6.dp)
                 )
             }
@@ -165,3 +265,40 @@ fun HomeFeedItem(feed: Feed, onClickLike: (id: Int) -> Unit, onClickFeed: (Feed)
     }
 
 }
+
+
+@Composable
+fun CategoryItem(
+    data: Category,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
+            .clickable { onClick() },
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+        ) {
+            Image(
+                painter = painterResource(id = data.iconResId),
+                contentDescription = null,
+                contentScale = ContentScale.Fit
+            )
+        }
+        VerticalSpacer(dp = 10.dp)
+        Text(
+            text = data.display,
+            style = RomTextStyle.text13,
+            color = Gray0,
+            fontWeight = FontWeight(500)
+        )
+    }
+}
+
+
+

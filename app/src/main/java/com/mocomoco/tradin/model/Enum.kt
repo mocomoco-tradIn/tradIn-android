@@ -21,3 +21,9 @@ enum class TradeMethod(val code: Int, val display: String) {
     Parcel(2, "택배"),
     Etc(3, "기타")
 }
+
+enum class SortType(val code: Int, val display: String) {
+    POPULAR(0, "인기순"),
+    LATEST(1, "최신순"),
+    VIEW(2, "조회순")
+}

@@ -27,3 +27,9 @@ enum class SortType(val code: Int, val display: String) {
     LATEST(1, "최신순"),
     VIEW(2, "조회순")
 }
+
+enum class FeedStatus(val code: String, val display: String) {
+    NONE("", ""),
+    WAIT("wait", "예약중"),
+    PROGRESS("progress", "교환가능")
+}

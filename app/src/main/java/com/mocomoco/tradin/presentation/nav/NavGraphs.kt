@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.mocomoco.tradin.common.Logger
 import com.mocomoco.tradin.presentation.*
 import com.mocomoco.tradin.presentation.TradInDestinations.ADD_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.DETAILS_ROUTE
@@ -31,7 +32,7 @@ import com.mocomoco.tradin.presentation.signup.SignupScreen
 fun TradInNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = TradInDestinations.MAIN_ROUTE
+    startDestination: String = MAIN_ROUTE
 ) {
     NavHost(
         navController = navController,
@@ -96,7 +97,7 @@ fun TradInNavGraph(
                 if (route.isNotEmpty()) {
                     navController.navigate(route)
                 } else {
-                    navController.popBackStack("$ADD_ROUTE/{${FROM_INVENTORY}}", true, true)
+                    navController.popBackStack()
                 }
             }
         }

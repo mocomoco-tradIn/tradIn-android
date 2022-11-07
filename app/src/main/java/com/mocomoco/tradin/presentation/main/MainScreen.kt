@@ -91,7 +91,9 @@ fun MainBottomNavigation(
                                     saveState = true
                                 }
                                 launchSingleTop = true
-                                restoreState = true
+                                if (bottomNavItem.route != MainDestination.INVENTORY_ROUTE) {
+                                    restoreState = true
+                                }
                             }
                         },
                         modifier = Modifier.weight(1f, true),

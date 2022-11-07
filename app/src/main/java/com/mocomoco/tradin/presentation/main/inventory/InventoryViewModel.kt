@@ -27,11 +27,9 @@ class InventoryViewModel @Inject constructor(
     )
     val state: StateFlow<InventoryState> = _state
 
-    init {
-        load()
-    }
 
-    private fun load() = viewModelScope.launch(Dispatchers.IO) {
+
+    fun load() = viewModelScope.launch(Dispatchers.IO) {
         val dto = productRepository.getProducts(0)
         _state.value = state.value.copy(
             products = dto.products.mapIndexed { index, value ->

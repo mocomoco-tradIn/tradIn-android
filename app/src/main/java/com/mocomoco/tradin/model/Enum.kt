@@ -1,6 +1,8 @@
 package com.mocomoco.tradin.model
 
+import androidx.compose.ui.graphics.Color
 import com.mocomoco.tradin.R
+import com.mocomoco.tradin.presentation.theme.*
 
 
 enum class Category(val code: Int, val display: String, val iconResId: Int) {
@@ -28,8 +30,8 @@ enum class SortType(val code: Int, val display: String) {
     VIEW(2, "조회순")
 }
 
-enum class FeedStatus(val code: String, val display: String) {
-    NONE("", ""),
-    WAIT("wait", "예약중"),
-    PROGRESS("progress", "교환가능")
+enum class FeedStatus(val code: String, val display: String, val backgroundColor: Color, val textColor: Color) {
+    NONE("", "", Transparent, Transparent),
+    WAIT("wait", "예약중", Orange3, Orange0),
+    PROGRESS("progress", "교환가능", Mint3, Mint1)
 }

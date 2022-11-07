@@ -1,15 +1,10 @@
 package com.mocomoco.tradin.presentation.main.home
 
-import androidx.compose.runtime.MutableState
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.mocomoco.tradin.base.BaseViewModel
 import com.mocomoco.tradin.data.data.dto.request_body.FeedIdBody
 import com.mocomoco.tradin.data.data.repository.FeedRepository
-import com.mocomoco.tradin.model.Category
-import com.mocomoco.tradin.model.Feed
-import com.mocomoco.tradin.model.Location
-import com.mocomoco.tradin.model.SortType
+import com.mocomoco.tradin.model.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -40,11 +35,17 @@ class HomeViewModel @Inject constructor(
     ) = viewModelScope.launch(Dispatchers.IO) {
         _state.value = state.value.copy(isFeedLoading = true)
         try {
-            feedRepository.getHomeFeeds(
+            val dto = feedRepository.getHomeFeeds(
                 region = location?.code,
                 sorted = sortType.code,
                 category = category?.code,
                 lastId = lastId
+            )
+
+            _state.value = state.value.copy(
+                feeds = state.value.feeds.toMutableList().apply {
+                    addAll(dto.feeds.map { mapToFeed(it) })
+                }
             )
         } catch (e: Exception) {
 

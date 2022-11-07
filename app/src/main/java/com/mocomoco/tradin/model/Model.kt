@@ -10,7 +10,7 @@ data class Location(
 
 data class Feed(
     val id: Int,
-    val imageUrl: String,
+    val imgUrl: String,
     val isLiked: Boolean,
     var title: String,
     val location: String,
@@ -21,7 +21,7 @@ data class Feed(
 )
 fun mapToFeed(dto: FeedDto): Feed = Feed(
     id = dto.feedId,
-    imageUrl = dto.image,
+    imgUrl = dto.image,
     isLiked = dto.isLikes,
     title = dto.title,
     location = dto.region,

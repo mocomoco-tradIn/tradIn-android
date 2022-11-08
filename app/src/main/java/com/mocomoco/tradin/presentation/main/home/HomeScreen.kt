@@ -47,7 +47,6 @@ import com.mocomoco.tradin.presentation.TradInDestinations
 import com.mocomoco.tradin.presentation.common.HorizontalSpacer
 import com.mocomoco.tradin.presentation.common.RomCircularProgressIndicator
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
-import com.mocomoco.tradin.presentation.nav.Arguments.FEED_ID
 import com.mocomoco.tradin.presentation.theme.*
 import com.mocomoco.tradin.util.ext.showToast
 import kotlinx.coroutines.delay
@@ -287,7 +286,7 @@ fun HomeScreen(
                                 viewModel.like(id)
                             },
                             onClickFeed = { feed ->
-                                onNavEvent("${TradInDestinations.DETAILS_ROUTE}/{${FEED_ID}}")
+                                onNavEvent("${TradInDestinations.DETAILS_ROUTE}/${feed.id}")
                             },
                             modifier = Modifier.weight(1f)
                         )
@@ -301,7 +300,7 @@ fun HomeScreen(
                                     viewModel.like(id)
                                 },
                                 onClickFeed = { feed ->
-                                    onNavEvent("${TradInDestinations.DETAILS_ROUTE}/{${FEED_ID}}")
+                                    onNavEvent("${TradInDestinations.DETAILS_ROUTE}/${feed.id}")
                                 },
                                 modifier = Modifier.weight(1f)
                             )

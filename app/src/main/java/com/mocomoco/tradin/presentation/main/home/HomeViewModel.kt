@@ -2,9 +2,9 @@ package com.mocomoco.tradin.presentation.main.home
 
 import androidx.lifecycle.viewModelScope
 import com.mocomoco.tradin.base.BaseViewModel
-import com.mocomoco.tradin.common.Logger
 import com.mocomoco.tradin.data.data.dto.request_body.FeedIdBody
 import com.mocomoco.tradin.data.data.repository.FeedRepository
+import com.mocomoco.tradin.data.data.resource.local.PreferenceService
 import com.mocomoco.tradin.model.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val feedRepository: FeedRepository,
+    private val preferenceService: PreferenceService
 ) : BaseViewModel() {
     val a = "asdf"
 
@@ -28,25 +29,24 @@ class HomeViewModel @Inject constructor(
     val successLikeEvent = _successLikeEvent.asSharedFlow()
 
 
-    suspend fun load(
+    fun load(
         sortType: SortType = SortType.POPULAR,
         location: Location? = null,
         category: Category? = null,
         lastId: Int = 0
     ) = viewModelScope.launch(Dispatchers.IO) {
+        _loading.value = true
         _state.value = state.value.copy(isFeedLoading = true)
         try {
             val dto = feedRepository.getHomeFeeds(
-                region = location?.code,
+                region = preferenceService.getLocation(),
                 sorted = sortType.code,
                 category = category?.code,
                 lastId = lastId
             )
 
             _state.value = state.value.copy(
-                feeds = state.value.feeds.toMutableList().apply {
-                    addAll(dto.feeds.map { mapToFeed(it) })
-                },
+                feeds = dto.feeds.map { mapToFeed(it) },
                 location = dto.region,
                 sortType = when (dto.sorted) {
                     SortType.POPULAR.display -> SortType.POPULAR
@@ -57,6 +57,7 @@ class HomeViewModel @Inject constructor(
         } catch (e: Exception) {
 
         } finally {
+            _loading.value = false
             _state.value = state.value.copy(isFeedLoading = false)
         }
     }
@@ -65,8 +66,19 @@ class HomeViewModel @Inject constructor(
         _loading.value = true
         try {
             feedRepository.postLikeFeed(FeedIdBody(feedId = id))
+            _state.value = state.value.copy(
+                feeds = state.value.feeds.map {
+                    if (it.id == id) {
+                        it.copy(
+                            isLiked = !it.isLiked
+                        )
+                    } else {
+                        it
+                    }
+                }
+            )
         } catch (e: Exception) {
-
+            _toastMessage.emit("오류 발생 e:${e.message}")
         } finally {
             _loading.value = false
         }

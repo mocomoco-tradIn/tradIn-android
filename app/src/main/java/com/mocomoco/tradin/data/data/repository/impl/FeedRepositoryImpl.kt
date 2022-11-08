@@ -19,7 +19,7 @@ class FeedRepositoryImpl @Inject constructor(
         category: Int?,
         lastId: Int?
     ): HomeFeedsDto {
-        return handleResponse(feedApi.getHomeFeeds(region, sorted, category, lastId))
+        return handleResponse(feedApi.getHomeFeeds(region, sorted, category, lastId, 1000))
     }
 
     override suspend fun getMyFeeds(lastId: Int): FeedsDto {

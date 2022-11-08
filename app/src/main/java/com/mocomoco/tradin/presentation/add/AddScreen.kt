@@ -401,7 +401,6 @@ fun BottomSheet(
     onClickAlbum: () -> Unit,
     onClickCamera: () -> Unit
 ) {
-    val width = LocalConfiguration.current.screenWidthDp.dp + 4.dp
     Column(
         modifier = Modifier
             .fillMaxWidth()

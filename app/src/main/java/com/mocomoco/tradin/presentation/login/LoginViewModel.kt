@@ -42,6 +42,7 @@ class LoginViewModel @Inject constructor(
             preferenceService.setAccessToken(dto.accessToken.value)
             preferenceService.setRefreshTokenKey(dto.refreshToken.key)
             preferenceService.setRefreshToken(dto.refreshToken.value)
+            preferenceService.setLocation(dto.info.regionCode)
 
             _state.value = state.value.copy(
                 invalidAccount = false,

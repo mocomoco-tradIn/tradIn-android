@@ -1,11 +1,12 @@
 package com.mocomoco.tradin.presentation.main.home
 
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,6 +15,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -22,27 +24,33 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LOGGER
+import androidx.paging.Logger
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mocomoco.tradin.R
-import com.mocomoco.tradin.common.Logger
 import com.mocomoco.tradin.model.Category
 import com.mocomoco.tradin.model.Feed
 import com.mocomoco.tradin.model.FeedStatus
+import com.mocomoco.tradin.model.SortType
 import com.mocomoco.tradin.presentation.TradInDestinations
 import com.mocomoco.tradin.presentation.common.HorizontalSpacer
+import com.mocomoco.tradin.presentation.common.RomCircularProgressIndicator
 import com.mocomoco.tradin.presentation.common.VerticalSpacer
 import com.mocomoco.tradin.presentation.nav.Arguments.FEED_ID
 import com.mocomoco.tradin.presentation.theme.*
+import com.mocomoco.tradin.util.ext.showToast
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
@@ -51,8 +59,17 @@ fun HomeScreen(
 
     val state = viewModel.state.collectAsState().value
 
+    val loading = viewModel.loading.collectAsState().value
+
+    val context = LocalContext.current
     LaunchedEffect(true) {
         viewModel.load(lastId = 0)
+
+        launch {
+            viewModel.toastMessage.collect {
+                it.showToast(context)
+            }
+        }
     }
 
     val categories = remember {
@@ -91,9 +108,18 @@ fun HomeScreen(
         mutableStateOf(0f)
     }
 
-    Logger.log("toolbarHeight ${toolbarHeightPx.value} / toolbarOffset ${toolbarOffsetPx.value}")
+    val dropdownMenuDp = remember {
+        mutableStateOf(Offset.Zero)
+    }
+
+    val expandDropDown = remember {
+        mutableStateOf(true)
+    }
 
     val lazyColumnState = rememberLazyListState()
+    val bottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val scope = rememberCoroutineScope()
 
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -106,141 +132,143 @@ fun HomeScreen(
         }
     }
 
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(nestedScrollConnection)
+    ModalBottomSheetLayout(
+        sheetContent = {
+            HomeBottomSheet(
+                onClick = {
+                    viewModel.load(sortType = it)
+                    scope.launch {
+                        bottomSheetState.hide()
+                    }
+                }
+            )
+        },
+        sheetShape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp),
+        sheetState = bottomSheetState
     ) {
-        LazyColumn(
+        Box(
             modifier = Modifier
-                .fillMaxSize(),
-            contentPadding = PaddingValues(top = toolbarHeight),
-            state = lazyColumnState
+                .fillMaxSize()
+                .nestedScroll(nestedScrollConnection)
         ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentPadding = PaddingValues(top = toolbarHeight),
+                state = lazyColumnState
+            ) {
 
 
-            // --- 카테고리 ---
-            item {
-                VerticalSpacer(dp = 16.dp)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    categories.take(4).forEachIndexed { index, category ->
-                        CategoryItem(
-                            data = category,
-                            modifier = Modifier.weight(1f),
-                            onClick = {
-                                // todo 카테고리 화면으로 이동
-                            }
-                        )
-
-                        if (index != 3) {
-                            HorizontalSpacer(dp = 28.dp)
-                        }
-                    }
-                }
-                VerticalSpacer(dp = 16.dp)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    categories.takeLast(4).forEachIndexed { index, category ->
-                        CategoryItem(
-                            data = category,
-                            modifier = Modifier.weight(1f),
-                            onClick = {
-                                // todo 카테고리 화면으로 이동
-                            }
-                        )
-                        if (index != 3) {
-                            HorizontalSpacer(dp = 28.dp)
-                        }
-                    }
-                }
-            }
-            
-            
-            item {
-                VerticalSpacer(dp = 12.dp)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                // --- 카테고리 ---
+                item {
+                    VerticalSpacer(dp = 16.dp)
                     Row(
                         modifier = Modifier
-//                            .clip(RoundedCornerShape(50f))
-                            .clickable {
-                                // todo 지역화면으로 이동
-                            },
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        categories.take(4).forEachIndexed { index, category ->
+                            CategoryItem(
+                                data = category,
+                                modifier = Modifier.weight(1f),
+                                onClick = {
+                                    // todo 카테고리 화면으로 이동
+                                }
+                            )
+
+                            if (index != 3) {
+                                HorizontalSpacer(dp = 28.dp)
+                            }
+                        }
+                    }
+                    VerticalSpacer(dp = 16.dp)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        categories.takeLast(4).forEachIndexed { index, category ->
+                            CategoryItem(
+                                data = category,
+                                modifier = Modifier.weight(1f),
+                                onClick = {
+                                    // todo 카테고리 화면으로 이동
+                                }
+                            )
+                            if (index != 3) {
+                                HorizontalSpacer(dp = 28.dp)
+                            }
+                        }
+                    }
+                }
+
+
+                item {
+                    VerticalSpacer(dp = 12.dp)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_location_red_22_dp),
-                            contentDescription = null
-                        )
-                        HorizontalSpacer(dp = 2.dp)
-                        Text(text = state.location, style = RomTextStyle.text16, color = Gray1)
-                    }
+                        Row(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(50f))
+                                .clickable {
+                                    // todo 지역화면으로 이동
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_location_red_22_dp),
+                                contentDescription = null
+                            )
+                            HorizontalSpacer(dp = 2.dp)
+                            Text(text = state.location, style = RomTextStyle.text16, color = Gray1)
+                        }
 
+                        Row(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(50f))
+                                .clickable {
+                                    scope.launch {
+                                        bottomSheetState.show()
+                                    }
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = state.sortType.display,
+                                style = RomTextStyle.text13,
+                                color = Gray2
+                            )
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_drop_down_arrow_22_dp),
+                                contentDescription = null
+                            )
+                        }
+
+                    }
+                }
+
+
+                // --- 피드 ---
+                val pairs = state.feeds.chunked(2)
+                items(
+                    pairs.size,
+                    key = { pairs[it].first().id },
+                    contentType = { pairs[it].first() }
+                ) { index ->
                     Row(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(50f))
-                            .clickable {
-                                // todo 바텀시트 띄우기
-                            }, verticalAlignment = Alignment.CenterVertically
+                            .fillMaxWidth()
+                            .padding(16.dp)
                     ) {
-                        Text(
-                            text = state.sortType.display,
-                            style = RomTextStyle.text13,
-                            color = Gray2
-                        )
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_drop_down_arrow_22_dp),
-                            contentDescription = null
-                        )
-                    }
-
-                }
-            }
-
-
-            // --- 피드 ---
-            val pairs = state.feeds.chunked(2)
-            items(
-                pairs.size,
-                key = { pairs[it].first().id },
-                contentType = { pairs[it].first() }
-            ) { index ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    HomeFeedItem(
-                        feed = pairs[index][0],
-                        onClickLike = { id ->
-                            viewModel.like(id)
-                        },
-                        onClickFeed = { feed ->
-                            onNavEvent("${TradInDestinations.DETAILS_ROUTE}/{${FEED_ID}}")
-                        },
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    HorizontalSpacer(dp = 12.dp)
-
-                    if (pairs[index].size > 1) {
                         HomeFeedItem(
-                            feed = pairs[index][1],
+                            feed = pairs[index][0],
                             onClickLike = { id ->
                                 viewModel.like(id)
                             },
@@ -249,61 +277,120 @@ fun HomeScreen(
                             },
                             modifier = Modifier.weight(1f)
                         )
+
+                        HorizontalSpacer(dp = 12.dp)
+
+                        if (pairs[index].size > 1) {
+                            HomeFeedItem(
+                                feed = pairs[index][1],
+                                onClickLike = { id ->
+                                    viewModel.like(id)
+                                },
+                                onClickFeed = { feed ->
+                                    onNavEvent("${TradInDestinations.DETAILS_ROUTE}/{${FEED_ID}}")
+                                },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
                     }
                 }
             }
-        }
 
 
-        // --- toolbar ---
-        Column(
-            modifier = Modifier
-                .offset {
-                    IntOffset(0, toolbarOffsetPx.value.roundToInt())
+            // --- toolbar ---
+            Column(
+                modifier = Modifier
+                    .offset {
+                        IntOffset(0, toolbarOffsetPx.value.roundToInt())
+                    }
+                    .fillMaxWidth()
+                    .background(color = White)
+                    .onGloballyPositioned {
+                        toolbarHeightPx.value = it.size.height.toFloat()
+                    },
+            ) {
+                VerticalSpacer(dp = 14.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = title,
+                        style = RomTextStyle.text17,
+                        fontWeight = FontWeight(500),
+                        modifier = Modifier.padding(top = 6.dp)
+                    )
+
+                    Row {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_search),
+                            contentDescription = null
+                        )
+                        HorizontalSpacer(dp = 6.dp)
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_notification),
+                            contentDescription = null
+                        )
+                    }
                 }
-                .fillMaxWidth()
-                .background(color = White)
-                .onGloballyPositioned {
-                    toolbarHeightPx.value = it.size.height.toFloat()
-                },
-        ) {
-            VerticalSpacer(dp = 14.dp)
-            Row(
+                VerticalSpacer(dp = 9.dp)
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(Gray7)
+                )
+            }
+
+            // --- loading ---
+            if (loading) {
+                RomCircularProgressIndicator()
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeBottomSheet(
+    onClick: (SortType) -> Unit
+) {
+
+    val sorted = remember {
+        listOf(
+            SortType.POPULAR,
+            SortType.LATEST,
+            SortType.VIEW
+        )
+    }
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        sorted.forEachIndexed { index, sortType ->
+            Text(
+                text = sortType.display,
+                style = RomTextStyle.text16,
+                color = Gray0,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = title,
-                    style = RomTextStyle.text17,
-                    fontWeight = FontWeight(500),
-                    modifier = Modifier.padding(top = 6.dp)
-                )
+                    .clickable { onClick(sortType) }
+                    .padding(
+                        top = if (index == 0) 24.dp else 18.dp,
+                        bottom = if (index == 2) 24.dp else 18.dp
+                    ),
+                textAlign = TextAlign.Center
+            )
 
-                Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_search),
-                        contentDescription = null
-                    )
-                    HorizontalSpacer(dp = 6.dp)
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_notification),
-                        contentDescription = null
-                    )
-                }
-            }
-            VerticalSpacer(dp = 9.dp)
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(1.dp)
-                    .background(Gray7)
+                    .background(Gray6)
             )
         }
-    }
 
+    }
 }
 
 

@@ -48,6 +48,14 @@ class PreferenceService @Inject constructor(@ApplicationContext context: Context
         return sharedPreferences.getString(REFRESH_TOKEN_KEY, null)
     }
 
+    fun setLocation(location: String) {
+        sharedPreferences.edit().putString(LAST_LOCATION, location).apply()
+    }
+
+    fun getLocation(): String? {
+        return sharedPreferences.getString(LAST_LOCATION, null)
+    }
+
     companion object {
         const val PREFERENCE_NAME = "tradIn"
 
@@ -55,6 +63,8 @@ class PreferenceService @Inject constructor(@ApplicationContext context: Context
         const val ACCESS_TOKEN_KEY = "accessTokenKey"
         const val REFRESH_TOKEN = "refreshToken"
         const val REFRESH_TOKEN_KEY = "refreshTokenKey"
+
+        const val LAST_LOCATION = "lastLocation"
 
         const val AUTO_LOGIN = "autoLogin"
     }

@@ -2,6 +2,7 @@ package com.mocomoco.tradin.presentation.main.home
 
 import androidx.lifecycle.viewModelScope
 import com.mocomoco.tradin.base.BaseViewModel
+import com.mocomoco.tradin.common.Logger
 import com.mocomoco.tradin.data.data.dto.request_body.FeedIdBody
 import com.mocomoco.tradin.data.data.repository.FeedRepository
 import com.mocomoco.tradin.model.*
@@ -51,7 +52,7 @@ class HomeViewModel @Inject constructor(
                     SortType.POPULAR.display -> SortType.POPULAR
                     SortType.LATEST.display -> SortType.LATEST
                     else -> SortType.VIEW
-                }
+                },
             )
         } catch (e: Exception) {
 

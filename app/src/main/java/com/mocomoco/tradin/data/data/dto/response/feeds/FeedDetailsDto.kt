@@ -7,7 +7,7 @@ data class FeedDetailsDto(
     val createdAt: String,
     val feedId: Int,
     val hit: Int,
-    val images: List<String>,
+    val images: List<String>?,
     val likes: Int,
     val nickname: String,
     val region: String,

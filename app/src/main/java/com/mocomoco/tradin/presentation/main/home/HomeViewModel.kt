@@ -44,7 +44,7 @@ class HomeViewModel @Inject constructor(
             )
 
             _state.value = state.value.copy(
-                feeds = dto.feeds.map { mapToFeed(it) },
+                feeds = dto.feeds?.map { mapToFeed(it) } ?: listOf(),
                 location = dto.region,
                 sortType = when (dto.sorted) {
                     SortType.POPULAR.display -> SortType.POPULAR

@@ -32,9 +32,9 @@ class InventoryViewModel @Inject constructor(
     fun load() = viewModelScope.launch(Dispatchers.IO) {
         val dto = productRepository.getProducts(0)
         _state.value = state.value.copy(
-            products = dto.products.mapIndexed { index, value ->
+            products = dto.products?.mapIndexed { index, value ->
                 value.mapToInventoryItem(index)
-            }
+            } ?: listOf()
         )
 
     }

@@ -44,7 +44,7 @@ class CategoryViewModel @Inject constructor(
                     title = dto.category,
                     feedCount = dto.totalCount,
                     sortType = sortType,
-                    feeds = dto.feeds.map { mapToFeed(it) }
+                    feeds = dto.feeds?.map { mapToFeed(it) } ?: listOf()
                 )
             } catch (e: Exception) {
 

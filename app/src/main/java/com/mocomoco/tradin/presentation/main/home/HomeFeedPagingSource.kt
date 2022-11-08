@@ -28,10 +28,10 @@ class HomeFeedPagingSource(
 
             //prevId = lastId
 
-            val nextKey = if (dto.feeds.size < PAGE_SIZE) null else dto.lastId
+            val nextKey = if (dto.feeds != null && dto.feeds.size < PAGE_SIZE) null else dto.lastId
 
             LoadResult.Page(
-                data = dto.feeds.map { mapToFeed(it) },
+                data = dto.feeds?.map { mapToFeed(it) } ?: listOf(),
                 prevKey = null,
                 nextKey = nextKey
             )

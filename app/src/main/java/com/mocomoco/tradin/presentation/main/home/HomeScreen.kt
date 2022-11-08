@@ -1,20 +1,16 @@
 package com.mocomoco.tradin.presentation.main.home
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -22,39 +18,29 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.mocomoco.tradin.R
+import com.mocomoco.tradin.common.Constants.LikeAnimDuration
 import com.mocomoco.tradin.model.Category
 import com.mocomoco.tradin.model.Feed
-import com.mocomoco.tradin.model.FeedStatus
-import com.mocomoco.tradin.model.SortType
 import com.mocomoco.tradin.presentation.TradInDestinations
-import com.mocomoco.tradin.presentation.common.HorizontalSpacer
-import com.mocomoco.tradin.presentation.common.RomCircularProgressIndicator
-import com.mocomoco.tradin.presentation.common.VerticalSpacer
+import com.mocomoco.tradin.presentation.TradInDestinations.CATEGORY_ROUTE
+import com.mocomoco.tradin.presentation.common.*
 import com.mocomoco.tradin.presentation.theme.*
 import com.mocomoco.tradin.util.ext.showToast
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
@@ -83,7 +69,7 @@ fun HomeScreen(
             viewModel.successLikeEvent.collect {
                 if (it) {
                     showLikeAnimation = true
-                    delay(1500L)
+                    delay(LikeAnimDuration)
                     showLikeAnimation = false
                 }
             }
@@ -140,16 +126,12 @@ fun HomeScreen(
         }
     }
 
-
-    val height = LocalConfiguration.current.screenHeightDp
-    val density = LocalDensity.current
-
     var showSortDialog by remember {
         mutableStateOf(false)
     }
 
     if (showSortDialog) {
-        HomeSortDialog(
+        SortDialog(
             onDismiss = {
                 showSortDialog = false
             },
@@ -187,7 +169,14 @@ fun HomeScreen(
                             data = category,
                             modifier = Modifier.weight(1f),
                             onClick = {
-                                // todo 카테고리 화면으로 이동
+                                onNavEvent(
+                                    "$CATEGORY_ROUTE/${category.code}/${
+                                        category.display.replace(
+                                            "/",
+                                            ""
+                                        )
+                                    }"
+                                )
                             }
                         )
 
@@ -208,7 +197,15 @@ fun HomeScreen(
                             data = category,
                             modifier = Modifier.weight(1f),
                             onClick = {
-                                // todo 카테고리 화면으로 이동
+                                category.display.replace("/", "")
+                                onNavEvent(
+                                    "$CATEGORY_ROUTE/${category.code}/${
+                                        category.display.replace(
+                                            "/",
+                                            ""
+                                        )
+                                    }"
+                                )
                             }
                         )
                         if (index != 3) {
@@ -280,7 +277,7 @@ fun HomeScreen(
                             .fillMaxWidth()
                             .padding(16.dp)
                     ) {
-                        HomeFeedItem(
+                        FeedItem(
                             feed = pairs[index][0],
                             onClickLike = { id ->
                                 viewModel.like(id)
@@ -294,7 +291,7 @@ fun HomeScreen(
                         HorizontalSpacer(dp = 12.dp)
 
                         if (pairs[index].size > 1) {
-                            HomeFeedItem(
+                            FeedItem(
                                 feed = pairs[index][1],
                                 onClickLike = { id ->
                                     viewModel.like(id)
@@ -304,6 +301,8 @@ fun HomeScreen(
                                 },
                                 modifier = Modifier.weight(1f)
                             )
+                        } else {
+                            Spacer(modifier = Modifier.weight(1f))
                         }
                     }
                 }
@@ -359,47 +358,7 @@ fun HomeScreen(
             }
 
         // --- animation ---
-        AnimatedVisibility(
-            visible = showLikeAnimation,
-            enter = fadeIn(initialAlpha = 0.5f),
-            exit = fadeOut()
-        ) {
-            Spacer(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .alpha(0.3f)
-                    .background(Gray0)
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.5f)
-                .align(Alignment.BottomCenter)
-        ) {
-            AnimatedVisibility(
-                visible = showLikeAnimation,
-                enter = slideInVertically() {
-                    // Slide in from 40 dp from the top.
-                    with(density) { height.dp.roundToPx() }
-                },
-                exit = fadeOut()
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_like_on_36_dp),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(128.dp),
-                        contentScale = ContentScale.Fit
-                    )
-                }
-            }
-        }
+        LikeAnimation(showLikeAnimation = showLikeAnimation)
 
 
         // --- loading ---
@@ -409,165 +368,7 @@ fun HomeScreen(
     }
 }
 
-@Composable
-fun HomeSortDialog(
-    onDismiss: () -> Unit,
-    onClick: (SortType) -> Unit
-) {
-    val sorted = remember {
-        listOf(
-            SortType.POPULAR,
-            SortType.LATEST,
-            SortType.VIEW
-        )
-    }
 
-    Dialog(
-        onDismissRequest = {
-            onDismiss()
-        }) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(White, RoundedCornerShape(5.dp))
-                .border(borderStrokeBlack2, RoundedCornerShape(5.dp))
-                .clip(RoundedCornerShape(5.dp))
-        ) {
-            sorted.forEachIndexed { index, sortType ->
-                Text(
-                    text = sortType.display,
-                    style = RomTextStyle.text16,
-                    color = Gray0,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            onClick(sortType)
-                            onDismiss()
-                        }
-                        .padding(
-                            top = if (index == 0) 24.dp else 18.dp,
-                            bottom = if (index == 2) 24.dp else 18.dp
-                        ),
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(Gray6)
-                )
-            }
-
-        }
-
-    }
-}
-
-
-@Composable
-fun HomeFeedItem(
-    feed: Feed,
-    onClickLike: (id: Int) -> Unit,
-    onClickFeed: (Feed) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
-            .clickable {
-                onClickFeed(feed)
-            }
-            .padding(8.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .aspectRatio(1f)
-        ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current).data(feed.imgUrl).crossfade(true)
-                    .build(),
-                contentDescription = null,
-                modifier = Modifier
-                    .border(borderStrokeBlack2, shape = RoundedCornerShape(10.dp))
-                    .clip(RoundedCornerShape(10.dp)),
-                contentScale = ContentScale.Crop,
-            )
-
-            Image(painter = painterResource(
-                id = if (feed.isLiked) R.drawable.ic_like_on_36_dp else R.drawable.ic_like_off_36_dp
-            ),
-                contentDescription = null,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .offset((-4).dp, (-4).dp)
-                    .clip(RoundedCornerShape(50f))
-                    .clickable { onClickLike(feed.id) })
-
-        }
-
-        VerticalSpacer(dp = 12.dp)
-
-        Text(text = feed.title, style = RomTextStyle.text14, color = Gray0)
-        VerticalSpacer(dp = 4.dp)
-
-        Text(
-            text = "${feed.location} · ${feed.nickname}",
-            style = RomTextStyle.text12,
-            color = Gray2,
-            overflow = TextOverflow.Ellipsis
-        )
-        VerticalSpacer(dp = 10.dp)
-
-        Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
-            Row(
-                modifier = Modifier
-                    .border(BorderStroke(1.dp, Gray4), shape = RoundedCornerShape(50f))
-                    .clip(RoundedCornerShape(50f))
-                    .padding(vertical = 2.dp, horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_like_off_21_dp),
-                    contentDescription = null
-                )
-                Text(
-                    text = if (feed.likeCount > 999) "999+" else "${feed.likeCount}",
-                    style = RomTextStyle.text12,
-                    color = Gray1
-                )
-            }
-            HorizontalSpacer(dp = 8.dp)
-
-            if (feed.status != FeedStatus.NONE) {
-                Text(
-                    text = feed.status.display,
-                    style = RomTextStyle.text12,
-                    color = feed.status.textColor,
-                    fontWeight = FontWeight(700),
-                    modifier = Modifier
-                        .background(
-                            color = feed.status.backgroundColor,
-                            shape = RoundedCornerShape(5.dp)
-                        )
-                        .padding(horizontal = 8.dp, vertical = 6.dp)
-                )
-            }
-
-        }
-        VerticalSpacer(dp = 8.dp)
-
-
-        Text(
-            text = feed.createdAt,
-            style = RomTextStyle.text12,
-            fontWeight = FontWeight(400),
-            color = Gray3
-        )
-        VerticalSpacer(dp = 10.dp)
-    }
-
-}
 
 
 @Composable

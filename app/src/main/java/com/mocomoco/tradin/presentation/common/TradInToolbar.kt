@@ -1,6 +1,7 @@
 package com.mocomoco.tradin.presentation.common
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
@@ -11,11 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mocomoco.tradin.R
-import com.mocomoco.tradin.presentation.theme.Gray0
-import com.mocomoco.tradin.presentation.theme.Gray7
-import com.mocomoco.tradin.presentation.theme.TradInTypography
+import com.mocomoco.tradin.presentation.theme.*
 
 @Composable
 fun DefaultToolbar(
@@ -29,6 +29,7 @@ fun DefaultToolbar(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .background(White)
     ) {
         Box(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
             if (showBack) {
@@ -44,8 +45,9 @@ fun DefaultToolbar(
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = title,
-                style = TradInTypography.h4,
-                color = Gray0
+                style = RomTextStyle.text16,
+                color = Gray0,
+                fontWeight = FontWeight(500)
             )
 
             Row(modifier = Modifier.align(Alignment.CenterEnd)) {

@@ -9,16 +9,18 @@ data class Location(
 )
 
 data class Feed(
-    val id: Int,
-    val imgUrl: String,
-    val isLiked: Boolean,
-    val title: String,
-    val location: String,
-    val nickname: String,
-    val likeCount: Int,
-    val status: FeedStatus,
-    val createdAt: String
-)
+    val id: Int = -1,
+    val imgUrl: String = "",
+    val isLiked: Boolean = false,
+    val title: String = "",
+    val location: String = "",
+    val nickname: String = "",
+    val likeCount: Int = 0,
+    val status: FeedStatus = FeedStatus.NONE,
+    val createdAt: String = ""
+) {
+    val invisible = id == -1
+}
 
 fun mapToFeed(dto: FeedDto): Feed = Feed(
     id = dto.feedId,

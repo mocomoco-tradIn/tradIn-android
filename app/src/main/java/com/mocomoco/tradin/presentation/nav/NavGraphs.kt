@@ -12,6 +12,8 @@ import com.mocomoco.tradin.presentation.DetailsScreen
 import com.mocomoco.tradin.presentation.MainDestination
 import com.mocomoco.tradin.presentation.MainScreen
 import com.mocomoco.tradin.presentation.TradInDestinations.ADD_ROUTE
+import com.mocomoco.tradin.presentation.TradInDestinations.BACK
+import com.mocomoco.tradin.presentation.TradInDestinations.CATEGORY_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.DETAILS_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.LOCATION_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.LOGIN_ROUTE
@@ -20,6 +22,7 @@ import com.mocomoco.tradin.presentation.TradInDestinations.SIGNUP_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.WIP
 import com.mocomoco.tradin.presentation.WipScreen
 import com.mocomoco.tradin.presentation.add.AddScreen
+import com.mocomoco.tradin.presentation.category.CategoryScreen
 import com.mocomoco.tradin.presentation.location.LocationSelectScreen
 import com.mocomoco.tradin.presentation.login.LoginScreen
 import com.mocomoco.tradin.presentation.main.chat.ChatListScreen
@@ -27,6 +30,8 @@ import com.mocomoco.tradin.presentation.main.community.CommunityScreen
 import com.mocomoco.tradin.presentation.main.home.HomeScreen
 import com.mocomoco.tradin.presentation.main.inventory.InventoryScreen
 import com.mocomoco.tradin.presentation.main.profile.ProfileScreen
+import com.mocomoco.tradin.presentation.nav.Arguments.CATEGORY_DISPLAY
+import com.mocomoco.tradin.presentation.nav.Arguments.CATEGORY_ID
 import com.mocomoco.tradin.presentation.nav.Arguments.FEED_ID
 import com.mocomoco.tradin.presentation.nav.Arguments.FROM_INVENTORY
 import com.mocomoco.tradin.presentation.signup.SignupScreen
@@ -56,6 +61,34 @@ fun TradInNavGraph(
             arguments = listOf(navArgument(FEED_ID) { type = NavType.IntType })
         ) {
             DetailsScreen()
+        }
+
+        composable(
+            "$CATEGORY_ROUTE/{${CATEGORY_ID}}/{${CATEGORY_DISPLAY}}",
+            arguments = listOf(
+                navArgument(CATEGORY_ID) {
+                    type = NavType.IntType
+                },
+                navArgument(CATEGORY_DISPLAY) {
+                    type = NavType.StringType
+                }
+            )
+        ) { entry ->
+            entry.arguments?.getInt(CATEGORY_ID)?.let { id ->
+                entry.arguments?.getString(CATEGORY_DISPLAY)?.let { display ->
+                    CategoryScreen(
+                        categoryId = id,
+                        categoryDisplay = display,
+                        onNavEvent = { route ->
+                            if (route == BACK) {
+                                navController.popBackStack()
+                            } else {
+                                navController.navigate(route)
+                            }
+                        }
+                    )
+                }
+            }
         }
 
         composable(
@@ -161,5 +194,7 @@ fun MainNavGraph(
 object Arguments {
     const val FROM_INVENTORY = "fromInventory"
     const val FEED_ID = "feedId"
+    const val CATEGORY_ID = "categoryId"
+    const val CATEGORY_DISPLAY = "categoryDisplay"
 }
 

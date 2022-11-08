@@ -1,8 +1,7 @@
-package com.mocomoco.tradin.presentation.main.home
+package com.mocomoco.tradin.presentation.category
 
 import androidx.lifecycle.viewModelScope
 import com.mocomoco.tradin.base.BaseViewModel
-import com.mocomoco.tradin.common.Logger
 import com.mocomoco.tradin.data.data.dto.request_body.FeedIdBody
 import com.mocomoco.tradin.data.data.repository.FeedRepository
 import com.mocomoco.tradin.data.data.resource.local.PreferenceService
@@ -19,46 +18,42 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class CategoryViewModel @Inject constructor(
     private val feedRepository: FeedRepository,
-    private val preferenceService: PreferenceService
+    private val preferenceService: PreferenceService,
 ) : BaseViewModel() {
-    private val _state = MutableStateFlow(HomeState())
-    val state: StateFlow<HomeState> = _state
+
+    private val _state = MutableStateFlow(CategoryState())
+    val state: StateFlow<CategoryState> = _state
 
     private val _successLikeEvent = MutableSharedFlow<Boolean>()
     val successLikeEvent = _successLikeEvent.asSharedFlow()
 
-    fun load(
-        sortType: SortType? = null,
-        lastId: Int = 0
-    ) = viewModelScope.launch(Dispatchers.IO) {
-        _loading.value = true
-        _state.value = state.value.copy(isFeedLoading = true)
-        try {
-            Logger.log("${preferenceService.getLocationCode()}")
-            val dto = feedRepository.getHomeFeeds(
-                region = preferenceService.getLocationCode(),
-                sorted = sortType?.code ?: state.value.sortType.code,
-                lastId = lastId
-            )
+    fun load(categoryId: Int, sortType: SortType = SortType.POPULAR, lastId: Int = 0) =
+        viewModelScope.launch(Dispatchers.IO) {
+            _loading.value = true
+            try {
+                val dto = feedRepository.getHomeFeeds(
+                    region = preferenceService.getLocationCode(),
+                    sorted = sortType.code,
+                    category = categoryId,
+                    lastId = lastId
+                )
 
-            _state.value = state.value.copy(
-                feeds = dto.feeds.map { mapToFeed(it) },
-                location = dto.region,
-                sortType = when (dto.sorted) {
-                    SortType.POPULAR.display -> SortType.POPULAR
-                    SortType.LATEST.display -> SortType.LATEST
-                    else -> SortType.VIEW
-                },
-            )
-        } catch (e: Exception) {
-            _toastMessage.emit("오류 발생 e:${e.message}")
-        } finally {
-            _loading.value = false
-            _state.value = state.value.copy(isFeedLoading = false)
+                _state.value = state.value.copy(
+                    title = dto.category,
+                    feedCount = dto.totalCount,
+                    sortType = sortType,
+                    feeds = dto.feeds.map { mapToFeed(it) }
+                )
+            } catch (e: Exception) {
+
+            } finally {
+                _loading.value = false
+            }
+
         }
-    }
+
 
     fun like(id: Int) = viewModelScope.launch {
         _loading.value = true
@@ -85,13 +80,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+
+    fun showSortDialog(show: Boolean) {
+        _state.value = state.value.copy(
+            showSortDialog = show
+        )
+    }
+
 }
 
-
-data class HomeState(
-    val feeds: List<Feed> = listOf(),
-    val isFeedLoading: Boolean = false,
-    val location: String = "",
+data class CategoryState(
+    val title: String = "",
+    val feedCount: Int = 0,
     val sortType: SortType = SortType.POPULAR,
+    val feeds: List<Feed> = listOf(),
+    val showSortDialog: Boolean = false,
 )
-

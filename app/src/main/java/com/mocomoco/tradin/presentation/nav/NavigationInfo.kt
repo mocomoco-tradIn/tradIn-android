@@ -12,14 +12,30 @@ val defaultNavOptionBuilder: NavOptionsBuilder.() -> Unit = {
 }
 
 object TradInDestinations {
-    const val MAIN_ROUTE = "main"
-    const val DETAILS_ROUTE = "details"
+
+    // 완료
     const val LOGIN_ROUTE = "login"
     const val SIGNUP_ROUTE = "signup"
-    const val LOCATION_ROUTE = "location"
     const val ADD_ROUTE = "addRoute"
 
+    // 진행중
+    const val MAIN_ROUTE = "main"
+
+    // 시작도 안함
+    const val NOTIFICATION_ROUTE = "notification"
+    const val SEARCH_ROUTE = "search"
+    const val LOCATION_ROUTE = "location"
+    const val CATEGORY_ROUTE = "category"
+    const val DETAILS_ROUTE = "details"
+    const val CHAT_ROUTE = "chat"
+
+
+
+    // 심사 후 업데이트
+
     const val WIP = "wip"
+
+    const val BACK = "back"
 }
 
 object MainDestination {

@@ -1,23 +1,28 @@
 package com.mocomoco.tradin.presentation.main.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -29,9 +34,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.LOGGER
-import androidx.paging.Logger
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mocomoco.tradin.R
@@ -46,6 +50,7 @@ import com.mocomoco.tradin.presentation.common.VerticalSpacer
 import com.mocomoco.tradin.presentation.nav.Arguments.FEED_ID
 import com.mocomoco.tradin.presentation.theme.*
 import com.mocomoco.tradin.util.ext.showToast
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -61,6 +66,10 @@ fun HomeScreen(
 
     val loading = viewModel.loading.collectAsState().value
 
+    var showLikeAnimation by remember {
+        mutableStateOf(false)
+    }
+
     val context = LocalContext.current
     LaunchedEffect(true) {
         viewModel.load(lastId = 0)
@@ -68,6 +77,16 @@ fun HomeScreen(
         launch {
             viewModel.toastMessage.collect {
                 it.showToast(context)
+            }
+        }
+
+        launch {
+            viewModel.successLikeEvent.collect {
+                if (it) {
+                    showLikeAnimation = true
+                    delay(1500L)
+                    showLikeAnimation = false
+                }
             }
         }
     }
@@ -108,17 +127,7 @@ fun HomeScreen(
         mutableStateOf(0f)
     }
 
-    val dropdownMenuDp = remember {
-        mutableStateOf(Offset.Zero)
-    }
-
-    val expandDropDown = remember {
-        mutableStateOf(true)
-    }
-
     val lazyColumnState = rememberLazyListState()
-    val bottomSheetState =
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
 
     val nestedScrollConnection = remember {
@@ -132,79 +141,86 @@ fun HomeScreen(
         }
     }
 
-    ModalBottomSheetLayout(
-        sheetContent = {
-            HomeBottomSheet(
-                onClick = {
-                    viewModel.load(sortType = it)
-                    scope.launch {
-                        bottomSheetState.hide()
-                    }
-                }
-            )
-        },
-        sheetShape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp),
-        sheetState = bottomSheetState
+
+    val height = LocalConfiguration.current.screenHeightDp
+    val density = LocalDensity.current
+
+    var showSortDialog by remember {
+        mutableStateOf(false)
+    }
+
+    if (showSortDialog) {
+        HomeSortDialog(
+            onDismiss = {
+                showSortDialog = false
+            },
+            onClick = {
+                viewModel.load(sortType = it)
+            }
+        )
+    }
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(nestedScrollConnection)
     ) {
-        Box(
+        LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(nestedScrollConnection)
+                .fillMaxSize(),
+            contentPadding = PaddingValues(top = toolbarHeight),
+            state = lazyColumnState
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(top = toolbarHeight),
-                state = lazyColumnState
-            ) {
 
 
-                // --- 카테고리 ---
-                item {
-                    VerticalSpacer(dp = 16.dp)
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        categories.take(4).forEachIndexed { index, category ->
-                            CategoryItem(
-                                data = category,
-                                modifier = Modifier.weight(1f),
-                                onClick = {
-                                    // todo 카테고리 화면으로 이동
-                                }
-                            )
-
-                            if (index != 3) {
-                                HorizontalSpacer(dp = 28.dp)
+            // --- 카테고리 ---
+            item {
+                VerticalSpacer(dp = 16.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    categories.take(4).forEachIndexed { index, category ->
+                        CategoryItem(
+                            data = category,
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                // todo 카테고리 화면으로 이동
                             }
-                        }
-                    }
-                    VerticalSpacer(dp = 16.dp)
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        categories.takeLast(4).forEachIndexed { index, category ->
-                            CategoryItem(
-                                data = category,
-                                modifier = Modifier.weight(1f),
-                                onClick = {
-                                    // todo 카테고리 화면으로 이동
-                                }
-                            )
-                            if (index != 3) {
-                                HorizontalSpacer(dp = 28.dp)
-                            }
+                        )
+
+                        if (index != 3) {
+                            HorizontalSpacer(dp = 28.dp)
                         }
                     }
                 }
+                VerticalSpacer(dp = 16.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    categories.takeLast(4).forEachIndexed { index, category ->
+                        CategoryItem(
+                            data = category,
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                // todo 카테고리 화면으로 이동
+                            }
+                        )
+                        if (index != 3) {
+                            HorizontalSpacer(dp = 28.dp)
+                        }
+                    }
+                }
+                }
 
 
+            // --- 지역, 정렬 ---
                 item {
                     VerticalSpacer(dp = 12.dp)
                     Row(
@@ -234,9 +250,7 @@ fun HomeScreen(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(50f))
                                 .clickable {
-                                    scope.launch {
-                                        bottomSheetState.show()
-                                    }
+                                    showSortDialog = true
                                 },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -345,19 +359,62 @@ fun HomeScreen(
                 )
             }
 
-            // --- loading ---
-            if (loading) {
-                RomCircularProgressIndicator()
+        // --- animation ---
+        AnimatedVisibility(
+            visible = showLikeAnimation,
+            enter = fadeIn(initialAlpha = 0.5f),
+            exit = fadeOut()
+        ) {
+            Spacer(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(0.3f)
+                    .background(Gray0)
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.5f)
+                .align(Alignment.BottomCenter)
+        ) {
+            AnimatedVisibility(
+                visible = showLikeAnimation,
+                enter = slideInVertically() {
+                    // Slide in from 40 dp from the top.
+                    with(density) { height.dp.roundToPx() }
+                },
+                exit = fadeOut()
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_like_on_36_dp),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(128.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                }
             }
+        }
+
+
+        // --- loading ---
+        if (loading) {
+            RomCircularProgressIndicator()
         }
     }
 }
 
 @Composable
-fun HomeBottomSheet(
+fun HomeSortDialog(
+    onDismiss: () -> Unit,
     onClick: (SortType) -> Unit
 ) {
-
     val sorted = remember {
         listOf(
             SortType.POPULAR,
@@ -366,28 +423,43 @@ fun HomeBottomSheet(
         )
     }
 
-    Column(modifier = Modifier.fillMaxWidth()) {
-        sorted.forEachIndexed { index, sortType ->
-            Text(
-                text = sortType.display,
-                style = RomTextStyle.text16,
-                color = Gray0,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onClick(sortType) }
-                    .padding(
-                        top = if (index == 0) 24.dp else 18.dp,
-                        bottom = if (index == 2) 24.dp else 18.dp
-                    ),
-                textAlign = TextAlign.Center
-            )
+    Dialog(
+        onDismissRequest = {
+            onDismiss()
+        }) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(White, RoundedCornerShape(5.dp))
+                .border(borderStrokeBlack2, RoundedCornerShape(5.dp))
+                .clip(RoundedCornerShape(5.dp))
+        ) {
+            sorted.forEachIndexed { index, sortType ->
+                Text(
+                    text = sortType.display,
+                    style = RomTextStyle.text16,
+                    color = Gray0,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onClick(sortType)
+                            onDismiss()
+                        }
+                        .padding(
+                            top = if (index == 0) 24.dp else 18.dp,
+                            bottom = if (index == 2) 24.dp else 18.dp
+                        ),
+                    textAlign = TextAlign.Center
+                )
 
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(Gray6)
-            )
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(Gray6)
+                )
+            }
+
         }
 
     }

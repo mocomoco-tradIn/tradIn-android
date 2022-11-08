@@ -52,7 +52,7 @@ class PreferenceService @Inject constructor(@ApplicationContext context: Context
         sharedPreferences.edit().putString(LAST_LOCATION, location).apply()
     }
 
-    fun getLocation(): String? {
+    fun getLocationCode(): String? {
         return sharedPreferences.getString(LAST_LOCATION, null)
     }
 

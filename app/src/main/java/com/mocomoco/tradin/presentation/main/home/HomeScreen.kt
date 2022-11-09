@@ -371,36 +371,6 @@ fun HomeScreen(
 
 
 
-@Composable
-fun CategoryItem(
-    data: Category,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
-) {
-    Column(
-        modifier = modifier
-            .clip(RoundedCornerShape(10.dp))
-            .clickable { onClick() },
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Image(
-                painter = painterResource(id = data.iconResId),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-            )
-        VerticalSpacer(dp = 10.dp)
-        Text(
-            text = data.display,
-            style = RomTextStyle.text13,
-            color = Gray0,
-            fontWeight = FontWeight(500)
-        )
-    }
-}
 
 
 

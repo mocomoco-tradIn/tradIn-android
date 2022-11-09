@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -20,7 +19,7 @@ import com.mocomoco.tradin.presentation.theme.borderStrokeBlack2
 
 
 @Composable
-fun DefaultAsyncImage(url: String, modifier: Modifier = Modifier) {
+fun BorderAsyncImage(url: String, modifier: Modifier = Modifier) {
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(url)
@@ -33,6 +32,20 @@ fun DefaultAsyncImage(url: String, modifier: Modifier = Modifier) {
         contentScale = ContentScale.Crop,
     )
 }
+
+@Composable
+fun DefaultAsyncImage(url: String, modifier: Modifier = Modifier) {
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(url)
+            .crossfade(true)
+            .build(),
+        contentDescription = null,
+        modifier = modifier,
+        contentScale = ContentScale.Crop,
+    )
+}
+
 
 @Composable
 fun DefaultImage(

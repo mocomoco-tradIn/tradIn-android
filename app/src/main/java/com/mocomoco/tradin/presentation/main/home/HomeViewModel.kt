@@ -53,7 +53,7 @@ class HomeViewModel @Inject constructor(
                 },
             )
         } catch (e: Exception) {
-            _toastMessage.emit("오류 발생 e:${e.message}")
+            _toastMessage.emit("오류 발생 e:${e}")
         } finally {
             _loading.value = false
             _state.value = state.value.copy(isFeedLoading = false)

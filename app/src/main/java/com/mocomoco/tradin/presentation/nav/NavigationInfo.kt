@@ -20,6 +20,7 @@ object TradInDestinations {
 
     // 진행중
     const val MAIN_ROUTE = "main"
+    const val ON_BOARDING_ROUTE = "onBoarding"
 
     // 시작도 안함
     const val NOTIFICATION_ROUTE = "notification"

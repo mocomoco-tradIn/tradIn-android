@@ -18,6 +18,7 @@ import com.mocomoco.tradin.presentation.TradInDestinations.DETAILS_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.LOCATION_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.LOGIN_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.MAIN_ROUTE
+import com.mocomoco.tradin.presentation.TradInDestinations.ON_BOARDING_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.SIGNUP_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.WIP
 import com.mocomoco.tradin.presentation.WipScreen
@@ -34,6 +35,7 @@ import com.mocomoco.tradin.presentation.nav.Arguments.CATEGORY_DISPLAY
 import com.mocomoco.tradin.presentation.nav.Arguments.CATEGORY_ID
 import com.mocomoco.tradin.presentation.nav.Arguments.FEED_ID
 import com.mocomoco.tradin.presentation.nav.Arguments.FROM_INVENTORY
+import com.mocomoco.tradin.presentation.on_boarding.OnBoardingScreen
 import com.mocomoco.tradin.presentation.signup.SignupScreen
 
 @Composable
@@ -47,6 +49,16 @@ fun TradInNavGraph(
         startDestination = startDestination,
         modifier = modifier
     ) {
+
+        composable(ON_BOARDING_ROUTE) {
+            OnBoardingScreen() {
+                navController.navigate(MAIN_ROUTE) {
+                    popUpTo(ON_BOARDING_ROUTE) {
+                        inclusive = true
+                    }
+                }
+            }
+        }
 
         composable(MAIN_ROUTE) {
             MainScreen(

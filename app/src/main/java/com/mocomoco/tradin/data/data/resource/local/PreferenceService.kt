@@ -56,6 +56,16 @@ class PreferenceService @Inject constructor(@ApplicationContext context: Context
         return sharedPreferences.getString(LAST_LOCATION, null)
     }
 
+    fun showBoarding(): Boolean {
+       val first = sharedPreferences.getBoolean(FIRST_WATCH_ON_BOARDING, true)
+
+        if (first) {
+            sharedPreferences.edit().putBoolean(FIRST_WATCH_ON_BOARDING, false).apply()
+        }
+
+        return first
+    }
+
     companion object {
         const val PREFERENCE_NAME = "tradIn"
 
@@ -66,6 +76,6 @@ class PreferenceService @Inject constructor(@ApplicationContext context: Context
 
         const val LAST_LOCATION = "lastLocation"
 
-        const val AUTO_LOGIN = "autoLogin"
+        const val FIRST_WATCH_ON_BOARDING = "firstWatchOnBoarding"
     }
 }

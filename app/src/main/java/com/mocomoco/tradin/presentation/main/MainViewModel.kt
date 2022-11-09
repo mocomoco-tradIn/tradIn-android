@@ -1,26 +1,12 @@
 package com.mocomoco.tradin.presentation.main
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.mocomoco.tradin.base.BaseViewModel
+import com.mocomoco.tradin.data.data.resource.local.PreferenceService
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(): ViewModel() {
-
-    private val _splashLoading = MutableStateFlow(true)
-    val splashLoading = _splashLoading.asStateFlow()
+class MainViewModel @Inject constructor() : BaseViewModel() {
 
 
-    init {
-        viewModelScope.launch {
-            delay(1000L)
-
-            _splashLoading.value = false
-        }
-    }
 }

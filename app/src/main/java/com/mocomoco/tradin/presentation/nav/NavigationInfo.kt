@@ -17,18 +17,20 @@ object TradInDestinations {
     const val LOGIN_ROUTE = "login"
     const val SIGNUP_ROUTE = "signup"
     const val ADD_ROUTE = "addRoute"
+    const val ON_BOARDING_ROUTE = "onBoarding"
 
     // 진행중
     const val MAIN_ROUTE = "main"
-    const val ON_BOARDING_ROUTE = "onBoarding"
+    const val REPORT_ROUTE = "report"
+    const val DETAILS_ROUTE = "details"
 
     // 시작도 안함
     const val NOTIFICATION_ROUTE = "notification"
     const val SEARCH_ROUTE = "search"
     const val LOCATION_ROUTE = "location"
     const val CATEGORY_ROUTE = "category"
-    const val DETAILS_ROUTE = "details"
     const val CHAT_ROUTE = "chat"
+    const val USER_PROFILE_ROUTE = "userProfile"
 
 
 

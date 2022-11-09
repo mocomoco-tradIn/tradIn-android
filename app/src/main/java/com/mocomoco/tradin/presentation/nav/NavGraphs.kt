@@ -20,6 +20,7 @@ import com.mocomoco.tradin.presentation.TradInDestinations.LOGIN_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.MAIN_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.ON_BOARDING_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.SIGNUP_ROUTE
+import com.mocomoco.tradin.presentation.TradInDestinations.USER_PROFILE_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.WIP
 import com.mocomoco.tradin.presentation.WipScreen
 import com.mocomoco.tradin.presentation.add.AddScreen
@@ -35,8 +36,10 @@ import com.mocomoco.tradin.presentation.nav.Arguments.CATEGORY_DISPLAY
 import com.mocomoco.tradin.presentation.nav.Arguments.CATEGORY_ID
 import com.mocomoco.tradin.presentation.nav.Arguments.FEED_ID
 import com.mocomoco.tradin.presentation.nav.Arguments.FROM_INVENTORY
+import com.mocomoco.tradin.presentation.nav.Arguments.USER_ID
 import com.mocomoco.tradin.presentation.on_boarding.OnBoardingScreen
 import com.mocomoco.tradin.presentation.signup.SignupScreen
+import com.mocomoco.tradin.presentation.user_profile.UserProfileScreen
 
 @Composable
 fun TradInNavGraph(
@@ -71,8 +74,27 @@ fun TradInNavGraph(
         composable(
             "$DETAILS_ROUTE/{${FEED_ID}}",
             arguments = listOf(navArgument(FEED_ID) { type = NavType.IntType })
-        ) {
-            DetailsScreen()
+        ) { entry ->
+            entry.arguments?.getInt(FEED_ID)?.let { id ->
+                DetailsScreen(feedId = id) { route ->
+                    if (route == BACK) {
+                        navController.popBackStack()
+                    } else {
+                        navController.navigate(route)
+                    }
+                }
+            }
+        }
+
+        composable(
+            "$USER_PROFILE_ROUTE/{${USER_ID}}",
+            arguments = listOf(navArgument(USER_ID) { type = NavType.IntType })
+        ) { entry ->
+            entry.arguments?.getInt(USER_ID)?.let { id ->
+                UserProfileScreen(id = id, onNavEvent = { route ->
+
+                })
+            }
         }
 
         composable(
@@ -208,5 +230,6 @@ object Arguments {
     const val FEED_ID = "feedId"
     const val CATEGORY_ID = "categoryId"
     const val CATEGORY_DISPLAY = "categoryDisplay"
+    const val USER_ID = "userId"
 }
 

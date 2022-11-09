@@ -17,11 +17,11 @@ enum class Category(val code: Int, val display: String, val iconResId: Int) {
     Etc(8, "기타", R.drawable.ic_category_etc),
 }
 
-enum class TradeMethod(val code: Int, val display: String) {
-    None(0, ""),
-    Direct(1, "직거래"),
-    Parcel(2, "택배"),
-    Etc(3, "기타")
+enum class TradeMethod(val code: Int, val id: String, val display: String) {
+    None(0, "",""),
+    Direct(1, "direct","직거래"),
+    Parcel(2, "parcel","택배"),
+    Etc(3, "etc","기타")
 }
 
 enum class SortType(val code: Int, val display: String) {

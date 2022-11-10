@@ -107,7 +107,9 @@ fun DetailsScreen(
         sheetState = bottomSheetState
     ) {
 
-        Box(modifier = Modifier.fillMaxSize().background(White)) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(White)) {
 
             Column(
                 modifier = Modifier
@@ -215,7 +217,7 @@ fun DetailsScreen(
                         }
 
                         Image(
-                            painter = painterResource(id = R.drawable.ic_like_off_36_dp),
+                            painter = painterResource(id = if (state.details.isLike) R.drawable.ic_like_on_36_dp else R.drawable.ic_like_off_36_dp),
                             contentDescription = null,
                             modifier = Modifier.clickable {
                                 viewModel.like(state.details.feedId)
@@ -339,7 +341,8 @@ fun DetailsScreen(
 
 
             // --- 상단 툴바 ---
-            DefaultToolbar(
+            StartTitleToolbar(
+                title = state.details.title,
                 showBack = true,
                 onClickBack = { onNavEvent(BACK) },
                 rightButtons = listOf(painterResource(id = R.drawable.ic_more_24_dp) to { scope.launch { bottomSheetState.show() } }),

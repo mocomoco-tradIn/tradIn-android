@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mocomoco.tradin.R
 import com.mocomoco.tradin.presentation.theme.Gray0
@@ -34,16 +34,18 @@ fun DefaultToolbar(
             .fillMaxWidth()
             .background(White)
     ) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+        ) {
             if (showBack) {
-                Icon(
+                Image(
                     modifier = modifier
+                        .align(Alignment.CenterStart)
                         .clickable {
                             onClickBack()
-                        }
-                        .align(Alignment.CenterStart),
+                        },
                     painter = painterResource(id = R.drawable.ic_back),
                     contentDescription = null
                 )
@@ -76,3 +78,71 @@ fun DefaultToolbar(
         )
     }
 }
+
+
+@Composable
+fun StartTitleToolbar(
+    modifier: Modifier = Modifier,
+    showBack: Boolean = false,
+    onClickBack: () -> Unit = {},
+    title: String = "",
+    rightButtons: List<Pair<Painter, () -> Unit>> = listOf()
+) {
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(White)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
+
+                if (showBack) {
+                    Image(
+                        modifier = modifier
+                            .clickable {
+                                onClickBack()
+                            },
+                        painter = painterResource(id = R.drawable.ic_back),
+                        contentDescription = null
+                    )
+                }
+
+                HorizontalSpacer(dp = 8.dp)
+
+                Text(
+                    text = title,
+                    style = RomTextStyle.text16,
+                    color = Gray0,
+                    fontWeight = FontWeight(500),
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            Row {
+                rightButtons.forEach { pair ->
+                    Image(
+                        painter = pair.first,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end = 16.dp, top = 4.dp, bottom = 4.dp)
+                            .clickable { pair.second.invoke() }
+                    )
+                }
+            }
+        }
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp), color = Gray7
+        )
+    }
+}
+

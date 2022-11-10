@@ -46,14 +46,13 @@ class DetailsViewModel @Inject constructor(
     fun like(id: Int) = viewModelScope.launch {
         _loading.value = true
         try {
-            var like = true
             val dto = feedRepository.postLikeFeed(FeedIdBody(feedId = id))
             _state.value = state.value.copy(
                 details = state.value.details.copy(
                     isLike = dto.isLikes
                 )
             )
-            _successLikeEvent.emit(like)
+            _successLikeEvent.emit(dto.isLikes)
         } catch (e: Exception) {
             _toastMessage.emit("오류 발생 e:${e.message}")
         } finally {

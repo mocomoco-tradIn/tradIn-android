@@ -97,6 +97,7 @@ class DetailsViewModel @Inject constructor(
                 )
             )
             _reportState.value = ReportState(completeReport = true)
+            _toastMessage.emit("신고 완료, 롬롬정책을 위반했는지 검토할게요")
         } catch (e: Exception) {
             _toastMessage.emit("오류 발생 e:${e.message}")
         } finally {

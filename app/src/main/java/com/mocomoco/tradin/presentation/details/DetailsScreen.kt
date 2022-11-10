@@ -38,7 +38,6 @@ import com.mocomoco.tradin.common.Constants
 import com.mocomoco.tradin.common.Logger
 import com.mocomoco.tradin.model.TradeMethod
 import com.mocomoco.tradin.presentation.TradInDestinations.BACK
-import com.mocomoco.tradin.presentation.TradInDestinations.REPORT_ROUTE
 import com.mocomoco.tradin.presentation.common.*
 import com.mocomoco.tradin.presentation.theme.*
 import com.mocomoco.tradin.util.ext.showToast
@@ -414,7 +413,7 @@ fun ColumnScope.DetailsBottomSheet(
     Text(
         text = "신고하기",
         style = RomTextStyle.text16,
-        color = Gray0,
+        color = Pink1,
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClickReport() }
@@ -535,9 +534,12 @@ fun ReportFeed(
 
     val buttonAnim by animateDpAsState(targetValue = if (!reportState.isSelected) 300.dp else 0.dp)
 
-
     var etcReasonText by remember {
         mutableStateOf("")
+    }
+
+    var showConfirmDialog by remember {
+        mutableStateOf(false)
     }
 
     LaunchedEffect(Unit) {
@@ -553,7 +555,11 @@ fun ReportFeed(
     }
 
     Box {
-        Column(modifier = Modifier.fillMaxSize().background(White)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(White)
+        ) {
             DefaultToolbar(
                 title = "사용자 신고하기",
                 rightButtons = listOf(painterResource(id = R.drawable.ic_close_24_dp) to {
@@ -609,15 +615,32 @@ fun ReportFeed(
                 .padding(bottom = 28.dp)
                 .offset(x = 0.dp, y = buttonAnim)
         ) {
-            viewModel.report(
-                state.details.feedId,
-                if (reportState.isSelectEtc) {
-                    "${reportState.selectedReason}: $etcReasonText"
-                } else {
-                    reportState.selectedReason
-                }
-            )
+            showConfirmDialog = true
         }
+    }
+    if (showConfirmDialog) {
+        ConfirmDialog(
+            contentText = "해당 게시글을 신고하시겠습니까?",
+            cancelText = "취소",
+            confirmText = "신고하기",
+            onClickConfirm = {
+                viewModel.report(
+                    state.details.feedId,
+                    if (reportState.isSelectEtc) {
+                        "${reportState.selectedReason}: $etcReasonText"
+                    } else {
+                        reportState.selectedReason
+                    }
+                )
+                showConfirmDialog = false
+            },
+            onClickCancel = {
+                showConfirmDialog = false
+            },
+            onDismiss = {
+                showConfirmDialog = false
+            }
+        )
     }
 }
 
@@ -633,7 +656,7 @@ fun ReportReasonItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(id = if (data.isChecked) R.drawable.ic_checkbox_on else R.drawable.ic_checkbox_off),
+            painter = painterResource(id = if (data.isChecked) R.drawable.ic_radio_button_on_24_dp else R.drawable.ic_radio_button_off_24_dp),
             contentDescription = null,
             modifier = Modifier
                 .clip(RoundedCornerShape(50))

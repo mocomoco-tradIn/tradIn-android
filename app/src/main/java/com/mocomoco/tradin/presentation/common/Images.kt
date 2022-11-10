@@ -34,7 +34,7 @@ fun BorderAsyncImage(url: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun DefaultAsyncImage(url: String, modifier: Modifier = Modifier) {
+fun DefaultAsyncImage(url: String, modifier: Modifier = Modifier, contentScale: ContentScale = ContentScale.Crop) {
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(url)
@@ -42,7 +42,7 @@ fun DefaultAsyncImage(url: String, modifier: Modifier = Modifier) {
             .build(),
         contentDescription = null,
         modifier = modifier,
-        contentScale = ContentScale.Crop,
+        contentScale = contentScale,
     )
 }
 

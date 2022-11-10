@@ -66,8 +66,6 @@ fun SortDialog(
                         .background(Gray6)
                 )
             }
-
         }
-
     }
 }

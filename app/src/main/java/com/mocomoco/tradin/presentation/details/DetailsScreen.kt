@@ -1,17 +1,23 @@
 package com.mocomoco.tradin.presentation.details
 
+import android.view.MotionEvent
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -62,6 +68,10 @@ fun DetailsScreen(
 
 
     var isScrollDown by remember {
+        mutableStateOf(false)
+    }
+
+    var showImageDetails by remember {
         mutableStateOf(false)
     }
 
@@ -132,6 +142,9 @@ fun DetailsScreen(
                             url = state.details.imageUrls[index], modifier = Modifier
                                 .fillMaxWidth()
                                 .aspectRatio(1f)
+                                .clickable {
+                                    showImageDetails = true
+                                }
                         )
                     }
 
@@ -370,6 +383,11 @@ fun DetailsScreen(
             RomCircularProgressIndicator()
         }
     }
+    if (showImageDetails) {
+        ImageDetails(imageUrls = state.details.imageUrls) {
+            showImageDetails = false
+        }
+    }
 }
 
 
@@ -409,5 +427,80 @@ fun DetailsIconInfoItem(painter: Painter, text: String) {
         VerticalSpacer(dp = 8.dp)
 
         Text(text = text, style = RomTextStyle.text13, color = Gray1)
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class, ExperimentalComposeUiApi::class)
+@Composable
+fun ImageDetails(
+    imageUrls: List<String>,
+    onClickBack: () -> Unit
+) {
+
+    val pagerState = rememberPagerState()
+    var scale by remember { mutableStateOf(1f) }
+    var rotationState by remember { mutableStateOf(1f) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Black)
+    ) {
+        StartTitleToolbar(
+            showBack = true,
+            onClickBack = { onClickBack() },
+            backIconColor = White,
+            backgroundColor = Transparent,
+            modifier = Modifier.align(Alignment.TopCenter),
+            showBottomLine = false
+        )
+
+        Column(
+            modifier = Modifier
+                .background(Black)
+                .align(Alignment.Center)
+                .pointerInput(Unit) {
+                    detectTransformGestures { centroid, pan, zoom, rotation ->
+                        scale *= zoom
+                        rotationState += rotation
+                    }
+                }
+                .pointerInteropFilter {
+                    Logger.log("action ${it.action}")
+                    when {
+                        it.action == MotionEvent.ACTION_UP || it.action ==  MotionEvent.ACTION_POINTER_UP -> {
+                            scale = 1f
+                            rotationState = 1f
+                        }
+                    }
+                    false
+                }
+        ) {
+            HorizontalPager(
+                count = imageUrls.size,
+                state = pagerState,
+                key = { imageUrls[it] },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+            ) { index ->
+                DefaultAsyncImage(
+                    url = imageUrls[index],
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RectangleShape)
+                        .graphicsLayer {
+                            scaleX = maxOf(.5f, minOf(3f, scale))
+                            scaleY = maxOf(.5f, minOf(3f, scale))
+                            rotationZ = rotationState
+                        },
+                    contentScale = ContentScale.FillWidth
+                )
+            }
+
+            VerticalSpacer(dp = 20.dp)
+
+            PagerDot(pagerState = pagerState, selectedColor = White, unSelectedColor = White_Op50)
+        }
     }
 }

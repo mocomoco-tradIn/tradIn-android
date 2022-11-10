@@ -4,21 +4,22 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mocomoco.tradin.R
-import com.mocomoco.tradin.presentation.theme.Gray0
-import com.mocomoco.tradin.presentation.theme.Gray7
-import com.mocomoco.tradin.presentation.theme.RomTextStyle
-import com.mocomoco.tradin.presentation.theme.White
+import com.mocomoco.tradin.presentation.theme.*
 
 @Composable
 fun DefaultToolbar(
@@ -26,13 +27,15 @@ fun DefaultToolbar(
     showBack: Boolean = false,
     onClickBack: () -> Unit = {},
     title: String = "",
-    rightButtons: List<Pair<Painter, () -> Unit>> = listOf()
+    rightButtons: List<Pair<Painter, () -> Unit>> = listOf(),
+    backgroundColor: Color = White,
+    showBottomLine: Boolean = true
 ) {
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(White)
+            .background(backgroundColor)
     ) {
         Box(
             modifier = Modifier
@@ -71,11 +74,13 @@ fun DefaultToolbar(
                 }
             }
         }
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp), color = Gray7
-        )
+        if (showBottomLine) {
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp), color = Gray7
+            )
+        }
     }
 }
 
@@ -84,15 +89,18 @@ fun DefaultToolbar(
 fun StartTitleToolbar(
     modifier: Modifier = Modifier,
     showBack: Boolean = false,
+    backIconColor: Color = Black,
     onClickBack: () -> Unit = {},
     title: String = "",
-    rightButtons: List<Pair<Painter, () -> Unit>> = listOf()
+    rightButtons: List<Pair<Painter, () -> Unit>> = listOf(),
+    backgroundColor: Color = White,
+    showBottomLine: Boolean = true
 ) {
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(White)
+            .background(backgroundColor)
     ) {
         Row(
             modifier = Modifier
@@ -105,13 +113,15 @@ fun StartTitleToolbar(
             Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
 
                 if (showBack) {
-                    Image(
+                    Icon(
                         modifier = modifier
+                            .clip(RoundedCornerShape(50))
                             .clickable {
                                 onClickBack()
                             },
                         painter = painterResource(id = R.drawable.ic_back),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = backIconColor
                     )
                 }
 
@@ -138,11 +148,14 @@ fun StartTitleToolbar(
                 }
             }
         }
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp), color = Gray7
-        )
+
+        if (showBottomLine){
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp), color = Gray7
+            )
+        }
     }
 }
 

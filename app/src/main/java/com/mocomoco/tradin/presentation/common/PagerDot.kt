@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,7 +27,7 @@ fun PagerDot(
     val dotRadius = with(LocalDensity.current) {
         dotRadiusDp.toPx()
     }
-    Row(modifier = modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center) {
+    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         repeat(pagerState.pageCount) {
             Canvas(modifier = Modifier) {
                 drawCircle(

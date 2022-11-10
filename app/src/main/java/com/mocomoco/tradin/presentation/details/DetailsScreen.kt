@@ -1,6 +1,7 @@
 package com.mocomoco.tradin.presentation.details
 
 import android.view.MotionEvent
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTransformGestures
@@ -441,6 +442,10 @@ fun ImageDetails(
     var scale by remember { mutableStateOf(1f) }
     var rotationState by remember { mutableStateOf(1f) }
 
+    BackHandler {
+        onClickBack()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -468,7 +473,7 @@ fun ImageDetails(
                 .pointerInteropFilter {
                     Logger.log("action ${it.action}")
                     when {
-                        it.action == MotionEvent.ACTION_UP || it.action ==  MotionEvent.ACTION_POINTER_UP -> {
+                        it.action == MotionEvent.ACTION_UP || it.action == MotionEvent.ACTION_POINTER_UP -> {
                             scale = 1f
                             rotationState = 1f
                         }

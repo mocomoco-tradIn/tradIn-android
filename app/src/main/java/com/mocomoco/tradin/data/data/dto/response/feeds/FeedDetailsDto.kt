@@ -16,5 +16,7 @@ data class FeedDetailsDto(
     val tradeMethod: String,
     val tradeMethodDescription: String,
     val trades: Int,
-    val userId: Int
+    val userId: Int,
+    val avatar: String,
+    val isLikes: Boolean
 )

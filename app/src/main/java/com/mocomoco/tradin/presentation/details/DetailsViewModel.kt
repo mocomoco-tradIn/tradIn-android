@@ -49,7 +49,8 @@ class DetailsViewModel @Inject constructor(
             val dto = feedRepository.postLikeFeed(FeedIdBody(feedId = id))
             _state.value = state.value.copy(
                 details = state.value.details.copy(
-                    isLike = dto.isLikes
+                    isLike = dto.isLikes,
+                    likeCount = state.value.details.likeCount + (if (dto.isLikes) 1 else -1)
                 )
             )
             _successLikeEvent.emit(dto.isLikes)
@@ -92,9 +93,9 @@ fun FeedDetailsDto.mapToDetails(): Details = Details(
     feedId = this.feedId,
     imageUrls = this.images ?: listOf(),
     title = this.title,
-    profileImage = "", // todo
+    profileImage = this.avatar,
     profileName = this.nickname,
-    isLike = false, // todo
+    isLike = this.isLikes,
     likeCount = this.likes,
     tradeCount = this.trades,
     chatCount = this.chatting,

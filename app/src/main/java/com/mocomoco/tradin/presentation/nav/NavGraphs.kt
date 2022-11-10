@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.mocomoco.tradin.presentation.DetailsScreen
+import com.mocomoco.tradin.presentation.details.DetailsScreen
 import com.mocomoco.tradin.presentation.MainDestination
 import com.mocomoco.tradin.presentation.MainScreen
 import com.mocomoco.tradin.presentation.TradInDestinations.ADD_ROUTE

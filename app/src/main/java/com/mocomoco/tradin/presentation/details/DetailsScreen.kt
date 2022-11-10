@@ -1,4 +1,4 @@
-package com.mocomoco.tradin.presentation
+package com.mocomoco.tradin.presentation.details
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.*
@@ -32,7 +32,6 @@ import com.mocomoco.tradin.model.TradeMethod
 import com.mocomoco.tradin.presentation.TradInDestinations.BACK
 import com.mocomoco.tradin.presentation.TradInDestinations.REPORT_ROUTE
 import com.mocomoco.tradin.presentation.common.*
-import com.mocomoco.tradin.presentation.details.DetailsViewModel
 import com.mocomoco.tradin.presentation.theme.*
 import com.mocomoco.tradin.util.ext.showToast
 import kotlinx.coroutines.delay
@@ -180,17 +179,13 @@ fun DetailsScreen(
                             DefaultAsyncImage(
                                 url = state.details.profileImage, modifier = Modifier
                                     .size(30.dp)
-                                    .clip(RoundedCornerShape(50f))
+                                    .clip(RoundedCornerShape(50))
                             )
                         } else {
                             Image(
-                                painter = painterResource(id = R.drawable.ic_default_profile),
+                                painter = painterResource(id = R.drawable.ic_default_profile_image_30_dp),
                                 contentDescription = null,
-                                modifier = Modifier
-                                    .size(30.dp)
-                                    .clip(RoundedCornerShape(50))
-                                    .background(color = Gray6)
-
+                                modifier = Modifier.size(30.dp)
                             )
                         }
 
@@ -375,11 +370,6 @@ fun DetailsScreen(
             RomCircularProgressIndicator()
         }
     }
-}
-
-@Composable
-fun Details() {
-
 }
 
 

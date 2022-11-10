@@ -15,7 +15,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mocomoco.tradin.R
-import com.mocomoco.tradin.presentation.theme.*
+import com.mocomoco.tradin.presentation.theme.Gray0
+import com.mocomoco.tradin.presentation.theme.Gray7
+import com.mocomoco.tradin.presentation.theme.RomTextStyle
+import com.mocomoco.tradin.presentation.theme.White
 
 @Composable
 fun DefaultToolbar(
@@ -31,12 +34,16 @@ fun DefaultToolbar(
             .fillMaxWidth()
             .background(White)
     ) {
-        Box(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)) {
             if (showBack) {
                 Icon(
-                    modifier = modifier.clickable {
-                        onClickBack()
-                    },
+                    modifier = modifier
+                        .clickable {
+                            onClickBack()
+                        }
+                        .align(Alignment.CenterStart),
                     painter = painterResource(id = R.drawable.ic_back),
                     contentDescription = null
                 )
@@ -55,7 +62,9 @@ fun DefaultToolbar(
                     Image(
                         painter = pair.first,
                         contentDescription = null,
-                        modifier = Modifier.padding(end = 16.dp, top = 4.dp, bottom = 4.dp).clickable { pair.second.invoke() }
+                        modifier = Modifier
+                            .padding(end = 16.dp, top = 4.dp, bottom = 4.dp)
+                            .clickable { pair.second.invoke() }
                     )
                 }
             }

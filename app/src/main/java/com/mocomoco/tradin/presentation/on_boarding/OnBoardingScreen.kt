@@ -3,7 +3,6 @@ package com.mocomoco.tradin.presentation.on_boarding
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,20 +11,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.mocomoco.tradin.R
 import com.mocomoco.tradin.presentation.common.DefaultRomButton
-import com.mocomoco.tradin.presentation.common.HorizontalSpacer
+import com.mocomoco.tradin.presentation.common.PagerDot
 import com.mocomoco.tradin.presentation.theme.*
 
 @OptIn(ExperimentalPagerApi::class)
@@ -141,26 +137,3 @@ fun OnBoardingScreen(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun PagerDot(
-    pagerState: PagerState,
-    selectedColor: Color,
-    unSelectedColor: Color,
-    modifier: Modifier = Modifier
-) {
-    val dotRadius = with(LocalDensity.current) {
-        4.dp.toPx()
-    }
-    Row(modifier = modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center) {
-        repeat(pagerState.pageCount) {
-            Canvas(modifier = Modifier) {
-                drawCircle(
-                    color = if (pagerState.currentPage == it) selectedColor else unSelectedColor,
-                    radius = dotRadius
-                )
-            }
-            HorizontalSpacer(dp = 12.dp)
-        }
-    }
-}

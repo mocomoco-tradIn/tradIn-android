@@ -17,11 +17,11 @@ enum class Category(val code: Int, val display: String, val iconResId: Int) {
     Etc(8, "기타", R.drawable.ic_category_etc),
 }
 
-enum class TradeMethod(val code: Int, val id: String, val display: String) {
+enum class TradeMethod(val code: Int, val id: String, val display: String, val resId: Int = 0) {
     None(0, "",""),
-    Direct(1, "direct","직거래"),
-    Parcel(2, "parcel","택배"),
-    Etc(3, "etc","기타")
+    Direct(1, "direct","직거래", R.drawable.ic_trade_method_direct),
+    Parcel(2, "parcel","택배", R.drawable.ic_trade_method_parcel),
+    Etc(3, "etc","기타", R.drawable.ic_trade_method_parcel) // todo 전용 아이콘으로 교체
 }
 
 enum class SortType(val code: Int, val display: String) {

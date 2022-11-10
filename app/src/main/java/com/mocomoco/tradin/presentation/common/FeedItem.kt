@@ -1,6 +1,9 @@
 package com.mocomoco.tradin.presentation.common
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -18,7 +21,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mocomoco.tradin.R
 import com.mocomoco.tradin.model.Feed
-import com.mocomoco.tradin.model.FeedStatus
 import com.mocomoco.tradin.presentation.theme.*
 
 @Composable
@@ -95,21 +97,7 @@ fun FeedItem(
             }
             HorizontalSpacer(dp = 8.dp)
 
-            if (feed.status != FeedStatus.NONE) {
-                Text(
-                    text = feed.status.display,
-                    style = RomTextStyle.text12,
-                    color = feed.status.textColor,
-                    fontWeight = FontWeight(700),
-                    modifier = Modifier
-                        .background(
-                            color = feed.status.backgroundColor,
-                            shape = RoundedCornerShape(5.dp)
-                        )
-                        .padding(horizontal = 8.dp, vertical = 6.dp)
-                )
-            }
-
+            StatusTag(feed.status)
         }
         VerticalSpacer(dp = 8.dp)
 

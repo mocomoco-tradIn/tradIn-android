@@ -7,11 +7,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -82,13 +81,6 @@ fun ConfirmDialog(
     onClickCancel: () -> Unit,
     onDismiss: () -> Unit
 ) {
-
-    var verticalLineHeight by remember {
-        mutableStateOf(0.dp)
-    }
-
-    val density = LocalDensity.current
-
     BackHandler {
         onDismiss()
     }
@@ -116,7 +108,11 @@ fun ConfirmDialog(
                     .height(1.dp)
                     .background(Gray7)
             )
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+            ) {
                 if (cancelText.isNotEmpty()) {
                     Text(
                         text = cancelText,
@@ -128,19 +124,14 @@ fun ConfirmDialog(
                             .clickable {
                                 onClickCancel()
                             }
-                            .padding(vertical = 14.dp)
-                            .onGloballyPositioned {
-                                verticalLineHeight = with(density) {
-                                    it.size.height.toDp()
-                                }
-                            },
+                            .padding(vertical = 14.dp),
                         textAlign = TextAlign.Center
                     )
                 }
                 if (cancelText.isNotEmpty() && confirmText.isNotEmpty()) {
                     Spacer(
                         modifier = Modifier
-                            .height(verticalLineHeight)
+                            .fillMaxHeight()
                             .width(1.dp)
                             .background(Gray7)
                     )
@@ -156,12 +147,7 @@ fun ConfirmDialog(
                             .clickable {
                                 onClickConfirm()
                             }
-                            .padding(vertical = 14.dp)
-                            .onGloballyPositioned {
-                                verticalLineHeight = with(density) {
-                                    it.size.height.toDp()
-                                }
-                            },
+                            .padding(vertical = 14.dp),
                         textAlign = TextAlign.Center
                     )
                 }

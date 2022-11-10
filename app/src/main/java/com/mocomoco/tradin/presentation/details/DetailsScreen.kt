@@ -26,6 +26,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -52,8 +53,7 @@ fun DetailsScreen(
     onNavEvent: (String) -> Unit
 ) {
 
-    val toolbarHeight = 56.dp
-    val bottonHeight = 60.dp
+
 
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -75,9 +75,14 @@ fun DetailsScreen(
     var showImageDetails by remember {
         mutableStateOf(false)
     }
+    var showReport by remember {
+        mutableStateOf(false)
+    }
 
+    val toolbarHeight = 56.dp
+    val buttonHeight = 60.dp
     val toolbarAnim by animateDpAsState(targetValue = if (isScrollDown) -toolbarHeight else 0.dp)
-    val buttonAnim by animateDpAsState(targetValue = if (isScrollDown) bottonHeight else 0.dp)
+    val buttonAnim by animateDpAsState(targetValue = if (isScrollDown) buttonHeight else 0.dp)
 
     var showLikeAnimation by remember {
         mutableStateOf(false)
@@ -107,7 +112,7 @@ fun DetailsScreen(
     ModalBottomSheetLayout(
         sheetContent = {
             DetailsBottomSheet {
-                onNavEvent(REPORT_ROUTE)
+                showReport = true
                 scope.launch {
                     bottomSheetState.hide()
                 }
@@ -389,6 +394,16 @@ fun DetailsScreen(
             showImageDetails = false
         }
     }
+
+    if (showReport) {
+        ReportFeed(viewModel = viewModel, state = state) { reported ->
+            showReport = false
+            viewModel.clearReportState()
+            if (reported) {
+                onNavEvent(BACK)
+            }
+        }
+    }
 }
 
 
@@ -507,5 +522,129 @@ fun ImageDetails(
 
             PagerDot(pagerState = pagerState, selectedColor = White, unSelectedColor = White_Op50)
         }
+    }
+}
+
+@Composable
+fun ReportFeed(
+    viewModel: DetailsViewModel,
+    state: DetailsState,
+    onClickBack: (reported: Boolean) -> Unit
+) {
+    val reportState = viewModel.reportState.collectAsState().value
+
+    val buttonAnim by animateDpAsState(targetValue = if (!reportState.isSelected) 300.dp else 0.dp)
+
+
+    var etcReasonText by remember {
+        mutableStateOf("")
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.getReportReasons()
+    }
+
+    BackHandler {
+        onClickBack(false)
+    }
+
+    if (reportState.completeReport) {
+        onClickBack(true)
+    }
+
+    Box {
+        Column(modifier = Modifier.fillMaxSize().background(White)) {
+            DefaultToolbar(
+                title = "사용자 신고하기",
+                rightButtons = listOf(painterResource(id = R.drawable.ic_close_24_dp) to {
+                    onClickBack(
+                        false
+                    )
+                })
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                VerticalSpacer(dp = 10.dp)
+                Text(
+                    text = state.details.title,
+                    style = RomTextStyle.text13,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    color = Gray0
+                )
+
+                VerticalSpacer(dp = 6.dp)
+                Text(text = "게시글을 신고하고 싶으신가요?", style = RomTextStyle.text17, color = Gray0)
+
+                VerticalSpacer(dp = 8.dp)
+                Text(text = "사유 선택", style = RomTextStyle.text17, color = Gray0)
+
+                reportState.reasons.forEach { reportReason ->
+                    VerticalSpacer(dp = 4.dp)
+                    ReportReasonItem(reportReason) {
+                        viewModel.onClickReportReason(reportReason.title, reportReason.index)
+                    }
+                }
+
+                if (reportState.isSelectEtc) {
+                    DefaultTextFields(
+                        value = etcReasonText,
+                        onValueChange = { etcReasonText = if (it.length <= 20) it else etcReasonText },
+                        placeholderText = "기타 사유를 입력해주세요 (20자 이내)"
+                    )
+                }
+            }
+        }
+
+        DefaultRomButton(
+            text = "신고하기", enable = true, modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 28.dp)
+                .offset(x = 0.dp, y = buttonAnim)
+        ) {
+            viewModel.report(
+                state.details.feedId,
+                if (reportState.isSelectEtc) {
+                    "${reportState.selectedReason}: $etcReasonText"
+                } else {
+                    reportState.selectedReason
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun ReportReasonItem(
+    data: ReportState.ReportReason,
+    onClickReason: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp, vertical = 9.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = if (data.isChecked) R.drawable.ic_checkbox_on else R.drawable.ic_checkbox_off),
+            contentDescription = null,
+            modifier = Modifier
+                .clip(RoundedCornerShape(50))
+                .clickable { onClickReason() }
+        )
+        HorizontalSpacer(dp = 6.dp)
+        Text(
+            text = data.title,
+            style = RomTextStyle.text16,
+            color = Gray0,
+            modifier = Modifier.weight(1f)
+        )
     }
 }

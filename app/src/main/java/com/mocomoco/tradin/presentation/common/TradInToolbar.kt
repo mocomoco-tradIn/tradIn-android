@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -42,17 +43,20 @@ fun DefaultToolbar(
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
         ) {
-            if (showBack) {
-                Image(
+
+            Image(
                     modifier = modifier
                         .align(Alignment.CenterStart)
+                        .alpha(if (showBack) 1f else 0f)
                         .clickable {
-                            onClickBack()
+                            if (showBack) {
+                                onClickBack()
+                            }
                         },
                     painter = painterResource(id = R.drawable.ic_back),
                     contentDescription = null
-                )
-            }
+            )
+
 
             Text(
                 modifier = Modifier.align(Alignment.Center),

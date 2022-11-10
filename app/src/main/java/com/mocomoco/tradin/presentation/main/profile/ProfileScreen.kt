@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import com.mocomoco.tradin.presentation.WipScreen
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+
+    onNavEvent: (String) -> Unit
+) {
     WipScreen(title = "ProfileScreen")
 }

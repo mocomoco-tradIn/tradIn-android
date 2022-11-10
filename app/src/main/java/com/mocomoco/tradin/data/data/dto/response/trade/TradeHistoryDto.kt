@@ -4,5 +4,5 @@ data class TradeHistoryDto(
     val lastId: Int,
     val progress: List<Progres>,
     val size: Int,
-    val trades: List<Trade>
+    val trades: List<TradeDto>
 )

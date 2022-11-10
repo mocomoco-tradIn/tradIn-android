@@ -38,6 +38,7 @@ import com.mocomoco.tradin.common.Constants
 import com.mocomoco.tradin.common.Logger
 import com.mocomoco.tradin.model.TradeMethod
 import com.mocomoco.tradin.presentation.TradInDestinations.BACK
+import com.mocomoco.tradin.presentation.TradInDestinations.USER_PROFILE_ROUTE
 import com.mocomoco.tradin.presentation.common.*
 import com.mocomoco.tradin.presentation.theme.*
 import com.mocomoco.tradin.util.ext.showToast
@@ -51,8 +52,6 @@ fun DetailsScreen(
     feedId: Int,
     onNavEvent: (String) -> Unit
 ) {
-
-
 
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -190,7 +189,11 @@ fun DetailsScreen(
                     VerticalSpacer(dp = 16.dp)
 
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onNavEvent("${USER_PROFILE_ROUTE}/${state.details.userId}")
+                            },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         if (state.details.profileImage.isNotEmpty()) {

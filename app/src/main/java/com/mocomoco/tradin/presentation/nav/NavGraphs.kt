@@ -220,7 +220,9 @@ fun MainNavGraph(
         }
 
         composable(MainDestination.PROFILE_ROUTE) {
-            ProfileScreen()
+            ProfileScreen() { route ->
+
+            }
         }
     }
 }

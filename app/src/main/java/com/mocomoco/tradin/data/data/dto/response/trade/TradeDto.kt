@@ -1,6 +1,6 @@
 package com.mocomoco.tradin.data.data.dto.response.trade
 
-data class Trade(
+data class TradeDto(
     val myProductImage: String,
     val otherNickname: String,
     val otherProductImage: String,

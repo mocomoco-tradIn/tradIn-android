@@ -5,9 +5,9 @@ import com.mocomoco.tradin.base.BaseViewModel
 import com.mocomoco.tradin.data.data.dto.request_body.FeedIdBody
 import com.mocomoco.tradin.data.data.repository.FeedRepository
 import com.mocomoco.tradin.data.data.resource.local.PreferenceService
+import com.mocomoco.tradin.mapper.mapToFeed
 import com.mocomoco.tradin.model.Feed
 import com.mocomoco.tradin.model.SortType
-import com.mocomoco.tradin.model.mapToFeed
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -44,7 +44,7 @@ class CategoryViewModel @Inject constructor(
                     title = dto.category,
                     feedCount = dto.totalCount,
                     sortType = sortType,
-                    feeds = dto.feeds?.map { mapToFeed(it) } ?: listOf()
+                    feeds = dto.feeds?.map { it.mapToFeed() } ?: listOf()
                 )
             } catch (e: Exception) {
 

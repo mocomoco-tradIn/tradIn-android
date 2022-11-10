@@ -3,11 +3,9 @@ package com.mocomoco.tradin.presentation.main.home
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mocomoco.tradin.data.common.Constants.PAGE_SIZE
-import com.mocomoco.tradin.data.data.dto.response.feeds.FeedDto
 import com.mocomoco.tradin.data.data.repository.FeedRepository
+import com.mocomoco.tradin.mapper.mapToFeed
 import com.mocomoco.tradin.model.Feed
-import com.mocomoco.tradin.model.mapToFeed
-import javax.inject.Inject
 
 class HomeFeedPagingSource(
     private val feedRepository: FeedRepository,
@@ -31,7 +29,7 @@ class HomeFeedPagingSource(
             val nextKey = if (dto.feeds != null && dto.feeds.size < PAGE_SIZE) null else dto.lastId
 
             LoadResult.Page(
-                data = dto.feeds?.map { mapToFeed(it) } ?: listOf(),
+                data = dto.feeds?.map { it.mapToFeed() } ?: listOf(),
                 prevKey = null,
                 nextKey = nextKey
             )

@@ -6,4 +6,15 @@ object Constants {
 
     const val PAGE_SIZE = 20
 
+    const val BASE_SOCKET_URL_DEV =  "wss://dev.tradin.shop/ws"
+    const val BASE_SOCKET_URL_PROD =  "wss://tradin.shop/ws"
+
+}
+
+fun setDevSocketUserId(userId: Int): String {
+    return "${Constants.BASE_SOCKET_URL_DEV}?uid={$userId}"
+}
+
+fun setProdSocketUserId(userId: Int): String {
+    return "${Constants.BASE_SOCKET_URL_PROD}?uid={$userId}"
 }

@@ -8,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.mocomoco.tradin.presentation.details.DetailsScreen
 import com.mocomoco.tradin.presentation.MainDestination
 import com.mocomoco.tradin.presentation.MainScreen
 import com.mocomoco.tradin.presentation.TradInDestinations.ADD_ROUTE
@@ -19,12 +18,14 @@ import com.mocomoco.tradin.presentation.TradInDestinations.LOCATION_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.LOGIN_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.MAIN_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.ON_BOARDING_ROUTE
+import com.mocomoco.tradin.presentation.TradInDestinations.SEARCH_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.SIGNUP_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.USER_PROFILE_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.WIP
 import com.mocomoco.tradin.presentation.WipScreen
 import com.mocomoco.tradin.presentation.add.AddScreen
 import com.mocomoco.tradin.presentation.category.CategoryScreen
+import com.mocomoco.tradin.presentation.details.DetailsScreen
 import com.mocomoco.tradin.presentation.location.LocationSelectScreen
 import com.mocomoco.tradin.presentation.login.LoginScreen
 import com.mocomoco.tradin.presentation.main.chat.ChatListScreen
@@ -38,6 +39,7 @@ import com.mocomoco.tradin.presentation.nav.Arguments.FEED_ID
 import com.mocomoco.tradin.presentation.nav.Arguments.FROM_INVENTORY
 import com.mocomoco.tradin.presentation.nav.Arguments.USER_ID
 import com.mocomoco.tradin.presentation.on_boarding.OnBoardingScreen
+import com.mocomoco.tradin.presentation.search.SearchScreen
 import com.mocomoco.tradin.presentation.signup.SignupScreen
 import com.mocomoco.tradin.presentation.user_profile.UserProfileScreen
 
@@ -45,7 +47,7 @@ import com.mocomoco.tradin.presentation.user_profile.UserProfileScreen
 fun TradInNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = MAIN_ROUTE
+    startDestination: String = ON_BOARDING_ROUTE
 ) {
     NavHost(
         navController = navController,
@@ -55,7 +57,7 @@ fun TradInNavGraph(
 
         composable(ON_BOARDING_ROUTE) {
             OnBoardingScreen() {
-                navController.navigate(MAIN_ROUTE) {
+                navController.navigate(LOGIN_ROUTE) {
                     popUpTo(ON_BOARDING_ROUTE) {
                         inclusive = true
                     }
@@ -140,19 +142,20 @@ fun TradInNavGraph(
 
 
         composable(LOGIN_ROUTE) {
-            LoginScreen(
-                onBack = {
-                    navController.popBackStack(LOGIN_ROUTE, inclusive = true)
-                },
-                onClickFindPassword = {
-                    navController.navigate(WIP) // todo replace
-                },
-                onClickSignup = {
-                    navController.navigate(SIGNUP_ROUTE) {
-                        launchSingleTop = true
-                        restoreState = true
+            LoginScreen(onCompleteLogin = {
+                navController.navigate(MAIN_ROUTE) {
+                    popUpTo(LOGIN_ROUTE) {
+                        inclusive = false
                     }
                 }
+            }, onClickFindPassword = {
+                navController.navigate(WIP) // todo replace
+            }, onClickSignup = {
+                navController.navigate(SIGNUP_ROUTE) {
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
             )
         }
 
@@ -166,13 +169,22 @@ fun TradInNavGraph(
                         launchSingleTop = true
                         restoreState = true
                     }
-                }
-            )
+                })
         }
 
         composable(LOCATION_ROUTE) {
             LocationSelectScreen {
                 navController.popBackStack(LOCATION_ROUTE, true, true)
+            }
+        }
+
+        composable(SEARCH_ROUTE) {
+            SearchScreen() { route ->
+                if (route == BACK) {
+                    navController.popBackStack()
+                } else {
+                    navController.navigate(route)
+                }
             }
         }
 

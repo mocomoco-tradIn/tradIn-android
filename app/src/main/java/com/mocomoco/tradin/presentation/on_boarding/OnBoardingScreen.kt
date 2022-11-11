@@ -27,7 +27,7 @@ import com.mocomoco.tradin.presentation.theme.*
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun OnBoardingScreen(
-    onNavToMain: () -> Unit
+    onNavToLogin: () -> Unit,
 ) {
 
     val pagerState = rememberPagerState()
@@ -126,7 +126,7 @@ fun OnBoardingScreen(
                                     .fillMaxWidth()
                                     .padding(16.dp)
                             ) {
-                                onNavToMain()
+                                onNavToLogin()
                             }
                         }
                     }

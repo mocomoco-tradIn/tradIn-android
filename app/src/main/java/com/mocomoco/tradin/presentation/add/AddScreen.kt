@@ -76,8 +76,6 @@ fun AddScreen(
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
 
-    val keyboardController = LocalSoftwareKeyboardController.current
-
     val galleryLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetMultipleContents()) { uris ->
             uris.forEach {

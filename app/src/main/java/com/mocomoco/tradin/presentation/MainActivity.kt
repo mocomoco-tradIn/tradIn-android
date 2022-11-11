@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.mocomoco.tradin.presentation.TradInDestinations.LOGIN_ROUTE
+import com.mocomoco.tradin.presentation.TradInDestinations.MAIN_ROUTE
 import com.mocomoco.tradin.presentation.TradInDestinations.ON_BOARDING_ROUTE
 import com.mocomoco.tradin.presentation.nav.TradInNavGraph
 import com.mocomoco.tradin.presentation.theme.TradInTheme
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TradInTheme {
                 TradInNavGraph(
-                    startDestination = if (viewModel.showOnBoarding()) ON_BOARDING_ROUTE else LOGIN_ROUTE
+                    startDestination = if (viewModel.showOnBoarding()) ON_BOARDING_ROUTE else if (viewModel.isLogin()) MAIN_ROUTE else LOGIN_ROUTE
                 )
             }
         }

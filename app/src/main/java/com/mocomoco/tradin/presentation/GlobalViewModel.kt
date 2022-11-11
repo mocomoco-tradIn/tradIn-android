@@ -30,4 +30,6 @@ class GlobalViewModel @Inject constructor(
     fun showOnBoarding(): Boolean {
         return preferenceService.showBoarding()
     }
+
+    fun isLogin(): Boolean = preferenceService.isLogin()
 }

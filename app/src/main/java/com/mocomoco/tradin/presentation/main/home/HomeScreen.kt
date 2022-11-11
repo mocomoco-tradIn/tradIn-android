@@ -16,7 +16,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -31,9 +30,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.mocomoco.tradin.R
 import com.mocomoco.tradin.common.Constants.LikeAnimDuration
 import com.mocomoco.tradin.model.Category
-import com.mocomoco.tradin.model.Feed
 import com.mocomoco.tradin.presentation.TradInDestinations
 import com.mocomoco.tradin.presentation.TradInDestinations.CATEGORY_ROUTE
+import com.mocomoco.tradin.presentation.TradInDestinations.SEARCH_ROUTE
 import com.mocomoco.tradin.presentation.common.*
 import com.mocomoco.tradin.presentation.theme.*
 import com.mocomoco.tradin.util.ext.showToast
@@ -339,13 +338,18 @@ fun HomeScreen(
                     Row {
                         Image(
                             painter = painterResource(id = R.drawable.ic_search),
-                            contentDescription = null
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(50))
+                                .clickable {
+                                    onNavEvent(SEARCH_ROUTE)
+                                }
                         )
-                        HorizontalSpacer(dp = 6.dp)
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_notification),
-                            contentDescription = null
-                        )
+//                        HorizontalSpacer(dp = 6.dp)
+//                        Image(
+//                            painter = painterResource(id = R.drawable.ic_notification),
+//                            contentDescription = null
+//                        )
                     }
                 }
                 VerticalSpacer(dp = 9.dp)

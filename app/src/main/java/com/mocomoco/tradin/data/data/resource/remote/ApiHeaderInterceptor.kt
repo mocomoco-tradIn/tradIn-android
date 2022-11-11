@@ -16,12 +16,10 @@ class ApiHeaderInterceptor @Inject constructor(
     private val refreshTokenApi: RefreshTokenApi
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        Logger.log("intercept")
-
+        Logger.log("request : ${chain.request().toString().split(".").last()}")
         val token = preferenceService.getAccessToken()
         val key = preferenceService.getAccessTokenKey()
         val request = if (token != null && key != null) {
-            Logger.log("key $key / token $token ")
 
             chain.request().newBuilder()
                 .addHeader(KEY, key)

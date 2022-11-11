@@ -2,10 +2,8 @@ package com.mocomoco.tradin.mapper
 
 import com.mocomoco.tradin.data.data.dto.response.feeds.FeedDetailsDto
 import com.mocomoco.tradin.data.data.dto.response.feeds.FeedDto
-import com.mocomoco.tradin.model.Details
-import com.mocomoco.tradin.model.Feed
-import com.mocomoco.tradin.model.FeedStatus
-import com.mocomoco.tradin.model.TradeMethod
+import com.mocomoco.tradin.data.data.dto.response.trade.TradeDto
+import com.mocomoco.tradin.model.*
 
 
 fun FeedDto.mapToFeed(): Feed = Feed(
@@ -52,3 +50,18 @@ fun FeedDetailsDto.mapToDetails(): Details = Details(
     category = this.category,
     userId = this.userId
 )
+
+fun TradeDto.mapToTrade(): Trade = Trade(
+    myProductImage = this.myProductImage,
+    otherNickname = this.otherNickname,
+    otherProductImage = this.otherProductImage,
+    otherUserId = this.otherUserId,
+    feedStatus = when (this.status) {
+        FeedStatus.WAIT.code -> FeedStatus.WAIT
+        FeedStatus.PROGRESS.code -> FeedStatus.PROGRESS
+        else -> FeedStatus.NONE
+    },
+    tradeDate = this.tradeDate,
+    tradeId = this.tradeId
+)
+

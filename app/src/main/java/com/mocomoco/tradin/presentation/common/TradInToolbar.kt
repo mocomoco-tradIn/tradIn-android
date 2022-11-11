@@ -45,7 +45,7 @@ fun DefaultToolbar(
         ) {
 
             Image(
-                    modifier = modifier
+                    modifier = Modifier
                         .align(Alignment.CenterStart)
                         .alpha(if (showBack) 1f else 0f)
                         .clickable {

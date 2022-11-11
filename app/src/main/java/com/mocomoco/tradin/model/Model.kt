@@ -1,5 +1,7 @@
 package com.mocomoco.tradin.model
 
+import com.mocomoco.tradin.data.data.dto.response.feeds.FeedDto
+
 data class Location(
     val code: String = "11680",
     val display: String = ""
@@ -18,6 +20,16 @@ data class Feed(
 ) {
     val invisible = id == -1
 }
+
+data class Trade(
+    val myProductImage: String,
+    val otherNickname: String,
+    val otherProductImage: String,
+    val otherUserId: Int,
+    val feedStatus: FeedStatus = FeedStatus.NONE,
+    val tradeDate: String,
+    val tradeId: Int,
+)
 
 data class User(
     val avatar: String = "",
